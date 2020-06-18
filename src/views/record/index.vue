@@ -1,9 +1,10 @@
 <template>
     <div class="record-content">
-        <div class="search-box">
+        <!-- <div class="search-box">
             <el-input class="search-inp" v-model="input" placeholder="请输入内容"></el-input>
             <el-button>查询</el-button>
-        </div>
+        </div> -->
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch"/>
         <div class="head-tab">
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane class="tab-pane-position" v-for="tabItem in tabItems" :key="tabItem.itemId" :name="tabItem.itemId">
@@ -129,12 +130,25 @@
     </div>
 </template>
 <script>
+    import Search from '@/components/Search'
     export default {
+        components: { Search },
         data()  {
             return  {
                 input:'',
                 activeName: "0",
-                
+                addSearch: [
+                    { dom: 'eac11', value: '',placeholder: '请选择年份', itemId: 5, name: 'input' },
+                    { dom: 'eac1112312312', value: '',placeholder: '请选择nhniodash', itemId: 6, name: 'input' },
+                    { dom: 'eac11123', value: '',placeholder: '请选择年份', itemId: 7, name: 'select' },
+                ],
+                selectOption: {
+                    eac11123: [
+                        { value: 1,label:'1' } ,
+                        { value: 2,label:'232' } ,
+                        { value: 3,label:'3' } ,
+                    ]
+                },
                 tabItems:[{
                         itemId:"0",
                         label:"侦监业务",
@@ -218,6 +232,9 @@
 
         },
         methods: {
+            comfirmSearch(data){
+                console.log(data,11111)
+                },
             headerRowStyle({row, rowIndex}){ 
                 return this.headStyle
             },

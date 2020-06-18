@@ -11,8 +11,8 @@ const asyncDataRoutes = [
             {   path: "filingCondition", component: 'views/caseManage/filingCondition/uncompleted', 
                 name: "FilingCondition", meta:{ title:'符合归档条件案件' },
                 children: [
-                    {path: "uncompleted", component: 'views/caseManage/uncompleted', name: "Uncompleted_Case", meta:{ title:'未归档案件' }},
-                    {path: "completed", component: 'views/caseManage/completed', name: "Completed_Case", meta:{ title:'已归档案件' }},
+                    {path: "uncompleted", component: 'views/caseManage/uncompleted', name: "UncompletedCase", meta:{ title:'未归档案件' }},
+                    {path: "completed", component: 'views/caseManage/completed', name: "CompletedCase", meta:{ title:'已归档案件' }},
                 ]
             },
         ],
@@ -27,8 +27,8 @@ const asyncDataRoutes = [
             {   path: "shallCompleted", component: 'views/archivesManage/shallCompleted/uncompleted', 
                 name: "ShallCompleted", meta:{ title:'应归档案件' },
                 children: [
-                    {path: "uncompleted", component: 'views/archivesManage/shallCompleted/uncompleted', name: "Uncompleted_Archives", meta:{ title:'未归档案件' }},
-                    {path: "completed", component: 'views/archivesManage/shallCompleted/completed', name: "Completed_Archives", meta:{ title:'已归档案件' }},
+                    {path: "uncompleted", component: 'views/archivesManage/shallCompleted/uncompleted', name: "UncompletedArchives", meta:{ title:'未归档案件' }},
+                    {path: "completed", component: 'views/archivesManage/shallCompleted/completed', name: "CompletedArchives", meta:{ title:'已归档案件' }},
                 ]
             },
             {path: "checkArchives", component: 'views/archivesManage/checkArchives', name: "CheckArchives", meta:{ title:'档案审查' }},
@@ -42,8 +42,8 @@ const asyncDataRoutes = [
             {   path: "putStorage", component: 'views/archivesManage/putStorage/uncompleted', 
                 name: "PutStorage", meta:{ title:'入库上架' },
                 children: [
-                    {path: "uncompleted", component: 'views/archivesManage/putStorage/uncompleted', name: "Uncompleted_Put", meta:{ title:'待入库上架' }},
-                    {path: "completed", component: 'views/archivesManage/putStorage/completed', name: "Completed_Put", meta:{ title:'已入库上架' }},
+                    {path: "uncompleted", component: 'views/archivesManage/putStorage/uncompleted', name: "UncompletedPut", meta:{ title:'待入库上架' }},
+                    {path: "completed", component: 'views/archivesManage/putStorage/completed', name: "CompletedPut", meta:{ title:'已入库上架' }},
                     {path: "temporary", component: 'views/archivesManage/putStorage/temporary', name: "Temporary", meta:{ title:'卷宗暂存' }},
                 ]
             },
@@ -65,7 +65,7 @@ const asyncDataRoutes = [
         component: 'layout',
         meta: {title: "历史卷宗", icon: "lock"},
         name: "HistoryCase_F", 
-        path: "",
+        path: "historyCase_F",
         redirect: "/historyCase",
         children: [
             {path: "historyCase", component: 'views/historyCase/index', name: "HistoryCase", meta:{ title:'历史卷宗' }},
@@ -75,7 +75,7 @@ const asyncDataRoutes = [
         component: 'layout',
         meta: {title: "档案绩效评价", icon: "lock"},
         name: "PerformanceEvaluation_F", 
-        path: "",
+        path: "performanceEvaluation_F",
         redirect: "/performanceEvaluation",
         children: [
             {path: "performanceEvaluation", component: 'views/performanceEvaluation/index', name: "PerformanceEvaluation", meta:{ title:'档案绩效评价' }},
@@ -85,7 +85,7 @@ const asyncDataRoutes = [
         component: 'layout',
         meta: {title: "个人相关", icon: "lock"},
         name: "ByPersonal_F", 
-        path: "",
+        path: "byPersonal_F",
         redirect: "/byPersonal",
         children: [
             {path: "byPersonal", component: 'views/byPersonal/index', name: "ByPersonal", meta:{ title:'个人相关' }},
@@ -100,11 +100,11 @@ const asyncDataRoutes = [
         children: [
             {path: "caseNum", component: 'views/archivesSituation/caseNum', name: "CaseNum", meta:{ title:'受理案件数量' }},
             {path: "caseShallCompleted", component: 'views/archivesSituation/caseShallCompleted', name: "CaseShallCompleted", meta:{ title:'应归档案件' }},
-            {path: "waitAssessment", component: 'views/archivesSituation/waitAssessment', name: "WaitAssessment", meta:{ title:'等待质量评查' }},
+            {path: "waitAssessment", component: 'views/archivesSituation/waitAssessment', name: "WaitAssessmentArchives", meta:{ title:'等待质量评查' }},
             {path: "unTransfer", component: 'views/archivesSituation/unTransfer', name: "UnTransfer", meta:{ title:'未移交归档案件' }},
             {path: "giveBack", component: 'views/archivesSituation/giveBack', name: "GiveBack", meta:{ title:'退回整改案件' }},
             {path: "notInWarehouse", component: 'views/archivesSituation/notInWarehouse', name: "NotInWarehouse", meta:{ title:'未上架案件' }},
-            {path: "inWarehouse", component: 'views/archivesSituation/inWarehouse', name: "InWarehouse", meta:{ title:'已归档上架案件' }},
+            {path: "inWarehouse", component: 'views/archivesSituation/inWarehouse', name: "InWarehouseArchives", meta:{ title:'已归档上架案件' }},
         ],
     },
 ]

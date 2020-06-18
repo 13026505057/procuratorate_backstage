@@ -5,11 +5,15 @@ import asyncDataRoutes from './routes'
 // 页面声明
 import Layout from '@/layout'
 import Page404 from '@/views/error-page/404'
+
+import Progress from '@/views/caseManage/progress'
 import AddPermission from '@/views/permission/add'
 import RolePermission from '@/views/permission/role'
 
 window.pageList = {
   Page404: Page404,
+
+  Progress: Progress,
   AddPermission: AddPermission, 
   RolePermission: RolePermission
 }

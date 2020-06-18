@@ -32,18 +32,18 @@ const asyncDataRoutes = [
                 ]
             },
             {path: "checkArchives", component: 'views/archivesManage/checkArchives', name: "CheckArchives", meta:{ title:'档案审查' }},
-            {   path: "checkHistory", component: 'views/archivesManage/uncompleted', 
+            {   path: "checkHistory", component: 'views/archivesManage/checkHistory/agree', 
                 name: "CheckHistory", meta:{ title:'审查记录' },
                 children: [
-                    {path: "agree", component: 'views/archivesManage/agree', name: "Agree", meta:{ title:'通过审查' }},
-                    {path: "disagree", component: 'views/archivesManage/disagree', name: "Disagree", meta:{ title:'未通过审查' }},
+                    {path: "agree", component: 'views/archivesManage/checkHistory/agree', name: "Agree", meta:{ title:'通过审查' }},
+                    {path: "disagree", component: 'views/archivesManage/checkHistory/disagree', name: "Disagree", meta:{ title:'未通过审查' }},
                 ]
             },
             {   path: "putStorage", component: 'views/archivesManage/putStorage/uncompleted', 
                 name: "PutStorage", meta:{ title:'入库上架' },
                 children: [
                     {path: "uncompleted", component: 'views/archivesManage/putStorage/uncompleted', name: "Uncompleted_Put", meta:{ title:'待入库上架' }},
-                    {path: "completed", component: 'views/archivesManage/putStorage/disagree', name: "Completed_Put", meta:{ title:'已入库上架' }},
+                    {path: "completed", component: 'views/archivesManage/putStorage/completed', name: "Completed_Put", meta:{ title:'已入库上架' }},
                     {path: "temporary", component: 'views/archivesManage/putStorage/temporary', name: "Temporary", meta:{ title:'卷宗暂存' }},
                 ]
             },
@@ -64,31 +64,31 @@ const asyncDataRoutes = [
     {
         component: 'layout',
         meta: {title: "历史卷宗", icon: "lock"},
-        name: "HistoryCase", 
-        path: "/historyCase",
+        name: "HistoryCase_F", 
+        path: "",
         redirect: "/historyCase",
         children: [
-            {path: "historyCase", component: 'views/historyCase/historyCase', name: "HistoryCase", meta:{ title:'历史卷宗' }},
+            {path: "historyCase", component: 'views/historyCase/index', name: "HistoryCase", meta:{ title:'历史卷宗' }},
         ],
     },
     {
         component: 'layout',
         meta: {title: "档案绩效评价", icon: "lock"},
-        name: "PerformanceEvaluation", 
-        path: "/performanceEvaluation",
+        name: "PerformanceEvaluation_F", 
+        path: "",
         redirect: "/performanceEvaluation",
         children: [
-            {path: "performanceEvaluation", component: 'views/performanceEvaluation/performanceEvaluation', name: "PerformanceEvaluation", meta:{ title:'档案绩效评价' }},
+            {path: "performanceEvaluation", component: 'views/performanceEvaluation/index', name: "PerformanceEvaluation", meta:{ title:'档案绩效评价' }},
         ],
     },
     {
         component: 'layout',
         meta: {title: "个人相关", icon: "lock"},
-        name: "ByPersonal", 
-        path: "/byPersonal",
+        name: "ByPersonal_F", 
+        path: "",
         redirect: "/byPersonal",
         children: [
-            {path: "byPersonal", component: 'views/byPersonal/byPersonal', name: "ByPersonal", meta:{ title:'个人相关' }},
+            {path: "byPersonal", component: 'views/byPersonal/index', name: "ByPersonal", meta:{ title:'个人相关' }},
         ],
     },
     {

@@ -11,8 +11,8 @@ const asyncDataRoutes = [
             {   path: "/filingCondition", component: 'views/caseManage/filingCondition/uncompleted', 
                 name: "FilingCondition", meta:{ title:'符合归档条件案件' },
                 children: [
-                    {path: "/uncompleted", component: 'views/caseManage/uncompleted', name: "Uncompleted_Case", meta:{ title:'未归档案件' }},
-                    {path: "/completed", component: 'views/caseManage/completed', name: "Completed_Case", meta:{ title:'已归档案件' }},
+                    {path: "uncompleted", component: 'views/caseManage/uncompleted', name: "UncompletedCase", meta:{ title:'未归档案件' }},
+                    {path: "completed", component: 'views/caseManage/completed', name: "CompletedCase", meta:{ title:'已归档案件' }},
                 ]
             },
         ],
@@ -27,8 +27,8 @@ const asyncDataRoutes = [
             {   path: "shallCompleted", component: 'views/archivesManage/shallCompleted/uncompleted', 
                 name: "ShallCompleted", meta:{ title:'应归档案件' },
                 children: [
-                    {path: "uncompleted", component: 'views/archivesManage/shallCompleted/uncompleted', name: "Uncompleted_Archives", meta:{ title:'未归档案件' }},
-                    {path: "completed", component: 'views/archivesManage/shallCompleted/completed', name: "Completed_Archives", meta:{ title:'已归档案件' }},
+                    {path: "uncompleted", component: 'views/archivesManage/shallCompleted/uncompleted', name: "UncompletedArchives", meta:{ title:'未归档案件' }},
+                    {path: "completed", component: 'views/archivesManage/shallCompleted/completed', name: "CompletedArchives", meta:{ title:'已归档案件' }},
                 ]
             },
             {path: "checkArchives", component: 'views/archivesManage/checkArchives', name: "CheckArchives", meta:{ title:'档案审查' }},
@@ -42,8 +42,8 @@ const asyncDataRoutes = [
             {   path: "putStorage", component: 'views/archivesManage/putStorage/uncompleted', 
                 name: "PutStorage", meta:{ title:'入库上架' },
                 children: [
-                    {path: "uncompleted", component: 'views/archivesManage/putStorage/uncompleted', name: "Uncompleted_Put", meta:{ title:'待入库上架' }},
-                    {path: "completed", component: 'views/archivesManage/putStorage/completed', name: "Completed_Put", meta:{ title:'已入库上架' }},
+                    {path: "uncompleted", component: 'views/archivesManage/putStorage/uncompleted', name: "UncompletedPut", meta:{ title:'待入库上架' }},
+                    {path: "completed", component: 'views/archivesManage/putStorage/completed', name: "CompletedPut", meta:{ title:'已入库上架' }},
                     {path: "temporary", component: 'views/archivesManage/putStorage/temporary', name: "Temporary", meta:{ title:'卷宗暂存' }},
                 ]
             },

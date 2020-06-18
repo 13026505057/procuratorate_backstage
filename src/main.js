@@ -22,7 +22,6 @@ import * as filters from './filters' // global filters
 //config the api Info
 import api from '@/api'
 Vue.prototype.$api = api
-
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

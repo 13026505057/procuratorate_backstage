@@ -2,6 +2,9 @@
   <div class="dashboard-container">
     <!-- <component :is="currentRole" /> -->
     123123123312
+    <svg class="icon iconcccc" aria-hidden="true">
+        <use xlink:href="#iconcaihongSVG"></use>
+    </svg>
   </div>
 </template>
 

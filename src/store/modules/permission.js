@@ -1,5 +1,8 @@
-import { asyncRoutes, constantRoutes } from '@/router'
+import { constantRoutes } from '@/router'
 import api from '@/api'
+// 暂存
+import asyncDataRoutes from './routes'
+// 页面声明
 import Layout from '@/layout'
 import Page404 from '@/views/error-page/404'
 import AddPermission from '@/views/permission/add'
@@ -52,39 +55,15 @@ const actions = {
       // api.getRoutes({name:'111'}).then((result)=>{
       //   let accessedRoutes
       //   // accessedRoutes = filterAsyncRoutes(result.data[0].routes)
-      //   accessedRoutes = [{
-      //     children: [
-      //       {path: "role", "component": "layout/Layout", name: "RolePermission", meta:{ title:'Role Permission',path: "role",name: "RolePermission" }}
-      //     ],
-      //     component: "layout/Layout",
-      //     meta: {title: "Permission", icon: "lock"},
-      //     name: "Permission",
-      //     path: "/permission",
-      //     redirect: "/permission/page",
-      //   }]
+
       //   commit('SET_ROUTES', accessedRoutes)
       //   console.log(accessedRoutes)
-      //   console.log(result.data[0].routes)
-      //   console.log(asyncRoutes)
       //   resolve(accessedRoutes)
       // })
       let accessedRoutes
-      if (roles.includes('admin')) accessedRoutes = asyncRoutes || []
-        else {
-          const accessedRoute = [{
-            component: 'layout/Layout',
-            meta: {title: "Permission", icon: "lock"},
-            name: "Permission",
-            path: "/permission",
-            redirect: "/permission/role",
-            children: [
-              {path: "add", component: 'views/permission/add', name: "AddPermission", meta:{ title:'Add page' }},
-              {path: "role", component: 'views/permission/role', name: "RolePermission", meta:{ title:'Role Permission' }},
-            ],
-          },{ path: '*', redirect: '/404', hidden: true }]
-          accessedRoutes = filterAsyncRoutes(accessedRoute,true)
-          // console.log(accessedRoutes)
-        }
+      const accessedRoute = asyncDataRoutes
+      accessedRoute.push({ path: '*', redirect: '/404', hidden: true })
+      accessedRoutes = filterAsyncRoutes(accessedRoute,true)
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
     })

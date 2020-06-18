@@ -5,13 +5,6 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
-
-/* Router Modules */
-import componentsRouter from './modules/components'
-import chartsRouter from './modules/charts'
-import tableRouter from './modules/table'
-import nestedRouter from './modules/nested'
-
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -40,24 +33,8 @@ import nestedRouter from './modules/nested'
  */
 export const constantRoutes = [
   {
-    path: '/redirect',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: '/redirect/:path(.*)',
-        component: () => import('@/views/redirect/index')
-      }
-    ]
-  },
-  {
     path: '/login',
     component: () => import('@/views/login/index'),
-    hidden: true
-  },
-  {
-    path: '/auth-redirect',
-    component: () => import('@/views/login/auth-redirect'),
     hidden: true
   },
   {
@@ -83,45 +60,6 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/documentation',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/documentation/index'),
-        name: 'Documentation',
-        meta: { title: 'Documentation', icon: 'documentation', affix: true }
-      }
-    ]
-  },
-  {
-    path: '/guide',
-    component: Layout,
-    redirect: '/guide/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/guide/index'),
-        name: 'Guide',
-        meta: { title: 'Guide', icon: 'guide', noCache: true }
-      }
-    ]
-  },
-  {
-    path: '/profile',
-    component: Layout,
-    redirect: '/profile/index',
-    hidden: true,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/profile/index'),
-        name: 'Profile',
-        meta: { title: 'Profile', icon: 'user', noCache: true }
-      }
-    ]
-  }
 ]
 
 /**
@@ -155,7 +93,7 @@ export const asyncRoutes = [
         component: () => import('@/views/permission/directive'),
         name: 'DirectivePermission',
         meta: {
-          title: 'Directive Permission'
+          title: 'Directive Permission',
           // if do not set roles, means: this page does not require permission
         }
       },
@@ -174,22 +112,16 @@ export const asyncRoutes = [
   {
     path: '/icon',
     component: Layout,
+    
     children: [
       {
         path: 'index',
         component: () => import('@/views/icons/index'),
         name: 'Icons',
-        meta: { title: 'Icons', icon: 'icon', noCache: true }
+        meta: { title: 'Icons', icon: 'icon', noCache: true,roles: ['editor']  }
       }
     ]
   },
-
-  /** when your routing map is too long, you can split it into small modules **/
-  componentsRouter,
-  chartsRouter,
-  nestedRouter,
-  tableRouter,
-
   {
     path: '/example',
     component: Layout,

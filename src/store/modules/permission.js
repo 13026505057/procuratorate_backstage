@@ -1,36 +1,32 @@
 import { asyncRoutes, constantRoutes } from '@/router'
+import api from '@/api'
+import Layout from '@/layout'
+import PagePermission from '@/views/permission/page'
+import RolePermission from '@/views/permission/role'
 
-/**
- * Use meta.role to determine if the current user has permission
- * @param roles
- * @param route
- */
-function hasPermission(roles, route) {
-  if (route.meta && route.meta.roles) {
-    return roles.some(role => route.meta.roles.includes(role))
-  } else {
-    return true
-  }
+window.pageList = {
+  PagePermission: PagePermission, 
+  RolePermission: RolePermission
 }
 
-/**
- * Filter asynchronous routing tables by recursion
- * @param routes asyncRoutes
- * @param roles
- */
-export function filterAsyncRoutes(routes, roles) {
-  const res = []
-
+export function filterAsyncRoutes(routes,status) {
+  let res = []
+  const res_arr = []
   routes.forEach(route => {
     const tmp = { ...route }
-    if (hasPermission(roles, tmp)) {
-      if (tmp.children) {
-        tmp.children = filterAsyncRoutes(tmp.children, roles)
-      }
-      res.push(tmp)
+    let arrList = {...tmp}
+    for(let key in arrList){
+      ['create_time','create_user_id','is_del','vue_role_id','vue_route_id','vue_route_parent_id'].map(item=>{
+        if(key == item) delete tmp[item]
+      })
     }
+    if(status) tmp['component'] = Layout
+      else tmp['component'] = window.pageList[tmp['name']]
+    if(tmp.children && tmp.children.length>0) tmp.children = filterAsyncRoutes(tmp.children,false)
+      else delete tmp.children
+    res_arr.push(tmp)
   })
-
+  res = [...new Set([...res_arr])]
   return res
 }
 
@@ -42,6 +38,7 @@ const state = {
 const mutations = {
   SET_ROUTES: (state, routes) => {
     state.addRoutes = routes
+    // state.routes = routes
     state.routes = constantRoutes.concat(routes)
   }
 }
@@ -49,12 +46,43 @@ const mutations = {
 const actions = {
   generateRoutes({ commit }, roles) {
     return new Promise(resolve => {
+      // api.getRoutes({key:roles[0]}).then((result)=>{
+      // api.getRoutes({name:'111'}).then((result)=>{
+      //   let accessedRoutes
+      //   // accessedRoutes = filterAsyncRoutes(result.data[0].routes)
+      //   accessedRoutes = [{
+      //     children: [
+      //       {path: "role", "component": "layout/Layout", name: "RolePermission", meta:{ title:'Role Permission',path: "role",name: "RolePermission" }}
+      //     ],
+      //     component: "layout/Layout",
+      //     meta: {title: "Permission", icon: "lock"},
+      //     name: "Permission",
+      //     path: "/permission",
+      //     redirect: "/permission/page",
+      //   }]
+      //   commit('SET_ROUTES', accessedRoutes)
+      //   console.log(accessedRoutes)
+      //   console.log(result.data[0].routes)
+      //   console.log(asyncRoutes)
+      //   resolve(accessedRoutes)
+      // })
       let accessedRoutes
-      if (roles.includes('admin')) {
-        accessedRoutes = asyncRoutes || []
-      } else {
-        accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-      }
+      if (roles.includes('admin')) accessedRoutes = asyncRoutes || []
+        else {
+          const accessedRoute = [{
+            component: 'layout/Layout',
+            meta: {title: "Permission", icon: "lock"},
+            name: "Permission",
+            path: "/permission",
+            redirect: "/permission/role",
+            children: [
+              {path: "page", component: 'views/permission/page', name: "PagePermission", meta:{ title:'Role Permission' }},
+              {path: "role", component: 'views/permission/role', name: "RolePermission", meta:{ title:'Role Permission' }},
+            ],
+          }]
+          accessedRoutes = filterAsyncRoutes(accessedRoute,true)
+          // console.log(accessedRoutes)
+        }
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
     })

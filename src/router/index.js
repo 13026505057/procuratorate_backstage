@@ -60,6 +60,19 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/record',
+    component: Layout,
+    redirect: '/record',
+    children: [
+      {
+        path: 'record',
+        component: () => import('@/views/record/index'),
+        name: 'Record',
+        meta: { title: 'record', icon: 'record', affix: true }
+      }
+    ]
+  },
 ]
 
 const createRouter = () => new Router({

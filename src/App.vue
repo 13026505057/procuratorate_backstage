@@ -9,8 +9,11 @@ export default {
   name: 'App'
 }
 </script>
-
 <style>
-  /* Icon Data */
-  @import url('//at.alicdn.com/t/font_1702412_46if5ose7ty.css');
+    .icon {
+        width: 1em; height: 1em;
+        vertical-align: -0.15em;
+        fill: currentColor;
+        overflow: hidden;
+    }
 </style>

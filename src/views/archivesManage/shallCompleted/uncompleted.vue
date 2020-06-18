@@ -1,7 +1,7 @@
 <template>
     <div class="unCompletedPage">
         <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch"/>
-        123123123
+        
     </div>
 </template>
 

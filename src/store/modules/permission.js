@@ -10,12 +10,20 @@ import Progress from '@/views/caseManage/progress'
 import AddPermission from '@/views/permission/add'
 import RolePermission from '@/views/permission/role'
 
+// 档案Routes
+import ShallCompleted from '@/views/archivesManage/shallCompleted/index'
+import UncompletedArchives from '@/views/archivesManage/shallCompleted/uncompleted'
+
 window.pageList = {
   Page404: Page404,
 
   Progress: Progress,
   AddPermission: AddPermission, 
-  RolePermission: RolePermission
+  RolePermission: RolePermission,
+
+  // 档案Routes
+  ShallCompleted: ShallCompleted,
+  UncompletedArchives: UncompletedArchives,
 }
 
 export function filterAsyncRoutes(routes,status) {

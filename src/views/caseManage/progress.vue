@@ -6,7 +6,7 @@
                 <el-tab-pane class="tab-pane-position" v-for="tabItem in tabItems" :key="tabItem.case_type_id" :name="tabItem.case_type_id">
                     <span slot="label">
                         {{tabItem.case_type_name}}
-                        <el-badge :value="tabItem.badge" v-if="tabItem.badge == '0'?false:true" class="item tab-badge-num"></el-badge>
+                        <el-badge :value="tabItem.contNum" v-if="tabItem.contNum == '0'?false:true" class="item tab-badge-num"></el-badge>
                     </span>
                     <div class="table-dataList" >
                         <el-table
@@ -153,39 +153,53 @@
         },
         mounted(){
             this.getCaseType();
-            this.getCornerMark();
+            // this.getCornerMark();
         },
         methods: {
             // 分类
-            async getCaseType(){
-                const resultData = await this.$api.getCaseType()
-                console.log(resultData)
-                if(resultData && resultData.code == '0') {
-                    this.tabItems = resultData.data.list;
-                    this.tabItems.map((item)=>{
-                        item.case_type_id = "_"+item.case_type_id;
-                        console.log(item.case_type_id)
+            getCaseType(){
+                this.$api.getCaseType().then(async (res)=>{
+                    console.log(res)
+                    this.tabItems = res.data.list;
+                    const resultData = await this.$api.getCornerMarkType();
+                    this.badgeList = resultData.data;
+                    Object.keys(resultData.data).map(item=>{
+                        res.data.list.map((itemChild,index)=>{
+                            console.log(item,"_"+itemChild.case_type_id)
+                            if("_"+itemChild.case_type_id == item) {
+                                itemChild.contNum = resultData.data[item]
+                                this.$set(this.tabItems[index],index,itemChild)
+                            }
+                            // console.log(item.case_type_id)
+                        })
                     })
-                    this.activeName = resultData.data.list[0].case_type_id;
-                }
+                })
+                
+                console.log(this.tabItems)
+                // console.log(resultData)
+                // if(resultData && resultData.code == '0') {
+                //     this.tabItems = resultData.data.list;
+                //     this.tabItems.map((item)=>{
+                //         item.case_type_id = "_"+item.case_type_id;
+                //         console.log(item.case_type_id)
+                //     })
+                //     this.activeName = resultData.data.list[0].case_type_id;
+                // }
             },
             // 角标
             async getCornerMark(){
                 const resultData = await this.$api.getCornerMarkType();
                 this.badgeList = resultData.data;
-
+                Object.keys(this.badgeList).map(item=>console.log(item))
                 // tabItem.badge
             },
             // 默认数据列表
             async getDataList(){
-
+                const resultData = await this.$api.getProgressCase();
             },
             comfirmSearch(data){
                 console.log(data,11111)
             },
-             comfirmSearch(data){
-                console.log(data,11111)
-                },
             headerRowStyle({row, rowIndex}){ 
                 return this.headStyle
             },

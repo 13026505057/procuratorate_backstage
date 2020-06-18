@@ -7,9 +7,9 @@ import { getToken } from '@/utils/auth'
 // create an axios instance
 const service = axios.create({
   // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  // baseURL: 'http://fe53cy.natappfree.cc/dossier_qd',
+//   baseURL: 'http://s9dt9i.natappfree.cc/dossier_qd',
   baseURL: 'http://106.12.68.167/dossier_qd',
-  // withCredentials: true, // send cookies when cross-domain requests
+//   withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })
 

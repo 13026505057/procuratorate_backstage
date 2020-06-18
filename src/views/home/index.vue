@@ -13,7 +13,6 @@ import { mapGetters } from 'vuex'
 import Search from '@/components/Search'
 
 export default {
-  name: 'Dashboard',
   components: { Search },
   data() {
     return {

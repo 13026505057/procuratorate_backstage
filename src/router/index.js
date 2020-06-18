@@ -60,6 +60,19 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/record',
+    children: [
+      {
+        path: 'record',
+        component: () => import('@/views/record/index'),
+        name: 'Decord',
+        meta: { title: 'Decord', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
 ]
 
 /**

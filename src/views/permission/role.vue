@@ -62,7 +62,6 @@
 <script>
 import path from 'path'
 import { deepClone } from '@/utils'
-import { getRoutes, getRoles, addRole, deleteRole, updateRole } from '@/api/role'
 
 const defaultRole = {
   key: '',
@@ -94,13 +93,14 @@ export default {
   created() {
     // Mock: get all routes and roles list from server
     this.getRoutes()
-    this.getRoles()
+    // this.getRoles()
   },
   methods: {
     async getRoutes() {
-      const res = await getRoutes()
+      const res = await this.$api.getRoutes()
       this.serviceRoutes = res.data
-      this.routes = this.generateRoutes(res.data)
+      console.log(res)
+      // this.routes = this.generateRoutes(res.data)
     },
     async getRoles() {
       const res = await getRoles()

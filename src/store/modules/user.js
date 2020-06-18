@@ -68,10 +68,10 @@ const actions = {
   },
 
   // user logout
-  logout() {
+  logout({commit}) {
     removeToken() // must remove  token  first
     resetRouter()
-    dom.commit('RESET_STATE')
+    commit('RESET_STATE')
   },
 
   // remove token

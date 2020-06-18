@@ -1,11 +1,13 @@
 import { asyncRoutes, constantRoutes } from '@/router'
 import api from '@/api'
 import Layout from '@/layout'
-import PagePermission from '@/views/permission/page'
+import Page404 from '@/views/error-page/404'
+import AddPermission from '@/views/permission/add'
 import RolePermission from '@/views/permission/role'
 
 window.pageList = {
-  PagePermission: PagePermission, 
+  Page404: Page404,
+  AddPermission: AddPermission, 
   RolePermission: RolePermission
 }
 
@@ -76,10 +78,10 @@ const actions = {
             path: "/permission",
             redirect: "/permission/role",
             children: [
-              {path: "page", component: 'views/permission/page', name: "PagePermission", meta:{ title:'Role Permission' }},
+              {path: "add", component: 'views/permission/add', name: "AddPermission", meta:{ title:'Add page' }},
               {path: "role", component: 'views/permission/role', name: "RolePermission", meta:{ title:'Role Permission' }},
             ],
-          }]
+          },{ path: '*', redirect: '/404', hidden: true }]
           accessedRoutes = filterAsyncRoutes(accessedRoute,true)
           // console.log(accessedRoutes)
         }

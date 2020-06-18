@@ -73,6 +73,7 @@
     "xlsx": "0.14.1"
   },
   "devDependencies": {
+    "core-js": "^2.6.11",
     "@babel/core": "7.0.0",
     "@babel/register": "7.0.0",
     "@vue/cli-plugin-babel": "3.5.3",

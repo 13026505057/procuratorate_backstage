@@ -13,9 +13,6 @@ const exhibit = {
     editCaseData(data) {
         return request({ url: '/exhibit/exhibit/update', method: 'post', data })
     }, 
-    // 获取已入库案件信息
-    editCaseData(data) {
-        return request({ url: '/exhibit/exhibit/getInByPage', method: 'post', data })
-    }, 
+   
 }
 export default exhibit

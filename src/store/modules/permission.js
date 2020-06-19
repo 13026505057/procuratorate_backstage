@@ -6,7 +6,9 @@ import asyncDataRoutes from './routes'
 import Layout from '@/layout'
 import Page404 from '@/views/error-page/404'
 
-
+import FilingCondition from '@/views/caseManage/filingCondition/index'
+import CompletedCase from '@/views/caseManage/filingCondition/completed'
+import UncompletedCase from '@/views/caseManage/filingCondition/uncompleted'
 import WaitAssessment from '@/views/caseManage/waitAssessment'
 import Progress from '@/views/caseManage/progress'
 import AddPermission from '@/views/permission/add'
@@ -20,6 +22,9 @@ import CompletedArchives from '@/views/archivesManage/shallCompleted/completed'
 window.pageList = {
   Page404: Page404,
 
+  FilingCondition: FilingCondition,
+  CompletedCase: CompletedCase,
+  UncompletedCase: UncompletedCase,
   WaitAssessment: WaitAssessment,
   Progress: Progress,
   AddPermission: AddPermission, 

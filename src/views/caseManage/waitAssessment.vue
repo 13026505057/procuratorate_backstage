@@ -23,6 +23,8 @@
                             </el-table-column>
                             <el-table-column
                                 align="center"
+                                label="序号"
+                                width="60"
                                 type="index">
                             </el-table-column>
                             <el-table-column
@@ -34,32 +36,39 @@
                                 :key="tableItem.label"
                                 >
                                 <template slot-scope="{row}">
-                                    <span v-if="tableItem.tableId == 5">{{ row[tableItem.prop] | pigeonhole }}</span>
-                                    <span v-else-if="tableItem.tableId == 7">{{row[tableItem.prop]==0?'未成卷':'已成卷'}}</span>
-                                    <span v-else-if="tableItem.tableId == 10">
-
+                                    <span v-if="tableItem.tableId == 4">
+                                        {{row[tableItem.prop]== 'in'?'已入库':'待入库'}}
                                     </span>
+                                    <span v-else-if="tableItem.tableId == 5">{{row[tableItem.prop]==1?'超期':'未超期'}}</span>
+                                    <span v-else-if="tableItem.tableId == 7">{{ row[tableItem.prop] | pigeonhole }}</span>
                                     <span v-else>{{row[tableItem.prop]}}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column
+                                label="待入库案卷数"
+                                align="center">
+                                <template slot-scope="props">
+                                    <span>{{props.row.total_quantity-props.row.in_quantity}}</span>
+                                </template>
+                            </el-table-column>
+                            <!-- <el-table-column
                                 width="190"
                                 align="center"
                                 label="操作">
                                 <template slot-scope="props">
                                     <el-button @click="examineClick(props.row)" class="highlight-btn" size="small">查看进度</el-button>
                                 </template>
-                            </el-table-column>
+                            </el-table-column> -->
                         </el-table>
-                        <div style="margin-top: 20px">
-                            <el-button @click="toggleSelection(tableData)">全选</el-button>
-                            <el-button @click="toggleSelection()">取消选择</el-button>
+                        <div class="check-all" style="margin-top: 10px">
+                            <el-button :disabled="disabled1" :loading="disabled1" @click="toggleSelection(tableData)">全选</el-button>
+                            <el-button :disabled="disabled1" :loading="disabled1" @click="toggleSelection()">取消选择</el-button>
+                            <el-button :disabled="disabled2" :loading="disabled2" @click="confirmExamine()">确认已审查</el-button>
                         </div>
                     </div>
                     <div class="pagination">
                         <el-pagination
                             background
-                            @size-change="handleSizeChange1"
                             @current-change="handleCurrentChange1"
                             :current-page.sync="currentPage1"
                             :page-size="pageSize"
@@ -75,56 +84,42 @@
 </template>
 <script>
     import Search from '@/components/Search'
+    import { mapGetters } from 'vuex'
+    import { setTimeout } from 'timers';
 
     export default {
         components: { Search },
+        computed:{
+            ...mapGetters(['org_id'])
+        },
         data()  {
             return  {
                 addSearch: [
-                    { dom: 'undertaker', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
-                    { dom: 'exceed', value: '',placeholder: '评查是否超期', itemId: 6, name: 'select' },
+                    { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
+                    { dom: 'anguan_pingcha_chaoqi', value: '',placeholder: '评查是否超期', itemId: 6, name: 'select' },
                 ],
                 selectOption:{
-                    exceed:[{value: '',label: '全部'}, 
+                    anguan_pingcha_chaoqi:[{value: '',label: '全部'}, 
                         {value: '1',label: '评查超期'}, 
                         {value: '0',label: '评查未超期'}
                     ],
                 },
                 activeName: "0",
                 tabItems:[],
-                tableData:[{
-                        date: '2016-05-03',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1516 弄'
-                    },{
-                        date: '2016-05-03',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1516 弄'
-                    },{
-                        date: '2016-05-03',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1516 弄'
-                    },{
-                        date: '2016-05-03',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1516 弄'
-                    },{
-                        date: '2016-05-03',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1516 弄'
-                    }],
+                tableData:[],
                 badgeList:[],
                 tableItems:[
                     {label: "统一受案号", prop: "case_bh", tableId:1},
                     {label: "案件名称", prop: "case_name", tableId:2},
                     {label: "案件类型", prop: "case_type_name", tableId:3},
-                    {label: "案件描述", prop: "case_desc", tableId:4},
-                    {label: "是否归档", prop: "time_status", tableId:5},
-                    {label: "承办人", prop: "case_take_user_name", tableId:6},
-                    {label: "是否成卷", prop: "chengjuan", tableId:7},
-                    {label: "总案卷数", prop: "total_quantity", tableId:8},
-                    {label: "在库案卷数", prop: "in_quantity", tableId:9},
-                    {label: "待入库案卷数", prop: "", tableId:10},
+                    {label: "案件状态", prop: "stock_status", tableId:4},
+                    {label: "评查是否超期", prop: "anguan_pingcha_chaoqi", tableId:5},
+                    {label: "案件描述", prop: "case_desc", tableId:6},
+                    {label: "是否归档", prop: "time_status", tableId:7},
+                    {label: "承办人", prop: "case_take_user_name", tableId:8},
+                    {label: "总案卷数", prop: "total_quantity", tableId:9},
+                    {label: "在库案卷数", prop: "in_quantity", tableId:10},
+                    // {label: "待入库案卷数", prop: "", tableId:11},
                     // total_quantity-in_quantity
 
                 ],
@@ -132,26 +127,25 @@
                 currentPage1:1,
                 pageSize:10,
                 total1:0,
-                stepItems:[{
-                    title:"是否办结：已办结",
-                    description: "时间：overtime"
-                }],
-                 headStyle:{
+                headStyle:{
                     backgroundColor: '#eaf5ff',
                     borderTop: '1px solid #97cfff',
                     borderBottom: '1px solid #97cfff',
                     fontSize: '18px',
                     color: '#2c2c2c'
                 },
-                progressList:{},
                 seatchData: {
                     timeYear:'',
                     case_name:'',
                     case_bh:'', //统一受案号
                     case_take_user_name:'',
                     anguan_pingcha_chaoqi:'',
+                    org_id:'',
+                    cout_for:'yishenjie',
                 },
-                multipleSelection:[]
+                multipleSelection:[],
+                disabled1:false,
+                disabled2:false,
 
             }
            
@@ -172,19 +166,18 @@
             }
         },
         mounted(){
-            this.getCaseType();
-            // this.getCornerMark();
+            this.seatchData.org_id = this.org_id
+
+            this.getCaseType(this.seatchData);
         },
         methods: {
             // 分类&&角标
-            getCaseType(){
+            getCaseType(seatchData){
                 this.$api.getCaseType().then(async (res)=>{
                     this.tabItems = res.data.list;
                     this.activeName = res.data.list[0].case_type_id;
-                    this.getDataList();
-                    let dataInfo = { ...this.seatchData }
-                    dataInfo['cout_for'] = 'yishenjie';
-                    // dataInfo['anguan_pingcha_chaoqi'] = ;
+                    this.getDataList(seatchData);
+                    let dataInfo = { ...seatchData }
                     
                     const resultData = await this.$api.getCornerMarkType(dataInfo);
                     this.badgeList = resultData.data;
@@ -202,46 +195,59 @@
             },
             
             // 默认数据列表
-            async getDataList(){
-                
-                let dataInfo = { ...this.seatchData }
+            async getDataList(seatchData){
+                let dataInfo = { ...seatchData }
                 dataInfo ['pageNum'] = this.currentPage1;
                 dataInfo ['pageSize'] = this.pageSize;
                 dataInfo ['case_type_id'] = this.activeName;
                 const resultData = await this.$api.getAwaitEvaluation(dataInfo);
                 if(resultData && resultData.code == '0') {
-                    // this.tableData = resultData.data.list,
+                    this.tableData = resultData.data.list,
                     this.total1 = resultData.data.total
                 }
             },
             comfirmSearch(data){
                 console.log(data,11111)
-                this.seatchData = {
-                    timeYear:data.year,
-                    case_name:data.name,
-                    case_bh:data.num, //统一受案号
-                    case_take_user_name:this.addSearch[0].value,
-                    anguan_pingcha_chaoqi:this.addSearch[1].value,
-                }
-                this.getDataList();
-                this.getCaseType();
+                for(let key in data){ this.seatchData[key] = data[key] }
+                this.getCaseType(this.seatchData);
             },
             toggleSelection(rows) {
                 console.log(rows)
-                let that = this;
-                // this.$nextTick(function () {
-                    if (rows) {
-                        rows.forEach(row => {
-                            console.log(that.$refs.multipleTable.toggleRowSelection(row))
-                            // that.$refs.multipleTable.toggleRowSelection(row);
-                        });
-                    } else {
-                        that.$refs.multipleTable.clearSelection();
-                    }
-                // })
+                this.disabled1 = true;
+                if (rows) {
+                    rows.forEach(row => {
+                        // console.log(this.$refs.multipleTable)
+                        this.$refs.multipleTable.map(item=>{
+                            item.toggleRowSelection(row);
+                        })
+                    });
+                } else {
+                    this.$refs.multipleTable.map(item=>{
+                        item.clearSelection();
+                    })
+                }
+                setTimeout(()=>{
+                    this.disabled1 = false;
+                },2000)
             },
+           
             handleSelectionChange(val) {
                 this.multipleSelection = val;
+            },
+             // 确认已审查
+            async confirmExamine(){
+                this.disabled2 = true;
+               
+                let case_id_arr = [] 
+                this.multipleSelection.map(item=>{
+                    case_id_arr.push(item.case_id)
+                })
+                let case_ids = case_id_arr.join(",")
+                console.log(case_ids)
+                const resultData = await this.$api.confirmExamine(case_ids);
+                setTimeout(()=>{
+                    this.disabled2 = false;
+                },2000)
             },
             headerRowStyle({row, rowIndex}){ 
                 return this.headStyle
@@ -249,31 +255,24 @@
             // 标签页
             handleClick(tab, event) {
                 console.log(tab, event);
-                this.getDataList();
+                this.getDataList(this.seatchData);
             },
             // 页面分页
-            handleSizeChange1(val) {
-                console.log(`每页 ${val} 条`);
-                this.getDataList();
-            },
             handleCurrentChange1(val) {
                 console.log(`当前页: ${val}`);
-                this.getDataList();
+                this.getDataList(this.seatchData);
             },
             
             // 小弹窗
             examineClick(res){ 
                 console.log(res)
                 this.dialogVisible = true;
-                this.progressList = res;
-                // this.overtime = res.overtime;
-
             },
             
         },
     }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
     $gradual-color: linear-gradient(to bottom right , #6db4ff, #47ccff);
     .wait-content{
         margin: 20px;
@@ -319,6 +318,10 @@
                 .ash-btn{
                     background-color: #d1d1d1;
                 }
+            }
+            .check-all button{
+                background-image: $gradual-color; 
+                color: #ffffff;
             }
             .pagination{
                 margin-top: 20px;

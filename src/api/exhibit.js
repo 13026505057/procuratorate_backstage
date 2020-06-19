@@ -12,10 +12,10 @@ const exhibit = {
     // 修改案卷信息
     editCaseData(data) {
         return request({ url: '/exhibit/exhibit/update', method: 'post', data })
-    }, 
-    // 获取已入库案件信息
-    editCaseData(data) {
-        return request({ url: '/exhibit/exhibit/getInByPage', method: 'post', data })
+    },
+    // 添加案卷信息
+    addExhibitData(data) {
+        return request({ url: '/exhibit/exhibit/add', method: 'post', data })
     }, 
 }
 export default exhibit

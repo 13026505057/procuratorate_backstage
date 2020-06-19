@@ -7,6 +7,7 @@ const getDefaultState = () => {
     token: getToken(),
     org_name: '',
     org_id: '',
+    org_list: [],
     user_true_name: '',
     roles: [],
   }
@@ -26,12 +27,31 @@ const mutations = {
   SET_ORG_ID: (state, org_id) => {
     state.org_id = org_id
   },
+  SET_ORG_LIST: (state, org_list) => {
+    state.org_list = org_list
+  },
   SET_USER_NAME: (state, user_true_name) => {
     state.user_true_name = user_true_name
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
   }
+}
+// 递归获取机构列表
+const filtersOrgData = (list,resData) =>{
+  if(Array.isArray(list) && list.length>0){
+    list.forEach((v,i)=>{
+      resData[i]={};
+      resData[i].value=v['org_id'];
+      resData[i].label=v['org_name'];
+      resData[i].level=v['org_level'];
+      var arr=[];
+      resData[i].children=arr;
+      filtersOrgData(v.orgs,arr);
+      if(!v.orgs) delete resData[i].children
+    });
+  }
+  return resData
 }
 
 const actions = {
@@ -47,7 +67,6 @@ const actions = {
   getInfo({ commit }) {
     return new Promise((resolve, reject) => {
       api.getInfo().then(response => {
-        console.log(response)
         const { data } = response
 
         if (!data) {
@@ -71,7 +90,17 @@ const actions = {
       })
     })
   },
-
+  getOrgTreeList({commit}){
+    return new Promise((resolve, reject) =>{
+      api.orgTreeGet().then(resultData=>{
+        let data = filtersOrgData(resultData.data,[])
+        commit('SET_ORG_LIST', data)
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
   // user logout
   logout({commit}) {
     removeToken() // must remove  token  first

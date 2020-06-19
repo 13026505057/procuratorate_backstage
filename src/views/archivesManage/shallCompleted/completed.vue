@@ -1,5 +1,5 @@
 <template>
-    <div class="uncompletedShall">
+    <div class="completedShallPage">
         <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
@@ -14,7 +14,7 @@
                             <el-table-column :label="item.dataIndex"
                                 v-for="item in columns" :key="item.itemId" align="center">
                                 <template slot-scope="{row}">
-                                    <span v-if="item.itemId == 4">{{ row[item.title]=='0'?'未交卷':'已交卷' }}</span>
+                                    <span v-if="item.itemId == 4">{{ row[item.title] | mapStatus }}</span>
                                     <span v-else>{{ row[item.title] }}</span>
                                 </template>
                             </el-table-column>
@@ -37,35 +37,52 @@
                 </el-tab-pane>
             </el-tabs>
         </div>
+        <!-- 案卷详情 -->
         <el-dialog title="案卷详情" :visible.sync="showModel.dialogTableVisible">
             <el-table :data="showModel.gridData" align="center">
                 <el-table-column type="index" label="#"></el-table-column>
                 <el-table-column :label="item.dataIndex"
                     v-for="item in showModel.gridData_columns" :key="item.itemId" align="center">
                     <template slot-scope="{row}">
-                        <span v-if="item.itemId == 6">{{ row[item.title]=='0'?'已入库':'待入库' }}</span>
-                        <span v-else-if="item.itemId == 7">{{ row[item.title]=='0'?'失效':'有效' }}</span>
+                        <span v-if="item.itemId == 6" :style="{'color':row[item.title]=='in'?'':'red'}">{{ row[item.title]=='in'?'已入库':'待入库' }}</span>
+                        <span v-else-if="item.itemId == 7" :style="{'color':row[item.title]=='0'?'red':''}">{{ row[item.title]=='0'?'失效':'有效' }}</span>
                         <span v-else>{{ row[item.title] }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="操作" width="300">
+                <el-table-column align="center" label="操作" width="200">
                     <template slot-scope="{row}">
                         <el-button @click="printQrCodeAgain(row.exhibit_id)" class="highlight-btn" type="operation" size="small">补打条码</el-button>
-                        <el-button @click="printReceipt(row.exhibit_id)" class="highlight-btn" type="operation" size="small">打印回执单</el-button>
                         <el-button @click="deleteCancel(row.exhibit_id)" class="highlight-btn" type="operation" size="small">作废</el-button>
                     </template>
                 </el-table-column>
             </el-table>
+            <DialogPagin ref="dialogTablePagin" :tableData="showModel.gridData_temporary" @dialogTablePagin="dialogTablePagin"/>
         </el-dialog>
     </div>
 </template>
 <script>
     import Search from '@/components/Search'
+    import DialogPagin from '@/components/DialogPagin'
     import { mapGetters } from 'vuex'
     export default {
-        components: { Search },
+        components: { Search,DialogPagin },
         computed:{
             ...mapGetters(['org_id'])
+        },
+        filters: {
+            mapStatus(status){
+                const statusMap = {
+                    "in": "已归档",
+                    "in_jj_out": "已归档（交卷超期）",
+                    "in_rk_out": "已归档（入库超期）",
+                    "in_all_out": "已归档（双超期）",
+                    "none": "未归档",
+                    "none_jj_out": "未归档（交卷超期）",
+                    "none_rk_out": "未归档（入库超期）",
+                    "none_all_out": "未归档（双超期）",
+                }
+                return statusMap[status]
+            }
         },
         data()  {
             return  {
@@ -76,7 +93,6 @@
                     case_bh: '',
                     timeYear: '',
                     case_take_user_name: '',
-                    case_none_status: '',
                     case_type_id: '',
                     org_id: '',
                 },
@@ -91,6 +107,7 @@
                     // 案卷详情
                     dialogTableVisible: false,
                     gridData: [],
+                    gridData_temporary: [],
                     gridData_columns: [
                         { title: 'out_exhibit_id', dataIndex: '条形码号', itemId: 1 },
                         { title: 'case_name', dataIndex: '卷宗名称', itemId: 2 },
@@ -99,19 +116,20 @@
                         { title: 'bgr', dataIndex: '被告人/嫌疑人', itemId: 5 },
                         { title: 'stock_status', dataIndex: '案卷状态', itemId: 6 },
                         { title: 'exhibit_status', dataIndex: '是否有效', itemId: 7 },
-                        { title: 'case_type', dataIndex: '存储位置', itemId: 8 },
-                    ]
+                        { title: 'cell_name', dataIndex: '存储位置', itemId: 8 },
+                    ],
                 },
                 // table表头
                 columns: [
                     { title: 'case_bh', dataIndex: '案件编号', itemId: 1 },
                     { title: 'case_name', dataIndex: '案件名称', itemId: 10 },
-                    { title: 'case_desc', dataIndex: '案件描述', itemId: 11 },
                     { title: 'case_type_name', dataIndex: '案件类型', itemId: 2 },
+                    { title: 'case_desc', dataIndex: '案件描述', itemId: 11 },
+                    { title: 'time_status', dataIndex: '是否归档', itemId: 4 },
                     { title: 'case_take_user_name', dataIndex: '承办人', itemId: 3 },
-                    { title: 'dangan_accept_status', dataIndex: '是否交卷', itemId: 4 },
-                    { title: 'dangan_accept_time', dataIndex: '交卷日期', itemId: 5 },
-                    { title: 'dangan_accept_day', dataIndex: '交卷天数', itemId: 6 },
+                    { title: 'total_quantity', dataIndex: '总案卷数', itemId: 5 },
+                    { title: 'in_quantity', dataIndex: '在库案卷数', itemId: 6 },
+                    { title: 'wait_quantity', dataIndex: '待入库案卷数', itemId: 7 },
                 ],
             }
            
@@ -126,13 +144,17 @@
                 this.pagination['pageNum'] = val;
                 this.getTableList(this.pagination)
             },
+            // DialogPagin
+            dialogTablePagin(data){
+                this.showModel.gridData = data
+            },
             handleClickTab(e){
                 this.pagination.case_type_id = e.paneName
                 this.getTableList(this.pagination)
             },
             // 类型分类
             getCaseType(){
-                this.$api.getInByPage().then(async (res)=>{
+                this.$api.getCaseType().then(async (res)=>{
                     this.showModel.tableList = res.data.list;
                     this.pagination.case_type_id = this.showModel.activeNameTab = res.data.list[0].case_type_id
                     // 角标
@@ -153,24 +175,32 @@
                     this.getTableList(this.pagination)
                 })
             },
-            // 获取未归档案件列表
+            // 获取案件列表
             async getTableList(dataInfo){
                 this.loading = true;
+                this.showModel.dialogTableVisible = false;
                 let getData = { ...dataInfo }
-                const resultData = await this.$api.getDangAnWeiGui(getData);
+                const resultData = await this.$api.getInByPage(getData);
                 const pagination = { ...this.pagination };
-                this.showModel.tableData = resultData.data.list;
+                let resultData_table = [];
+                resultData.data.list.map(item=>{
+                    resultData_table.push({...item,wait_quantity: item.total_quantity - item.in_quantity})
+                })
+                this.showModel.tableData = resultData_table;
                 pagination.total = resultData.data.total;
                 this.pagination = pagination;
             },
             // 确认搜索
             comfirmSearch(data){
                 for(let key in data){ this.pagination[key] = data[key] }
-                this.getTableList(this.pagination)
+                this.getCaseType(this.pagination)
             },
             showDialogPanel(dataInfo){
                 this.showModel.dialogTableVisible = true;
-                this.showModel.gridData = dataInfo;
+                this.showModel.gridData_temporary = dataInfo
+                this.$nextTick(() => {
+                    this.$refs.dialogTablePagin.dialogTablePagin(1)
+                })
             },
             // 补打条形码
             async printQrCodeAgain(exhibit_id){
@@ -185,13 +215,16 @@
             // 作废
             async deleteCancel(exhibit_id){
                 let resultData = await this.$api.editCaseData({exhibit_id,exhibit_status: 0})
-                if(resultData && resultData.code == '0') this.$message.success('操作成功')
-            }
+                if(resultData && resultData.code == '0') {
+                    this.$message.success('操作成功')
+                    this.getCaseType()
+                }
+            },
         },
     }
 </script>
 <style lang="scss">
-    .uncompletedShall{
+    .completedShallPage{
         margin: 20px;
         .head-tab{
             margin-top: 30px;

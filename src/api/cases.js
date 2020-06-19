@@ -22,6 +22,14 @@ const cases = {
     // 已入库案件
     getInByPage(data) {
         return request({ url: '/cases/cases/getInByPage', method: 'post', data })
+    }, 
+    // 符合归档条件案件
+    getConfirmedByPage(data) {
+        return request({ url: '/cases/cases/getConfirmedByPage', method: 'post', data })
+    },
+    // 档案通过审查案件
+    getDangAnConfirmByPage(data) {
+        return request({ url: '/cases/cases/getDangAnConfirmByPage', method: 'post', data })
     },
 }
 export default cases

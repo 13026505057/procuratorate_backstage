@@ -1,6 +1,6 @@
 <template>
-    <div class="uncompletedPutPage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch"/>
+    <div class="checkedItemPage">
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
@@ -9,8 +9,9 @@
                         <el-badge :value="item.contNum" v-if="item.contNum == '0'?false:true" class="item tab-badge-num"></el-badge>
                     </span>
                     <div class="table-dataList" >
-                        <el-table height="500" :data="showModel.tableData" border style="width: 100%">
+                        <el-table height="500" :data="showModel.tableData" border style="width: 100%" @selection-change="handleSelectionChange">
                             <el-table-column align="center" type="index"></el-table-column>
+                            <el-table-column type="selection" width="55"></el-table-column>
                             <el-table-column :label="item.dataIndex"
                                 v-for="item in columns" :key="item.itemId" align="center">
                                 <template slot-scope="{row}">
@@ -18,9 +19,10 @@
                                     <span v-else>{{ row[item.title] }}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column align="center" label="操作">
+                            <el-table-column align="center" label="操作" width="250">
                                 <template slot-scope="{row}">
                                     <el-button @click="showDialogPanel(row.exhibits)" class="highlight-btn" size="small">已有案卷</el-button>
+                                    <el-button @click="receivedItem(row.case_id)" class="highlight-btn" size="small">审核结果</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -49,7 +51,7 @@
                         <span v-else>{{ row[item.title] }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="操作" width="200">
+                <el-table-column align="center" label="操作" width="300">
                     <template slot-scope="{row}">
                         <el-button @click="printQrCodeAgain(row.exhibit_id)" class="highlight-btn" type="operation" size="small">补打条码</el-button>
                         <el-button @click="deleteCancel(row.exhibit_id)" class="highlight-btn" type="operation" size="small">作废</el-button>
@@ -57,6 +59,26 @@
                 </el-table-column>
             </el-table>
             <DialogPagin ref="dialogTablePagin" :tableData="showModel.gridData_temporary" @dialogTablePagin="dialogTablePagin"/>
+        </el-dialog>
+        <!-- 接收案卷 -->
+        <el-dialog title="档案检查" :visible.sync="showModel.dialogReceivedVisible">
+            <div v-for="(item,index) in eachDataInfoList" :key="index"
+                style="display:table;width: 100%;margin-bottom: 10px">
+                <span style="display:table-cell;width: 25%;text-align: right;padding-right: 20px">
+                    {{ item.captionTitle }}：
+                </span>
+                
+                <el-select v-model="submitDataInfo[item.dom]" :placeholder="item.placeholder" v-if="item.itemId == 1">
+                    <el-option v-for="itemChild in showModel.selectOption_type" :key="itemChild.type_item" 
+                        :label="itemChild.type_name" :value="itemChild.type_value"></el-option>
+                </el-select>
+                <el-input v-model="submitDataInfo[item.dom]" v-if="submitDataInfo[item.dom]"
+                    :placeholder="item.placeholder" style="width: auto"></el-input>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="showModel.dialogReceivedVisible = false">取 消</el-button>
+                <el-button type="primary" @click="confirmBtn">确 定</el-button>
+            </span>
         </el-dialog>
     </div>
 </template>
@@ -91,15 +113,13 @@
                     pageSize: 10,
                     case_name: '',
                     case_bh: '',
-                    begin_time: '',
-                    end_time: '',
-                    stock_log_type: 'init',
+                    timeYear: '',
+                    case_take_user_name: '',
+                    case_type_id: '',
                     org_id: '',
                 },
                 addSearch: [
-                    { dom: 'case_bh', value: '',placeholder: '请输入统一涉案号', itemId: 5, name: 'input' },
-                    { dom: 'case_name', value: '',placeholder: '请输入案件名', itemId: 6, name: 'input' },
-                    { dom: 'timeData', value: '',placeholder: '', itemId: 7, name: 'daterange' },
+                    { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
                 ],
                 selectOption: {},
                 showModel: {
@@ -120,6 +140,13 @@
                         { title: 'exhibit_status', dataIndex: '是否有效', itemId: 7 },
                         { title: 'cell_name', dataIndex: '存储位置', itemId: 8 },
                     ],
+                    // 新增案卷
+                    dialogReceivedVisible: false,
+                    selectOption_type: [
+                        { type_value: 'agree', type_name: '通过', type_id: 1 },
+                        { type_value: 'disagree', type_name: '审核不通过', type_id: 2 },
+                        { type_value: 'ju', type_name: '文书', type_id: 3 },
+                    ],
                 },
                 // table表头
                 columns: [
@@ -133,6 +160,20 @@
                     { title: 'in_quantity', dataIndex: '在库案卷数', itemId: 6 },
                     { title: 'wait_quantity', dataIndex: '待入库案卷数', itemId: 7 },
                 ],
+                submitDataInfo: {
+                    case_id: '',
+                    nd: '',
+                    exhibit_type: '',
+                    bgqx: '',
+                    dh: '',
+                    jh: '',
+                    bgr: '',
+                    print_code: 0,
+                    print_accept: 0
+                },
+                eachDataInfoList: [
+                    { captionTitle: '检查结果', placeholder: '请选择检查结果', dom: 'dh', itemId: 1 },
+                ]
             }
            
         },
@@ -154,6 +195,10 @@
                 this.pagination.case_type_id = e.paneName
                 this.getTableList(this.pagination)
             },
+            // 选中
+            handleSelectionChange(val){
+                console.log(val)
+            },
             // 类型分类
             getCaseType(){
                 this.$api.getCaseType().then(async (res)=>{
@@ -162,7 +207,6 @@
                     // 角标
                     let dataInfo = {...this.pagination};
                     // 每个页面字段不同(cout_for)
-                    dataInfo.stock_status_str = 'in,out,wout,win';
 
                     ['pageNum','pageSize','case_type_id'].map(item=> delete dataInfo[item])
                     const resultData = await this.$api.getCornerMarkType(dataInfo);
@@ -181,8 +225,9 @@
             async getTableList(dataInfo){
                 this.loading = true;
                 this.showModel.dialogTableVisible = false;
+                this.showModel.dialogReceivedVisible = false;
                 let getData = { ...dataInfo }
-                const resultData = await this.$api.getInByPage(getData);
+                const resultData = await this.$api.getConfirmedByPage(getData);
                 const pagination = { ...this.pagination };
                 let resultData_table = [];
                 resultData.data.list.map(item=>{
@@ -203,16 +248,10 @@
                 this.$nextTick(() => {
                     this.$refs.dialogTablePagin.dialogTablePagin(1)
                 })
-                
             },
             // 补打条形码
             async printQrCodeAgain(exhibit_id){
                 let resultData = await this.$api.printAgain({exhibit_id})
-                if(resultData && resultData.code == '0') this.$message.success('已发送打印请求')
-            },
-            // 打印回执单
-            async printReceipt(exhibit_id){
-                let resultData = await this.$api.printAcceptReturn({exhibit_id})
                 if(resultData && resultData.code == '0') this.$message.success('已发送打印请求')
             },
             // 作废
@@ -223,11 +262,34 @@
                     this.getCaseType()
                 }
             },
+            // 接收案卷信息
+            receivedItem(case_id){
+                this.showModel.dialogReceivedVisible = true;
+                this.resetSubmitInfo();
+                this.submitDataInfo.case_id = case_id;
+            },
+            //重置表单
+            resetSubmitInfo(){
+                for( let key in this.submitDataInfo){ this.submitDataInfo[key] = '' }
+                this.submitDataInfo.nd = new Date().getFullYear()
+                this.submitDataInfo.exhibit_type = this.showModel.selectOption_type[0].type_value;
+                this.submitDataInfo.bgqx = this.showModel.selectOption_time[0].time_value;
+            },
+            // 确认提交
+            async confirmBtn(){
+                ['print_code','print_accept'].map(item=> this.submitDataInfo[item] = Number(this.submitDataInfo[item]))
+                let resultData = await this.$api.addExhibitData(this.submitDataInfo)
+                if(resultData && resultData.code=='0'){
+                    this.$message.success('添加成功')
+                    this.getCaseType()
+                    this.resetSubmitInfo()
+                }
+            }
         },
     }
 </script>
 <style lang="scss">
-    .uncompletedPutPage{
+    .checkedItemPage{
         margin: 20px;
         .head-tab{
             margin-top: 30px;
@@ -270,6 +332,8 @@
                 top: -2px;
             }
         }
+        .checkboxSelect{
+            padding: 15px 0 0 10%;;
+        }
     }
-    
 </style>

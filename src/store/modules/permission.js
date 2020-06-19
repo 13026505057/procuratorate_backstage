@@ -17,6 +17,19 @@ import ShallCompleted from '@/views/archivesManage/shallCompleted/index'
 import UncompletedArchives from '@/views/archivesManage/shallCompleted/uncompleted'
 import CompletedArchives from '@/views/archivesManage/shallCompleted/completed'
 
+import CheckArchives from '@/views/archivesManage/checkArchives/index'
+import ReceiveItem from '@/views/archivesManage/checkArchives/receiveItem'
+import CheckItem from '@/views/archivesManage/checkArchives/checkItem'
+
+import CheckHistory from '@/views/archivesManage/checkHistory/index'
+import Agree from '@/views/archivesManage/checkHistory/agree'
+import Disagree from '@/views/archivesManage/checkHistory/disagree'
+
+import PutStorage from '@/views/archivesManage/putStorage/index'
+import UncompletedPut from '@/views/archivesManage/putStorage/uncompleted'
+import CompletedPut from '@/views/archivesManage/putStorage/completed'
+import Temporary from '@/views/archivesManage/putStorage/temporary'
+
 window.pageList = {
   Page404: Page404,
 
@@ -29,6 +42,16 @@ window.pageList = {
   ShallCompleted: ShallCompleted,
   UncompletedArchives: UncompletedArchives,
   CompletedArchives: CompletedArchives,
+  CheckArchives: CheckArchives,
+  ReceiveItem: ReceiveItem,
+  CheckItem: CheckItem,
+  CheckHistory: CheckHistory,
+  Agree: Agree,
+  Disagree: Disagree,
+  PutStorage: PutStorage,
+  UncompletedPut: UncompletedPut,
+  CompletedPut: CompletedPut,
+  Temporary: Temporary
 }
 
 export function filterAsyncRoutes(routes,status) {

@@ -1,5 +1,5 @@
 <template>
-    <div class="uncompletedShall">
+    <div class="uncompletedShallPage">
         <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
@@ -56,14 +56,16 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <DialogPagin ref="dialogTablePagin" :tableData="showModel.gridData_temporary" @dialogTablePagin="dialogTablePagin"/>
         </el-dialog>
     </div>
 </template>
 <script>
     import Search from '@/components/Search'
+    import DialogPagin from '@/components/DialogPagin'
     import { mapGetters } from 'vuex'
     export default {
-        components: { Search },
+        components: { Search,DialogPagin },
         computed:{
             ...mapGetters(['org_id'])
         },
@@ -97,6 +99,7 @@
                     // 案卷详情
                     dialogTableVisible: false,
                     gridData: [],
+                    gridData_temporary: [],
                     gridData_columns: [
                         { title: 'out_exhibit_id', dataIndex: '条形码号', itemId: 1 },
                         { title: 'case_name', dataIndex: '卷宗名称', itemId: 2 },
@@ -131,6 +134,10 @@
             handleCurrentChange(val) {
                 this.pagination['pageNum'] = val;
                 this.getTableList(this.pagination)
+            },
+            // DialogPagin
+            dialogTablePagin(data){
+                this.showModel.gridData = data
             },
             handleClickTab(e){
                 this.pagination.case_type_id = e.paneName
@@ -172,11 +179,14 @@
             // 确认搜索
             comfirmSearch(data){
                 for(let key in data){ this.pagination[key] = data[key] }
-                this.getTableList(this.pagination)
+                this.getCaseType(this.pagination)
             },
             showDialogPanel(dataInfo){
                 this.showModel.dialogTableVisible = true;
-                this.showModel.gridData = dataInfo;
+                this.showModel.gridData_temporary = dataInfo
+                this.$nextTick(() => {
+                    this.$refs.dialogTablePagin.dialogTablePagin(1)
+                })
             },
             // 补打条形码
             async printQrCodeAgain(exhibit_id){
@@ -191,13 +201,16 @@
             // 作废
             async deleteCancel(exhibit_id){
                 let resultData = await this.$api.editCaseData({exhibit_id,exhibit_status: 0})
-                if(resultData && resultData.code == '0') this.$message.success('操作成功')
+                if(resultData && resultData.code == '0') {
+                    this.$message.success('操作成功')
+                    this.getCaseType();
+                }
             }
         },
     }
 </script>
 <style lang="scss">
-    .uncompletedShall{
+    .uncompletedShallPage{
         margin: 20px;
         .head-tab{
             margin-top: 30px;

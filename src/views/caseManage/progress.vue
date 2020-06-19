@@ -17,6 +17,8 @@
                             style="width: 100%">
                             <el-table-column
                                 align="center"
+                                label="序号"
+                                width="60"
                                 type="index">
                             </el-table-column>
                             <el-table-column
@@ -31,9 +33,15 @@
                                     <span v-if="tableItem.tableId == 5">{{ row[tableItem.prop] | pigeonhole }}</span>
                                     <span v-else-if="tableItem.tableId == 7">{{row[tableItem.prop]==0?'未成卷':'已成卷'}}</span>
                                     <span v-else-if="tableItem.tableId == 10">
-
                                     </span>
                                     <span v-else>{{row[tableItem.prop]}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                label="待入库案卷数"
+                                align="center">
+                                <template slot-scope="props">
+                                    <span>{{props.row.total_quantity-props.row.in_quantity}}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column
@@ -41,7 +49,7 @@
                                 align="center"
                                 label="操作">
                                 <template slot-scope="props">
-                                    <el-button @click="examineClick(props.row)" class="highlight-btn" size="small">查看进度</el-button>
+                                    <el-button :disabled="disabled1" :loading="disabled1" @click="examineClick(props.row)" class="highlight-btn" size="small">查看进度</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -49,14 +57,12 @@
                     <div class="pagination">
                         <el-pagination
                             background
-                            @size-change="handleSizeChange1"
                             @current-change="handleCurrentChange1"
                             :current-page.sync="currentPage1"
                             :page-size="pageSize"
                             layout="prev, pager, next, jumper"
                             :total="total1">
                         </el-pagination>
-                        <div @click="handleCurrentChange1" class="page-change">确定</div>
                     </div>
                 </el-tab-pane>
             </el-tabs>
@@ -98,13 +104,19 @@
 </template>
 <script>
     import Search from '@/components/Search'
+    import { mapGetters } from 'vuex'
+import { setTimeout } from 'timers';
+
 
     export default {
         components: { Search },
+        computed:{
+            ...mapGetters(['org_id'])
+        },
         data()  {
             return  {
                 addSearch: [
-                    { dom: 'undertaker', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
+                    { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
                 ],
                 selectOption:{},
                 activeName: "0",
@@ -121,7 +133,7 @@
                     {label: "是否成卷", prop: "chengjuan", tableId:7},
                     {label: "总案卷数", prop: "total_quantity", tableId:8},
                     {label: "在库案卷数", prop: "in_quantity", tableId:9},
-                    {label: "待入库案卷数", prop: "", tableId:10},
+                    // {label: "待入库案卷数", prop: "", tableId:10},
                     // total_quantity-in_quantity
 
                 ],
@@ -146,8 +158,10 @@
                     case_name:'',
                     case_bh:'', //统一受案号
                     case_take_user_name:'',
+                    org_id: '',
 
-                }
+                },
+                disabled1:false,
 
             }
            
@@ -168,17 +182,18 @@
             }
         },
         mounted(){
-            this.getCaseType();
-            // this.getCornerMark();
+            this.seatchData.org_id = this.org_id
+
+            this.getCaseType(this.seatchData);
         },
         methods: {
             // 分类&&角标
-            getCaseType(){
+            getCaseType(seatchData){
                 this.$api.getCaseType().then(async (res)=>{
                     this.tabItems = res.data.list;
                     this.activeName = res.data.list[0].case_type_id;
                     this.getDataList();
-                    let dataInfo = { ...this.seatchData }
+                    let dataInfo = { ...seatchData }
                     const resultData = await this.$api.getCornerMarkType(dataInfo);
                     this.badgeList = resultData.data;
                     Object.keys(resultData.data).map(item=>{
@@ -197,10 +212,6 @@
             // 默认数据列表
             async getDataList(){
                 console.log({...this.seatchData})
-                // let case_name = '';
-                // if(this.seatchData.name && this.seatchData.fzname)
-                // case_name = this.seatchData.name
-                // case_name = this.seatchData.fzname;
                 let dataInfo = { ...this.seatchData }
                 dataInfo ['pageNum'] = this.currentPage1;
                 dataInfo ['pageSize'] = this.pageSize;
@@ -213,15 +224,9 @@
                 }
             },
             comfirmSearch(data){
-                this.seatchData = {
-                    timeYear:data.year,
-                    case_name:data.name,
-                    case_bh:data.num, //统一受案号
-                    case_take_user_name:this.addSearch[0].value
-                }
-                console.log(this.seatchData)
-                this.getDataList();
-                this.getCaseType();
+                console.log(data)
+                for(let key in data){ this.seatchData[key] = data[key] }
+                this.getCaseType(this.seatchData);
             },
             headerRowStyle({row, rowIndex}){ 
                 return this.headStyle
@@ -229,24 +234,23 @@
             // 标签页
             handleClick(tab, event) {
                 console.log(tab, event);
-                this.getDataList();
+                this.getDataList(this.seatchData);
             },
-            // 页面分页
-            handleSizeChange1(val) {
-                console.log(`每页 ${val} 条`);
-                this.getDataList();
-            },
+            
             handleCurrentChange1(val) {
                 console.log(`当前页: ${val}`);
-                this.getDataList();
+                this.getDataList(this.seatchData);
             },
             
             // 小弹窗
             examineClick(res){ 
                 console.log(res)
+                this.disabled1 = true;
                 this.dialogVisible = true;
                 this.progressList = res;
-                // this.overtime = res.overtime;
+                setTimeout(()=>{
+                    this.disabled1 = false;
+                },2000)
 
             },
             

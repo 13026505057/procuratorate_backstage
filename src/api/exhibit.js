@@ -16,6 +16,6 @@ const exhibit = {
     // 添加案卷信息
     addExhibitData(data) {
         return request({ url: '/exhibit/exhibit/add', method: 'post', data })
-    }, 
+    },
 }
 export default exhibit

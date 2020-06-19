@@ -11,8 +11,8 @@ const asyncDataRoutes = [
             {   path: "filingCondition", component: 'views/caseManage/filingCondition/index',
                 name: "FilingCondition", meta:{ title:'符合归档条件案件' },
                 children: [
-                    {path: "uncompleted", component: 'views/caseManage/uncompleted', name: "UncompletedCase", meta:{ title:'未归档案件' }},
-                    {path: "completed", component: 'views/caseManage/completed', name: "CompletedCase", meta:{ title:'已归档案件' }},
+                    {path: "uncompleted", component: 'views/caseManage/filingCondition/uncompleted', name: "UncompletedCase", meta:{ title:'未归档案件' }},
+                    {path: "completed", component: 'views/caseManage/filingCondition/completed', name: "CompletedCase", meta:{ title:'已归档案件' }},
                 ]
             },
         ],

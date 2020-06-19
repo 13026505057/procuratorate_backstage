@@ -9,6 +9,12 @@ const cases = {
     getCornerMarkType(data) {
         return request({ url: '/cases/cases/getCountForType', method: 'post', data })
     },
+    getProgressCase(data) {
+        return request({ url: '/cases/cases/getCaseJinDuByPage', method: 'post', data })
+    },
+    getAwaitEvaluation (data) {
+        return request({ url: '/cases/cases/getNotConfirmByPage', method: 'post', data })
+    },
     // 未归档案件
     getDangAnWeiGui(data) {
         return request({ url: '/cases/cases/getDangAnWeiGui', method: 'post', data })

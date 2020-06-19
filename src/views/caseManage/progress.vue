@@ -1,41 +1,98 @@
 <template>
-    <div class="record-content">
+    <div class="progress-content">
         <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch"/>
         <div class="head-tab">
-            <el-tabs v-model="activeName" @tab-click="handleClickTab">
-                <el-tab-pane class="tab-pane-position" v-for="item in tableList" :key="item.case_type_id" :name="item.case_type_id">
+            <el-tabs v-model="activeName" @tab-click="handleClick">
+                <el-tab-pane class="tab-pane-position" v-for="tabItem in tabItems" :key="tabItem.case_type_id" :name="tabItem.case_type_id" >
                     <span slot="label">
-                        {{item.case_type_name}}
-                        <el-badge :value="item.contNum" v-if="item.contNum == '0'?false:true" class="item tab-badge-num"></el-badge>
+                        {{tabItem.case_type_name}}
+                        <el-badge :value="tabItem.contNum" v-if="tabItem.contNum == '0'?false:true" class="item tab-badge-num"></el-badge>
                     </span>
                     <div class="table-dataList" >
-                        <el-table height="560" :data="tableData" border style="width: 100%">
-                            <el-table-column align="center" type="index"></el-table-column>
-                            <el-table-column :prop="item.title" :label="item.dataIndex"
-                                v-for="item in columns" :key="item.itemId" align="center">
+                        <el-table
+                            height="560"
+                            :data="tableData"
+                            :header-cell-style="headerRowStyle"
+                            border
+                            style="width: 100%">
+                            <el-table-column
+                                align="center"
+                                type="index">
                             </el-table-column>
-                            <el-table-column align="center" label="操作">
+                            <el-table-column
+                                align="center"
+                                show-overflow-tooltip
+                                v-for="tableItem in tableItems"
+                                :prop="tableItem.prop"
+                                :label="tableItem.label"
+                                :key="tableItem.label"
+                                >
+                                <template slot-scope="{row}">
+                                    <span v-if="tableItem.tableId == 5">{{ row[tableItem.prop] | pigeonhole }}</span>
+                                    <span v-else-if="tableItem.tableId == 7">{{row[tableItem.prop]==0?'未成卷':'已成卷'}}</span>
+                                    <span v-else-if="tableItem.tableId == 10">
+
+                                    </span>
+                                    <span v-else>{{row[tableItem.prop]}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                width="190"
+                                align="center"
+                                label="操作">
                                 <template slot-scope="props">
-                                    <el-button @click="examineClick" class="highlight-btn" size="small">案件进度</el-button>
-                                    <el-button @click="detailsClick" class="ash-btn" size="small">未完成</el-button>
+                                    <el-button @click="examineClick(props.row)" class="highlight-btn" size="small">查看进度</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
                     </div>
                     <div class="pagination">
-                        <!-- 分页 -->
-                        <el-pagination small background
-                            style="text-align: center;margin-top: 20px;padding-bottom:20px;"
-                            @current-change="handleCurrentChange"
-                            :current-page.sync="pagination.pageNum"
-                            :page-size="pagination.pageSize"
+                        <el-pagination
+                            background
+                            @size-change="handleSizeChange1"
+                            @current-change="handleCurrentChange1"
+                            :current-page.sync="currentPage1"
+                            :page-size="pageSize"
                             layout="prev, pager, next, jumper"
-                            :total="pagination.total">
+                            :total="total1">
                         </el-pagination>
-                        <!-- <div @click="handleCurrentChange1" class="page-change">确定</div> -->
+                        <div @click="handleCurrentChange1" class="page-change">确定</div>
                     </div>
                 </el-tab-pane>
             </el-tabs>
+            <el-dialog
+                title="案件进度"
+                :visible.sync="dialogVisible"
+                width="34%"
+                center>
+                <span>
+                    <div class="step-flex" style="height: 400px;">
+                        <el-steps direction="vertical" :active="1"  style="height: 350px;">
+                            <el-step status="finish" title="" description="">
+                                <template slot="title">是否办结：已办结</template>
+                                <template slot="description">时间：{{progressList.overtime}}</template>
+                            </el-step>
+                            <el-step :status="progressList.anguan_confirm_time==null?'wait':'finish'" title="" description="">
+                                <template slot="title">案件审查：{{progressList.anguan_confirm_time==null?"未审查":"已审查"}}</template>
+                                <template v-if="progressList.anguan_confirm_time==null?false:true"  slot="description">时间：{{progressList.anguan_confirm_time}}</template>
+                            </el-step>
+                            <el-step :status="progressList.dangan_accept_time==null?'wait':'finish'" title="" description="">
+                                <template slot="title">档案接收：{{progressList.dangan_accept_time==null?"未接收":"已接收"}}</template>
+                                <template v-if="progressList.dangan_accept_time==null?false:true"  slot="description">时间：{{progressList.dangan_accept_time}}</template>
+                            </el-step>
+                            <el-step :status="progressList.stock_status=='none'?'wait':'finish'" title="" description="">
+                                <template slot="title">是否上架：{{progressList.stock_status=="none"?"未上架":"已上架"}}</template>
+                                <template v-if="progressList.stock_status=='none'?false:true"  slot="description">时间：{{progressList.gdrq}}</template>
+                            </el-step>
+                        </el-steps>
+                    </div>
+                </span>
+                <span slot="footer" class="dialog-footer">
+                    <!-- <el-button type="primary" @click="dialogVisible = false">调 取</el-button> -->
+                    <el-button type="primary" @click="dialogVisible = false">关 闭</el-button>
+                </span>
+            </el-dialog>
+           
         </div>
     </div>
 </template>
@@ -46,118 +103,240 @@
         components: { Search },
         data()  {
             return  {
-                pagination: {
-                    pageNum: 1,
-                    pageSize: 10,
-                },
                 addSearch: [
                     { dom: 'undertaker', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
                 ],
-                selectOption: {},
+                selectOption:{},
                 activeName: "0",
-                tableList:[],
+                tabItems:[],
                 tableData:[],
-                columns: [
-                    // { title: 'project_patient_name', dataIndex: '患者姓名', itemId: 1, fixed: true },
-                    // { title: 'out_trade_no', dataIndex: '订单编号', itemId: 10 },
-                    // { title: 'out_trade_no_dd', dataIndex: '订单流水编号', itemId: 11 },
-                    // { title: 'project_patient_card_id', dataIndex: '患者身份证号', itemId: 2 },
-                    // { title: 'patient_type_name', dataIndex: '与本人关系', itemId: 3 },
-                    // { title: 'patient_tel', dataIndex: '联系方式', itemId: 4 },
-                    // { title: 'project_name', dataIndex: '项目名称', itemId: 5 },
-                    // { title: 'project_address', dataIndex: '地址', itemId: 6 },
-                    // { title: 'project_menu_name', dataIndex: '套餐名称', itemId: 7 },
+                badgeList:[],
+                tableItems:[
+                    {label: "统一受案号", prop: "case_bh", tableId:1},
+                    {label: "案件名称", prop: "case_name", tableId:2},
+                    {label: "案件类型", prop: "case_type_name", tableId:3},
+                    {label: "案件描述", prop: "case_desc", tableId:4},
+                    {label: "是否归档", prop: "time_status", tableId:5},
+                    {label: "承办人", prop: "case_take_user_name", tableId:6},
+                    {label: "是否成卷", prop: "chengjuan", tableId:7},
+                    {label: "总案卷数", prop: "total_quantity", tableId:8},
+                    {label: "在库案卷数", prop: "in_quantity", tableId:9},
+                    {label: "待入库案卷数", prop: "", tableId:10},
+                    // total_quantity-in_quantity
+
                 ],
+                dialogVisible:false,
+                currentPage1:1,
+                pageSize:10,
+                total1:0,
+                stepItems:[{
+                    title:"是否办结：已办结",
+                    description: "时间：overtime"
+                }],
+                 headStyle:{
+                    backgroundColor: '#eaf5ff',
+                    borderTop: '1px solid #97cfff',
+                    borderBottom: '1px solid #97cfff',
+                    fontSize: '18px',
+                    color: '#2c2c2c'
+                },
+                progressList:{},
+                seatchData: {
+                    timeYear:'',
+                    case_name:'',
+                    case_bh:'', //统一受案号
+                    case_take_user_name:'',
+
+                }
+
             }
            
         },
+        filters:{
+            pigeonhole(status){
+                const statusList = {
+                    in:"已归档",
+                    in_jj_out:"已归档（交卷超期）",
+                    in_rk_out:"已归档（入库超期）",
+                    in_all_out:"已归档（双超期）",
+                    none:"未归档",
+                    none_jj_out:"未归档（交卷超期）",
+                    none_rk_out:"未归档（入库超期）",
+                    none_all_out:"未归档（双超期）",
+                }
+                return statusList[status]
+            }
+        },
         mounted(){
             this.getCaseType();
+            // this.getCornerMark();
         },
         methods: {
-            // 分页
-            handleCurrentChange(val) {
-                this.pagination['pageNum'] = val;
-                this.getTableList(this.pagination)
-            },
-            handleClickTab(activeCaseId){
-                console.log(activeCaseId)
-            },
-            // 类型分类
+            // 分类&&角标
             getCaseType(){
                 this.$api.getCaseType().then(async (res)=>{
-                    this.tableList = res.data.list;
-                    // 角标
-                    const resultData = await this.$api.getCornerMarkType();
+                    this.tabItems = res.data.list;
+                    this.activeName = res.data.list[0].case_type_id;
+                    this.getDataList();
+                    let dataInfo = { ...this.seatchData }
+                    const resultData = await this.$api.getCornerMarkType(dataInfo);
+                    this.badgeList = resultData.data;
                     Object.keys(resultData.data).map(item=>{
                         res.data.list.map((itemChild,index)=>{
+                            // console.log(item,"_"+itemChild.case_type_id)
                             if("_"+itemChild.case_type_id == item) {
                                 itemChild.contNum = resultData.data[item]
-                                this.$set(this.tableList[index],index,itemChild)
+                                this.$set(this.tabItems[index],index,itemChild)
                             }
                         })
                     })
-                    // this.getTableList(res.data.list[0].case_type_id)
                 })
+                
             },
+            
             // 默认数据列表
-            async getTableList(dataInfo){
-                this.loading = true;
-                let getData = { ...dataInfo }
-                const resultData = await this.$api.getProgressCase(getData);
-                const pagination = { ...this.pagination };
-                this.tableData = resultData.data.list;
-                pagination.total = returnData.data.total;
+            async getDataList(){
+                console.log({...this.seatchData})
+                // let case_name = '';
+                // if(this.seatchData.name && this.seatchData.fzname)
+                // case_name = this.seatchData.name
+                // case_name = this.seatchData.fzname;
+                let dataInfo = { ...this.seatchData }
+                dataInfo ['pageNum'] = this.currentPage1;
+                dataInfo ['pageSize'] = this.pageSize;
+                dataInfo ['case_type_id'] = this.activeName;
+                
+                const resultData = await this.$api.getProgressCase(dataInfo);
+                if(resultData && resultData.code == '0') {
+                    this.tableData = resultData.data.list,
+                    this.total1 = resultData.data.total
+                }
             },
             comfirmSearch(data){
-                console.log(data,11111)
+                this.seatchData = {
+                    timeYear:data.year,
+                    case_name:data.name,
+                    case_bh:data.num, //统一受案号
+                    case_take_user_name:this.addSearch[0].value
+                }
+                console.log(this.seatchData)
+                this.getDataList();
+                this.getCaseType();
             },
+            headerRowStyle({row, rowIndex}){ 
+                return this.headStyle
+            },
+            // 标签页
+            handleClick(tab, event) {
+                console.log(tab, event);
+                this.getDataList();
+            },
+            // 页面分页
+            handleSizeChange1(val) {
+                console.log(`每页 ${val} 条`);
+                this.getDataList();
+            },
+            handleCurrentChange1(val) {
+                console.log(`当前页: ${val}`);
+                this.getDataList();
+            },
+            
+            // 小弹窗
+            examineClick(res){ 
+                console.log(res)
+                this.dialogVisible = true;
+                this.progressList = res;
+                // this.overtime = res.overtime;
+
+            },
+            
         },
     }
 </script>
-<style lang="scss" scope>
-    .record-content{
+<style lang="scss">
+    $gradual-color: linear-gradient(to bottom right , #6db4ff, #47ccff);
+    .progress-content{
         margin: 20px;
-    }
-    .head-tab{
-        margin-top: 30px;
-        .table-dataList{
-            height: 560px;
-            // overflow-y: auto;
-            .highlight-btn,.ash-btn{
-                font-size: 14px;
+        .search-box{
+            border: 2px solid #97cfff;
+            height: 82px;
+            background-color: #eaf5ff;
+            display: flex;
+            .search-inp,button {
+                margin: 23px 30px;
+            }
+            .search-inp{
+                width: 270px;
+            }
+            input{
+                border-radius: 8px;
+                border: 1px solid #6db4ff;
+            }
+            button{
+                width:94px;
+                height: 38px;
+                background-image: $gradual-color;
                 color: #ffffff;
                 border: none;
-            }
-            .highlight-btn{
-                background-color: #6cb5ff;
-            }
-            .ash-btn{
-                background-color: #d1d1d1;
+                font-size: 19px;
+                border-radius: 8px;
             }
         }
-        .pagination{
-            margin-top: 40px;
-            display: flex;
-            justify-content: center;
-            .page-change{
-                height: 28px;
-                line-height: 28px;
-                font-size: 13px;
-                margin: 2px 5px;
-                padding: 0px 6px;
-                // background-image: $gradual-color;
-                color: #ffffff;
-                border-radius: 4px;
-                cursor: pointer;
+        .head-tab{
+            margin-top: 30px;
+            .table-dataList{
+                height: 560px;
+                // overflow-y: auto;
+                .highlight-btn,.ash-btn{
+                    font-size: 14px;
+                    color: #ffffff;
+                    border: none;
+                }
+                .highlight-btn{
+                    background-color: #6cb5ff;
+                    
+                }
+                .ash-btn{
+                    background-color: #d1d1d1;
+                }
             }
-        }
-        .tab-pane-position {
-            position: relative;
-        }
-        .tab-badge-num{
-            position: absolute;
-            top: -2px;
+            .pagination{
+                margin-top: 20px;
+                display: flex;
+                justify-content: center;
+                .page-change{
+                    height: 28px;
+                    line-height: 28px;
+                    font-size: 13px;
+                    margin: 2px 5px;
+                    padding: 0px 6px;
+                    background-image: $gradual-color;
+                    color: #ffffff;
+                    border-radius: 4px;
+                    cursor: pointer;
+                }
+            }
+            .tab-pane-position {
+                position: relative;
+            }
+            .tab-badge-num{
+                position: absolute;
+                top: -2px;
+            }
+            .customClass{
+                // background-color: #47ccff;
+            }
+            .step-flex{
+                display: flex;
+                justify-content: center;
+                overflow-y: auto;
+            }
+            .dialog-footer button{
+                margin: 0 60px;
+            }
         }
     }
+    
+ 
+    
 </style>

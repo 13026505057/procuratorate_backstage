@@ -6,6 +6,7 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     org_name: '',
+    org_id: '',
     user_true_name: '',
     roles: [],
   }
@@ -21,6 +22,9 @@ const mutations = {
   },
   SET_ORG_NAME: (state, org_name) => {
     state.org_name = org_name
+  },
+  SET_ORG_ID: (state, org_id) => {
+    state.org_id = org_id
   },
   SET_USER_NAME: (state, user_true_name) => {
     state.user_true_name = user_true_name
@@ -50,7 +54,7 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { org_name, user_true_name } = data[0]
+        const { org_name, user_true_name, org_id } = data[0]
         const roles = new Array(data[0].username)
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
@@ -60,6 +64,7 @@ const actions = {
         commit('SET_ROLES', roles)
         commit('SET_ORG_NAME', org_name)
         commit('SET_USER_NAME', user_true_name)
+        commit('SET_ORG_ID', org_id)
         resolve(roles)
       }).catch(error => {
         reject(error)

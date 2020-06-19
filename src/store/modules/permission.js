@@ -13,6 +13,7 @@ import RolePermission from '@/views/permission/role'
 // 档案Routes
 import ShallCompleted from '@/views/archivesManage/shallCompleted/index'
 import UncompletedArchives from '@/views/archivesManage/shallCompleted/uncompleted'
+import CompletedArchives from '@/views/archivesManage/shallCompleted/completed'
 
 window.pageList = {
   Page404: Page404,
@@ -24,6 +25,7 @@ window.pageList = {
   // 档案Routes
   ShallCompleted: ShallCompleted,
   UncompletedArchives: UncompletedArchives,
+  CompletedArchives: CompletedArchives,
 }
 
 export function filterAsyncRoutes(routes,status) {

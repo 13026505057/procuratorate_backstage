@@ -6,6 +6,8 @@ import asyncDataRoutes from './routes'
 import Layout from '@/layout'
 import Page404 from '@/views/error-page/404'
 
+
+import WaitAssessment from '@/views/caseManage/waitAssessment'
 import Progress from '@/views/caseManage/progress'
 import AddPermission from '@/views/permission/add'
 import RolePermission from '@/views/permission/role'
@@ -17,6 +19,7 @@ import UncompletedArchives from '@/views/archivesManage/shallCompleted/uncomplet
 window.pageList = {
   Page404: Page404,
 
+  WaitAssessment: WaitAssessment,
   Progress: Progress,
   AddPermission: AddPermission, 
   RolePermission: RolePermission,

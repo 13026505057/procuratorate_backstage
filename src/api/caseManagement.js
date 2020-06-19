@@ -8,6 +8,12 @@ const caseManagement = {
     getCornerMarkType(data) {
         return request({ url: '/cases/cases/getCountForType', method: 'post', data })
     },
+    getProgressCase(data) {
+        return request({ url: '/cases/cases/getCaseJinDuByPage', method: 'post', data })
+    },
+    getAwaitEvaluation (data) {
+        return request({ url: '/cases/cases/getNotConfirmByPage', method: 'post', data })
+    },
     
 }
 export default caseManagement

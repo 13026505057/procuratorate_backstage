@@ -39,7 +39,25 @@ const cases = {
     getUndocumented(data) {
         return request({ url: '/cases/cases/getConfirmedNoneByPage', method: 'post', data })
     },
-    
-    
+
+    // 档案管理
+    // 档案未通过审查案件
+    caseRefuseHistoryGetByPage(data) {
+        return request({ url: '/caseRefuseHistoryGetByPage', method: 'post', data })
+    },
+    // 档案通过审查操作
+    confirmNone(data) {
+        return request({ url: '/cases/cases/confirmNone', method: 'post', data })
+    },
+    // 档案未通过审查案件
+    refuseConfirmNone(data) {
+        return request({ url: '/cases/cases/refuseConfirmNone', method: 'post', data })
+    },
+
+    // 分析评估
+    // 各业务类型符合归档条件
+    getConfirmedNotInByPage(data) {
+        return request({ url: '/cases/cases/getConfirmedNotInByPage', method: 'post', data })
+    },
 }
 export default cases

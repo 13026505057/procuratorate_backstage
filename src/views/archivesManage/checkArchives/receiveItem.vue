@@ -80,8 +80,8 @@
                 </el-select>
             </div>
             <div class="checkboxSelect">
-                <el-checkbox v-model="submitDataInfo.print_code">备选项</el-checkbox>
-                <el-checkbox v-model="submitDataInfo.print_accept">备选项</el-checkbox>
+                <el-checkbox v-model="submitDataInfo.print_code">同时打印案件条形码</el-checkbox>
+                <el-checkbox v-model="submitDataInfo.print_accept">同时打印收卷回执单</el-checkbox>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="showModel.dialogReceivedVisible = false">取 消</el-button>

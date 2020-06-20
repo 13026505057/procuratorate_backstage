@@ -69,11 +69,12 @@ export default {
                 if(this.selectOrgId.length>0) org_id = this.selectOrgId[this.selectOrgId.length-1]
                     else org_id = this.org_id
                 dataInfo.org_id = org_id
-                if(dataInfo.timeData && dataInfo.timeData.length>0) {
-                    dataInfo.begin_time = dataInfo.timeData[0]
-                    dataInfo.end_time = dataInfo.timeData[1]
-                } else dataInfo.begin_time = dataInfo.end_time = ''
-                
+                if(item.dom == 'timeData') {
+                    if(dataInfo.timeData && dataInfo.timeData.length>0) {
+                        dataInfo.begin_time = dataInfo.timeData[0]
+                        dataInfo.end_time = dataInfo.timeData[1]
+                    } else dataInfo.begin_time = dataInfo.end_time = ''
+                }
                 delete dataInfo.timeData
             })
             this.$emit('comfirmSearch',dataInfo)

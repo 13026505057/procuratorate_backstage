@@ -31,6 +31,13 @@ import PutStorage from '@/views/archivesManage/putStorage/index'
 import UncompletedPut from '@/views/archivesManage/putStorage/uncompleted'
 import CompletedPut from '@/views/archivesManage/putStorage/completed'
 import Temporary from '@/views/archivesManage/putStorage/temporary'
+// 分析评估
+import QualifiedType from '@/views/appraise/qualifiedType'
+import CompletedType from '@/views/appraise/completedType'
+import UncompletedType from '@/views/appraise/uncompletedType'
+import QualifiedHandler from '@/views/appraise/qualifiedHandler'
+import CompletedHandler from '@/views/appraise/completedHandler'
+import UncompletedHandler from '@/views/appraise/uncompletedHandler'
 
 window.pageList = {
   Page404: Page404,
@@ -56,7 +63,15 @@ window.pageList = {
   PutStorage: PutStorage,
   UncompletedPut: UncompletedPut,
   CompletedPut: CompletedPut,
-  Temporary: Temporary
+  Temporary: Temporary,
+
+  // 分析评估
+  QualifiedType: QualifiedType,
+  CompletedType: CompletedType,
+  UncompletedType: UncompletedType,
+  QualifiedHandler: QualifiedHandler,
+  CompletedHandler: CompletedHandler,
+  UncompletedHandler: UncompletedHandler,
 }
 
 export function filterAsyncRoutes(routes,status) {

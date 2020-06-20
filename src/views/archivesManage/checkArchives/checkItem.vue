@@ -9,9 +9,8 @@
                         <el-badge :value="item.contNum" v-if="item.contNum == '0'?false:true" class="item tab-badge-num"></el-badge>
                     </span>
                     <div class="table-dataList" >
-                        <el-table height="500" :data="showModel.tableData" border style="width: 100%" @selection-change="handleSelectionChange">
+                        <el-table height="500" :data="showModel.tableData" border style="width: 100%">
                             <el-table-column align="center" type="index"></el-table-column>
-                            <el-table-column type="selection" width="55"></el-table-column>
                             <el-table-column :label="item.dataIndex"
                                 v-for="item in columns" :key="item.itemId" align="center">
                                 <template slot-scope="{row}">
@@ -22,7 +21,7 @@
                             <el-table-column align="center" label="操作" width="250">
                                 <template slot-scope="{row}">
                                     <el-button @click="showDialogPanel(row.exhibits)" class="highlight-btn" size="small">已有案卷</el-button>
-                                    <el-button @click="receivedItem(row.case_id)" class="highlight-btn" size="small">审核结果</el-button>
+                                    <el-button @click="resultItem(row.case_id)" class="highlight-btn" size="small">审查结果</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -61,23 +60,31 @@
             <DialogPagin ref="dialogTablePagin" :tableData="showModel.gridData_temporary" @dialogTablePagin="dialogTablePagin"/>
         </el-dialog>
         <!-- 接收案卷 -->
-        <el-dialog title="档案检查" :visible.sync="showModel.dialogReceivedVisible">
-            <div v-for="(item,index) in eachDataInfoList" :key="index"
-                style="display:table;width: 100%;margin-bottom: 10px">
+        <el-dialog title="档案检查" :visible.sync="showModel.dialogReceivedVisible" @close="resetSubmitInfo">
+            <div style="display:table;width: 100%;margin-bottom: 10px">
                 <span style="display:table-cell;width: 25%;text-align: right;padding-right: 20px">
-                    {{ item.captionTitle }}：
+                    检查结果：
                 </span>
-                
-                <el-select v-model="submitDataInfo[item.dom]" :placeholder="item.placeholder" v-if="item.itemId == 1">
+                <el-select v-model="submitDataInfoType" placeholder="请选择检查结果">
                     <el-option v-for="itemChild in showModel.selectOption_type" :key="itemChild.type_item" 
                         :label="itemChild.type_name" :value="itemChild.type_value"></el-option>
                 </el-select>
-                <el-input v-model="submitDataInfo[item.dom]" v-if="submitDataInfo[item.dom]"
-                    :placeholder="item.placeholder" style="width: auto"></el-input>
+            </div>
+            <div  style="display:table;width: 100%;margin-bottom: 10px" v-if="submitDataInfoType=='disagree'">
+                <span style="display:table-cell;width: 25%;text-align: right;padding-right: 20px">
+                    退查原因：
+                </span>
+                <el-input v-model="submitDataInfo['mark']" clearable placeholder="请填写退查原因" style="width: auto"></el-input>
+            </div>
+            <div style="display:table;width: 100%;margin-bottom: 10px" v-else-if="submitDataInfoType=='flaw'">
+                <span style="display:table-cell;width: 25%;text-align: right;padding-right: 20px">
+                    标识原因：
+                </span>
+                <el-input v-model="submitDataInfo['mark']" clearable placeholder="请填写标识原因" style="width: auto"></el-input>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="showModel.dialogReceivedVisible = false">取 消</el-button>
-                <el-button type="primary" @click="confirmBtn">确 定</el-button>
+                <el-button type="primary" @click="confirmBtn(submitDataInfoCaseId)">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -145,7 +152,7 @@
                     selectOption_type: [
                         { type_value: 'agree', type_name: '通过', type_id: 1 },
                         { type_value: 'disagree', type_name: '审核不通过', type_id: 2 },
-                        { type_value: 'ju', type_name: '文书', type_id: 3 },
+                        { type_value: 'flaw', type_name: '不成卷(瑕疵卷)', type_id: 3 },
                     ],
                 },
                 // table表头
@@ -160,20 +167,11 @@
                     { title: 'in_quantity', dataIndex: '在库案卷数', itemId: 6 },
                     { title: 'wait_quantity', dataIndex: '待入库案卷数', itemId: 7 },
                 ],
+                submitDataInfoType: '',
+                submitDataInfoCaseId: '',
                 submitDataInfo: {
-                    case_id: '',
-                    nd: '',
-                    exhibit_type: '',
-                    bgqx: '',
-                    dh: '',
-                    jh: '',
-                    bgr: '',
-                    print_code: 0,
-                    print_accept: 0
+                    mark: '',
                 },
-                eachDataInfoList: [
-                    { captionTitle: '检查结果', placeholder: '请选择检查结果', dom: 'dh', itemId: 1 },
-                ]
             }
            
         },
@@ -194,10 +192,6 @@
             handleClickTab(e){
                 this.pagination.case_type_id = e.paneName
                 this.getTableList(this.pagination)
-            },
-            // 选中
-            handleSelectionChange(val){
-                console.log(val)
             },
             // 类型分类
             getCaseType(){
@@ -263,28 +257,46 @@
                 }
             },
             // 接收案卷信息
-            receivedItem(case_id){
+            resultItem(case_id){
                 this.showModel.dialogReceivedVisible = true;
-                this.resetSubmitInfo();
-                this.submitDataInfo.case_id = case_id;
+                this.submitDataInfoCaseId = case_id
             },
             //重置表单
             resetSubmitInfo(){
                 for( let key in this.submitDataInfo){ this.submitDataInfo[key] = '' }
-                this.submitDataInfo.nd = new Date().getFullYear()
-                this.submitDataInfo.exhibit_type = this.showModel.selectOption_type[0].type_value;
-                this.submitDataInfo.bgqx = this.showModel.selectOption_time[0].time_value;
+                this.showModel.dialogReceivedVisible = false;
+                this.submitDataInfoType = '';
             },
             // 确认提交
-            async confirmBtn(){
-                ['print_code','print_accept'].map(item=> this.submitDataInfo[item] = Number(this.submitDataInfo[item]))
-                let resultData = await this.$api.addExhibitData(this.submitDataInfo)
-                if(resultData && resultData.code=='0'){
-                    this.$message.success('添加成功')
-                    this.getCaseType()
-                    this.resetSubmitInfo()
-                }
-            }
+            confirmBtn(case_ids){
+                const typeFun = [
+                    { type: 'agree', fun: 'agreeCheckFun' },
+                    { type: 'disagree', fun: 'disagreeCheckFun' },
+                    { type: 'flaw', fun: 'flawCheckFun' },
+                ]
+                typeFun.map(item=>{
+                    if(this.submitDataInfoType == item.type) {
+                        this[item.fun](case_ids);
+                        this.resetSubmitInfo();
+                    }
+                })
+            },
+            // 审查通过
+            async agreeCheckFun(case_ids){
+                let resultData = await this.$api.confirmNone({case_ids})
+                if(resultData && resultData.code=='0') this.$message.success('操作成功')
+            },
+            // 审查不通过
+            async disagreeCheckFun(case_ids){
+                const dataInfo = { case_ids,mark: this.submitDataInfo.mark }
+                let resultData = await this.$api.refuseConfirmNone(dataInfo)
+                if(resultData && resultData.code=='0') this.$message.success('操作成功')
+            },
+            // 不成卷(瑕疵卷)
+            async flawCheckFun(case_ids){
+                let resultData = await this.$api.confirmNone({case_ids})
+                if(resultData && resultData.code=='0') this.$message.success('操作成功')
+            },
         },
     }
 </script>

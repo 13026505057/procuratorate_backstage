@@ -268,7 +268,9 @@
 
     }
 </script>
-<style lang="scss">
+
+
+<style lang="scss" scoped>
     $gradual-color: linear-gradient(to bottom right , #6db4ff, #47ccff);
     .record-content{
         margin: 20px;

@@ -115,16 +115,7 @@
                             </el-table-column>
                         </el-table>
                     </div>
-                    <div class="pagination">
-                        <el-pagination
-                            background
-                            @current-change="handleCurrentChange2"
-                            :current-page.sync="currentPage2"
-                            :page-size="pageSize"
-                            layout="prev, pager, next, jumper"
-                            :total="total2">
-                        </el-pagination>
-                    </div>
+                    <DialogPagin ref="dialogTablePagin" :tableData="tableData1_temporary" @dialogTablePagin="dialogTablePagin"/>
                 </span>
                 <!-- <span slot="footer" class="dialog-footer">
                     <el-button type="primary" @click="dialogVisible = false">调 取</el-button>
@@ -136,11 +127,12 @@
 </template>
 <script>
  import Search from '@/components/Search'
+ import DialogPagin from '@/components/DialogPagin'
     import { mapGetters } from 'vuex'
     import { setTimeout } from 'timers';
 
     export default {
-        components: { Search },
+        components: { Search,DialogPagin },
         computed:{
             ...mapGetters(['org_id'])
         },
@@ -201,7 +193,7 @@
                 total2:1,
                 currentPage2:1,
                 tableData1:[],
-                tableData1_pable: [],
+                tableData1_temporary: [],
                 disabled1:false,
                 disabled2:false,
                 disabled3:false,
@@ -251,7 +243,11 @@
                 })
                 
             },
-            
+            // DialogPagin
+            dialogTablePagin(data){
+                console.log(data)
+                this.tableData1 = data
+            },
             // 默认数据列表
             async getDataList(seatchData){
                 let dataInfo = { ...seatchData }
@@ -309,20 +305,14 @@
                 console.log(res)
                 this.disabled1 = true;
                 this.dialogVisibleDetails = true;
-                this.tableData1_pable = res.exhibits;
-                this.tableData1 = this.handlePage(res.exhibits,1);
-                this.total2 = res.exhibits.length
+                this.tableData1_temporary = res.exhibits
+                this.$nextTick(() => {
+                    this.$refs.dialogTablePagin.dialogTablePagin(1)
+                })
                 setTimeout(()=>{
                     this.disabled1 = false;
                 },2000)
             },
-            handlePage(arr,page){
-                return arr.slice((page-1)*this.pageSize,page*this.pageSize)
-            },
-            // 弹窗分页
-            handleCurrentChange2(val){
-                this.tableData1 = this.handlePage(this.tableData1_pable,val);
-            }
             
         },
     }

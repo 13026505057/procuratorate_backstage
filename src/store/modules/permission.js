@@ -6,6 +6,8 @@ import asyncDataRoutes from './routes'
 import Layout from '@/layout'
 import Page404 from '@/views/error-page/404'
 
+
+import Unit from '@/views/setting/unit'
 import FilingCondition from '@/views/caseManage/filingCondition/index'
 import CompletedCase from '@/views/caseManage/filingCondition/completed'
 import UncompletedCase from '@/views/caseManage/filingCondition/uncompleted'
@@ -35,6 +37,7 @@ import Temporary from '@/views/archivesManage/putStorage/temporary'
 window.pageList = {
   Page404: Page404,
 
+  Unit:Unit,
   FilingCondition: FilingCondition,
   CompletedCase: CompletedCase,
   UncompletedCase: UncompletedCase,

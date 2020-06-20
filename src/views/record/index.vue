@@ -14,7 +14,6 @@
                     </span>
                     <div class="table-dataList" >
                         <el-table
-                            height="560"
                             :data="tableData"
                             :header-cell-style="headerRowStyle"
                             border

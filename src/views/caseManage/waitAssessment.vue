@@ -11,7 +11,6 @@
                     <div class="table-dataList" >
                         <el-table
                             ref="multipleTable"
-                            height="560"
                             :data="tableData"
                             :header-cell-style="headerRowStyle"
                             border
@@ -303,7 +302,6 @@
         .head-tab{
             margin-top: 30px;
             .table-dataList{
-                 
                 .highlight-btn,.ash-btn{
                     font-size: 14px;
                     color: #ffffff;

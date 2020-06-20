@@ -1,13 +1,12 @@
 <template>
-    <div class="unit-content">
+    <div class="overall-content unit-content">
         <div class="search-box">
             <div>单位列表</div>
-            <el-button @click="addUnitClick">新增单位</el-button>
+            <el-button @click="addUnitClick('add','')">新增单位</el-button>
         </div>
         <div class="table-list">
             <div class="table-dataList" >
                 <el-table
-                    height="560"
                     :data="tableData"
                     :header-cell-style="headerRowStyle"
                     border
@@ -27,8 +26,8 @@
                     <el-table-column
                         align="center"
                         label="操作">
-                        <template slot-scope="props">
-                            <el-button @click="updateClick" class="ash-btn" size="small">修改</el-button>
+                        <template slot-scope="{ row }">
+                            <el-button @click="addUnitClick('update',row)" class="ash-btn" size="small">修改</el-button>
                             <el-button @click="examineClick" class="highlight-btn" size="small">删除</el-button>
                         </template>
                     </el-table-column>
@@ -52,15 +51,22 @@
                 <span>
                     <el-form ref="form" :model="unit_form" label-width="80px">
                         <el-form-item label="单位名称">
-                            <el-input v-model="unit_form.name"></el-input>
+                            <el-input v-model="unit_form.org_name"></el-input>
                         </el-form-item>
                         <el-form-item label="单位编号">
-                            <el-input v-model="unit_form.name"></el-input>
+                            <el-input v-model="unit_form.org_code"></el-input>
                         </el-form-item>
-                    </el-form>
+                    </el-form>  
                 </span>
                 <span slot="footer" class="dialog-footer">
-                    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                    <el-popconfirm
+                        :title="popconfirmTitle"
+                        @onConfirm="confirmClick"
+                        >
+                        <!-- <el-button>删除</el-button> -->
+                        <el-button slot="reference" type="primary" @click="confirmAddUnit">确 定</el-button>
+                    </el-popconfirm>
+                    <!-- <el-button type="primary" @click="confirmAddUnit">确 定</el-button> -->
                     <el-button type="primary" @click="dialogVisible = false">关 闭</el-button>
                 </span>
             </el-dialog>
@@ -73,7 +79,6 @@
         
         data()  {
             return  {
-                
                 tableItems:[{
                         label: "单位名称",
                         prop: "org_name"
@@ -96,8 +101,12 @@
                 dialogVisible:false,
                 dialogTitle:'',
                 unit_form:{
-
-                }
+                    org_name: '',
+                    org_code:''
+                },
+                type:'',
+                org_id:'',
+                popconfirmTitle:'',
 
             }
         },
@@ -123,13 +132,52 @@
                 this.getDataList();
             },
             // 新增
-            addUnitClick(){
+            addUnitClick(type,row_org_id){
                 this.dialogVisible = true;
-                this.dialogTitle = "新增单位"
+                this.type = type;
+                this.org_id = row_org_id.org_id;
+                if(type == "add"){
+                    this.dialogTitle = "新增单位"
+                }else{
+                    this.dialogTitle = "修改单位"
+                    for(let key in row_org_id){ this.unit_form[key] = row_org_id[key] }
+                    this.unit_form.org_name = row_org_id.org_name;
+                    this.unit_form.org_code = row_org_id.org_code;
+                }
             },
-            // 修改
-            updateClick(){
-                // dialogVisible
+            // 新增&&修改
+            async confirmAddUnit(){
+                if(this.type == "add"){
+                    this.popconfirmTitle = "确定新增吗"
+                }else{
+                    this.popconfirmTitle = "确定修改吗"
+                }
+                
+            },
+            async confirmClick(){
+                const dataInfo = { ...this.unit_form }
+                 if(this.type == "add"){
+                    const resultData = await this.$api.addUnit(dataInfo);
+                    if(resultData&&resultData.code == 0){
+                        this.$message({
+                            message: '新增成功',
+                            type: 'success'
+                        });
+                        this.dialogVisible = false;
+                    }
+                }else{
+                    dataInfo['org_id'] = this.org_id;
+                    console.log(dataInfo)
+                    const resultData = await this.$api.updateUnit(dataInfo);
+                    if(resultData&&resultData.code == 0){
+                        this.$message({
+                            message: '修改成功',
+                            type: 'success'
+                        });
+                        this.dialogVisible = false;
+                    }
+                    
+                }
             },
             // 小弹窗
             examineClick(){
@@ -143,6 +191,7 @@
     $gradual-color: linear-gradient(to bottom right , #6db4ff, #47ccff);
     .unit-content{
         margin: 20px;
+        
         .search-box{
             border: 2px solid #97cfff;
             height: 70px;
@@ -183,7 +232,7 @@
             }
             
             .pagination{
-                margin-top: 40px;
+                margin-top: 30px;
                 display: flex;
                 justify-content: center;
             }

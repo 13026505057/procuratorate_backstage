@@ -29,6 +29,14 @@ export default {
   width: 100%;
   position: relative;
   overflow: hidden;
+  >div{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0px;
+    bottom: 0px;
+    overflow-y: auto;
+  }
 }
 
 .fixed-header+.app-main {

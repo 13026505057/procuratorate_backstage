@@ -75,7 +75,6 @@
                             layout="prev, pager, next, jumper"
                             :total="total1">
                         </el-pagination>
-                        <div @click="handleCurrentChange1" class="page-change">确定</div>
                     </div>
                 </el-tab-pane>
             </el-tabs>

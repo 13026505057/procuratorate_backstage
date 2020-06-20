@@ -352,8 +352,7 @@
         .head-tab{
             margin-top: 30px;
             .table-dataList{
-                height: 560px;
-                // overflow-y: auto;
+                 
                 .highlight-btn,.ash-btn{
                     font-size: 14px;
                     color: #ffffff;

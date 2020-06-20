@@ -89,27 +89,22 @@ const asyncDataRoutes = [
     {
         component: 'layout',
         meta: {title: "个人相关", icon: "lock"},
-        name: "ByPersonal_F", 
+        name: "ByPersonal_F",
         path: "byPersonal_F",
-        redirect: "/byPersonal",
+        redirect: "/archivesSituation",
         children: [
-            {path: "byPersonal", component: 'views/byPersonal/index', name: "ByPersonal", meta:{ title:'个人相关' }},
-        ],
-    },
-    {
-        component: 'layout',
-        meta: {title: "案件归档情况", icon: "lock"},
-        name: "ArchivesSituation", 
-        path: "/archivesSituation",
-        redirect: "/archivesSituation/caseNum",
-        children: [
-            {path: "caseNum", component: 'views/archivesSituation/caseNum', name: "CaseNum", meta:{ title:'受理案件数量' }},
-            {path: "caseShallCompleted", component: 'views/archivesSituation/caseShallCompleted', name: "CaseShallCompleted", meta:{ title:'应归档案件' }},
-            {path: "waitAssessment", component: 'views/archivesSituation/waitAssessment', name: "WaitAssessmentArchives", meta:{ title:'等待质量评查' }},
-            {path: "unTransfer", component: 'views/archivesSituation/unTransfer', name: "UnTransfer", meta:{ title:'未移交归档案件' }},
-            {path: "giveBack", component: 'views/archivesSituation/giveBack', name: "GiveBack", meta:{ title:'退回整改案件' }},
-            {path: "notInWarehouse", component: 'views/archivesSituation/notInWarehouse', name: "NotInWarehouse", meta:{ title:'未上架案件' }},
-            {path: "inWarehouse", component: 'views/archivesSituation/inWarehouse', name: "InWarehouseArchives", meta:{ title:'已归档上架案件' }},
+            {   path: "archivesSituation", component: 'views/byPersonal/archivesSituation/index', 
+                name: "ArchivesSituation", meta:{ title:'案件归档情况' },
+                children: [
+                    {path: "caseNum", component: 'views/byPersonal/archivesSituation/caseNum', name: "CaseNum", meta:{ title:'受理案件数量' }},
+                    {path: "caseShallCompleted", component: 'views/byPersonal/archivesSituation/caseShallCompleted', name: "CaseShallCompleted", meta:{ title:'应归档案件' }},
+                    {path: "waitAssessment", component: 'views/byPersonal/archivesSituation/waitAssessment', name: "WaitAssessmentArchives", meta:{ title:'等待质量评查' }},
+                    {path: "unTransfer", component: 'views/byPersonal/archivesSituation/unTransfer', name: "UnTransfer", meta:{ title:'未移交归档案件' }},
+                    {path: "giveBack", component: 'views/byPersonal/archivesSituation/giveBack', name: "GiveBack", meta:{ title:'退回整改案件' }},
+                    {path: "notInWarehouse", component: 'views/byPersonal/archivesSituation/notInWarehouse', name: "NotInWarehouse", meta:{ title:'未上架案件' }},
+                    {path: "inWarehouse", component: 'views/byPersonal/archivesSituation/inWarehouse', name: "InWarehouseArchives", meta:{ title:'已归档上架案件' }},
+                ]
+            },
         ],
     },
     {

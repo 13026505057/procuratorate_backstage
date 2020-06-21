@@ -189,6 +189,7 @@ export default {
 
       for (const route of routes) {
         const routePath = path.resolve(basePath, route.path)
+        
 
         // recursive child routes
         if (route.children) {

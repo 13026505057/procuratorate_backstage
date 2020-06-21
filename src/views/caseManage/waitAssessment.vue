@@ -1,6 +1,6 @@
 <template>
     <div class="wait-content">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch"/>
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
         <div class="head-tab">
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane class="tab-pane-position" v-for="tabItem in tabItems" :key="tabItem.case_type_id" :name="tabItem.case_type_id" >
@@ -82,14 +82,10 @@
 </template>
 <script>
     import Search from '@/components/Search'
-    import { mapGetters } from 'vuex'
     import { setTimeout } from 'timers';
 
     export default {
         components: { Search },
-        computed:{
-            ...mapGetters(['org_id'])
-        },
         data()  {
             return  {
                 addSearch: [
@@ -138,7 +134,6 @@
                     case_bh:'', //统一受案号
                     case_take_user_name:'',
                     anguan_pingcha_chaoqi:'',
-                    org_id:'',
                     cout_for:'yishenjie',
                 },
                 multipleSelection:[],
@@ -164,11 +159,12 @@
             }
         },
         mounted(){
-            this.seatchData.org_id = this.org_id
-
             this.getCaseType(this.seatchData);
         },
         methods: {
+            receivedAddress(data){
+                Object.keys(data).map(item=> this.seatchData[item] = data[item] )
+            },
             // 分类&&角标
             getCaseType(seatchData){
                 this.$api.getCaseType().then(async (res)=>{
@@ -205,8 +201,7 @@
                 }
             },
             comfirmSearch(data){
-                console.log(data,11111)
-                for(let key in data){ this.seatchData[key] = data[key] }
+                this.$nextTick(()=>{ for(let key in data) { this.seatchData[key] = data[key] } })
                 this.getCaseType(this.seatchData);
             },
             toggleSelection(rows) {

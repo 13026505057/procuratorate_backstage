@@ -10,7 +10,7 @@
                     type="year" class="item" value-format="yyyy"></el-date-picker>
             </template>
             <template v-else-if="item.name == 'select'">
-                <el-select v-model="item.value" placeholder="请选择">
+                <el-select v-model="item.value" :placeholder="item.placeholder">
                     <el-option v-for="itemChild in selectOption[item.dom]"
                         :key="itemChild.value" :label="itemChild.label" :value="itemChild.value">
                     </el-option>
@@ -21,10 +21,17 @@
                     start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd">
                 </el-date-picker>
             </template>
+            <template v-else-if="item.name == 'selectTimeStatus'">
+                <el-select v-model="item.value" :placeholder="item.placeholder">
+                    <el-option v-for="itemChild in selectOption[item.dom]"
+                        :key="itemChild.case_time_status" :label="itemChild.case_time_status_name" :value="itemChild.case_time_status">
+                    </el-option>
+                </el-select>
+            </template>
         </div>
         <div class="searchItem">
             <template v-if="org_list[0].level !== 'area'">
-                <el-cascader placeholder="试试搜索：青岛市" v-model="selectOrgId" :options="org_list" 
+                <el-cascader ref="treeOrg" placeholder="试试搜索：青岛市" v-model="selectOrgId" :options="org_list" 
                     :props="{ checkStrictly: true }" filterable clearable></el-cascader>
             </template>
         </div>
@@ -41,7 +48,7 @@ export default {
         selectOption: [Object],
     },
     computed: {
-        ...mapGetters(['org_list','org_id'])
+        ...mapGetters(['org_list','address_id'])
     },
     data(){
         return{
@@ -55,7 +62,8 @@ export default {
             org_dataList: [{level:'area'}]
         }
     },
-    mounted(){
+    created(){
+        this.$emit('receivedAddress',this.address_id)
         if(this.resetData) this.searchList = this.addSearch
             else if(this.addSearch && this.addSearch.length>0) this.searchList.push(...this.addSearch)
         
@@ -65,10 +73,12 @@ export default {
             let dataInfo = {}
             this.searchList.map(item=>{
                 dataInfo[item.dom] = item.value
-                let org_id;
-                if(this.selectOrgId.length>0) org_id = this.selectOrgId[this.selectOrgId.length-1]
-                    else org_id = this.org_id
-                dataInfo.org_id = org_id
+                if(this.selectOrgId){
+                    this.$nextTick(()=>{
+                        const { data } = this.$refs.treeOrg.getCheckedNodes()[0];
+                        ['province_id','city_id','area_id'].map(keys=> dataInfo[keys] = data[keys] )
+                    })
+                }
                 if(item.dom == 'timeData') {
                     if(dataInfo.timeData && dataInfo.timeData.length>0) {
                         dataInfo.begin_time = dataInfo.timeData[0]
@@ -78,7 +88,7 @@ export default {
                 delete dataInfo.timeData
             })
             this.$emit('comfirmSearch',dataInfo)
-        }
+        },
     }
 }
 </script>

@@ -1,6 +1,10 @@
 import request from "@/utils/request"
 
 const setting = {
+    // 获取案件时间状态设置
+    caseTimeStatus(data) {
+        return request({ url: '/caseTimeStatusGet', method: 'post', data })
+    },
     // 单位设置
     getUnitList(data) {
         return request({ url: '/orgGetByPage', method: 'post', data })

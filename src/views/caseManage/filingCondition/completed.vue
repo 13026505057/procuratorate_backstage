@@ -1,6 +1,6 @@
 <template>
     <div class="unCompleted-content">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch"/>
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
         <div class="head-tab">
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane class="tab-pane-position" v-for="tabItem in tabItems" :key="tabItem.case_type_id" :name="tabItem.case_type_id" >
@@ -126,14 +126,10 @@
 <script>
  import Search from '@/components/Search'
  import DialogPagin from '@/components/DialogPagin'
-    import { mapGetters } from 'vuex'
     import { setTimeout } from 'timers';
 
     export default {
         components: { Search,DialogPagin },
-        computed:{
-            ...mapGetters(['org_id'])
-        },
         data()  {
             return  {
                 addSearch: [
@@ -184,7 +180,6 @@
                     case_name:'',
                     case_bh:'', //统一受案号
                     case_take_user_name:'',
-                    org_id:'',
                     stock_status_str:'in,out,wout,win',
 
                 },
@@ -215,11 +210,12 @@
             }
         },
         mounted(){
-            this.seatchData.org_id = this.org_id
-
             this.getCaseType(this.seatchData);
         },
         methods: {
+            receivedAddress(data){
+                Object.keys(data).map(item=> this.seatchData[item] = data[item] )
+            },
             // 分类&&角标
             getCaseType(seatchData){
                 this.$api.getCaseType().then(async (res)=>{
@@ -260,8 +256,7 @@
             },
             // 查询
             comfirmSearch(data){
-                console.log(data,11111)
-                for(let key in data){ this.seatchData[key] = data[key] }
+                this.$nextTick(()=>{ for(let key in data) { this.seatchData[key] = data[key] } })
                 this.getCaseType(this.seatchData);
             },
             // 补打条码

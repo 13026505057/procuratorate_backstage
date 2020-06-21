@@ -1,6 +1,6 @@
 <template>
-    <div class="completedHanderPage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch"/>
+    <div class="completedTypePage">
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
@@ -63,12 +63,8 @@
 <script>
     import Search from '@/components/Search'
     import DialogPagin from '@/components/DialogPagin'
-    import { mapGetters } from 'vuex'
     export default {
         components: { Search,DialogPagin },
-        computed:{
-            ...mapGetters(['org_id'])
-        },
         filters: {
             mapStatus(status){
                 const statusMap = {
@@ -93,7 +89,6 @@
                     case_bh: '',
                     timeYear: '',
                     case_type_id: '',
-                    org_id: '',
                 },
                 addSearch: [
                     { dom: 'case_bh', value: '', placeholder: '请输入案卷号', itemId: 0, name: 'input' },
@@ -135,10 +130,12 @@
             }
         },
         mounted(){
-            this.pagination.org_id = this.org_id
             this.getCaseType();
         },
         methods: {
+            receivedAddress(data){
+                Object.keys(data).map(item=> this.pagination[item] = data[item] )
+            },
             // 分页
             handleCurrentChange(val) {
                 this.pagination['pageNum'] = val;
@@ -196,7 +193,7 @@
             },
             // 确认搜索
             comfirmSearch(data){
-                for(let key in data){ this.pagination[key] = data[key] }
+                this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] }  })
                 this.getCaseType()
             },
             showDialogPanel(dataInfo){
@@ -223,7 +220,7 @@
     }
 </script>
 <style lang="scss">
-    .completedHanderPage{
+    .completedTypePage{
         margin: 20px;
         .head-tab{
             margin-top: 30px;

@@ -35,7 +35,8 @@ router.beforeEach(async(to, from, next) => {
           // get user info
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
           const roles = await store.dispatch('user/getInfo')
-          const data = await store.dispatch('user/getOrgTreeList')
+          await store.dispatch('user/getOrgTreeList')
+          await store.dispatch('settings/caseTimeStatusGet')
           // const roles = ['admin']
           // store.dispatch('user/SET_ROLES',roles)
           // generate accessible routes map based on roles

@@ -1,8 +1,7 @@
 <template>
     <div class="qualifiedPage">
-        
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
         <div class="head-tab">
-            <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch"/>
             <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
                     <span slot="label">
@@ -67,8 +66,8 @@
     import { mapGetters } from 'vuex'
     export default {
         components: { Search,DialogPagin },
-        computed:{
-            ...mapGetters(['org_id'])
+        computed: {
+            ...mapGetters(['caseTimeStatus'])
         },
         filters: {
             mapStatus(status){
@@ -95,20 +94,15 @@
                     timeYear: '',
                     time_status: '',
                     case_type_id: '',
-                    org_id: '',
                 },
                 addSearch: [
                     { dom: 'case_bh', value: '', placeholder: '请输入案卷号', itemId: 0, name: 'input' },
                     { dom: 'case_name', value: '', placeholder: '请输入案卷名称', itemId: 1, name: 'input' },
                     { dom: 'timeYear', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
-                    { dom: 'time_status', value: 'null',placeholder: '请选择状态', itemId: 5, name: 'select' },
+                    { dom: 'time_status', value: null,placeholder: '请选择状态', itemId: 5, name: 'selectTimeStatus' },
                 ],
                 selectOption: {
-                    time_status: [
-                        { value: 'null', label: '全部' },
-                        { value: 'none', label: '未归档（未超期）' },
-                        { value: 'none_jj_out', label: '未归档（交卷超期）' },
-                    ]
+                    time_status: []
                 },
                 showModel: {
                     activeNameTab: "0",
@@ -144,10 +138,13 @@
             }
         },
         mounted(){
-            this.pagination.org_id = this.org_id
+            this.selectOption.time_status = this.caseTimeStatus
             this.getCaseType();
         },
         methods: {
+            receivedAddress(data){
+                Object.keys(data).map(item=> this.pagination[item] = data[item] )
+            },
             // 分页
             handleCurrentChange(val) {
                 this.pagination['pageNum'] = val;
@@ -184,7 +181,6 @@
                             }
                         })
                     })
-                    this.getTableList(this.pagination)
                 })
             },
             // 获取案件列表
@@ -204,7 +200,7 @@
             },
             // 确认搜索
             comfirmSearch(data){
-                for(let key in data){ this.pagination[key] = data[key] }
+                this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] }  })
                 this.getCaseType()
             },
             showDialogPanel(dataInfo){

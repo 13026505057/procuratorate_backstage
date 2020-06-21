@@ -1,13 +1,21 @@
 import request from '@/utils/request'
 
 const roles = {
-  // 获取配置路由信息
-  getRoutes(data) {
+  // 获取默认配置路由信息
+  getDefaultRoutes(data) {
     return request({ url: '/vueDefaultRouteGet', method: 'post', data })
   },
-  // 添加配置路由信息
-  addRoutes(data){
-    return request({ url: '/vueDefaultRouteAdd', method: 'post', data })
+  // 获取权限组列表
+  getRoutesGroup(data){
+    return request({ url: '/group/get', method: 'post', data })
+  },
+  // 获取权限组信息
+  getRoutesData(data){
+    return request({ url: '/vueRoleGet', method: 'post', data })
+  },
+  // 修改权限组信息
+  editRoutesData(data){
+    return request({ url: '/vueRoleUpdate', method: 'post', data })
   },
   // 机构信息
   orgTreeGet(data){

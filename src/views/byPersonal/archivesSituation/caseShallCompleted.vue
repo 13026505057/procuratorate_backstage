@@ -1,5 +1,5 @@
 <template>
-    <div class="uncompletedHanderPage">
+    <div class="caseShallComplletedPage">
         <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
@@ -49,12 +49,6 @@
                         <span v-else>{{ row[item.title] }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="操作" width="300">
-                    <template slot-scope="{row}">
-                        <el-button @click="printQrCodeAgain(row.exhibit_id)" class="highlight-btn" type="operation" size="small">补打条码</el-button>
-                        <el-button @click="deleteCancel(row.exhibit_id)" class="highlight-btn" type="operation" size="small">作废</el-button>
-                    </template>
-                </el-table-column>
             </el-table>
             <DialogPagin ref="dialogTablePagin" :tableData="showModel.gridData_temporary" @dialogTablePagin="dialogTablePagin"/>
         </el-dialog>
@@ -63,8 +57,12 @@
 <script>
     import Search from '@/components/Search'
     import DialogPagin from '@/components/DialogPagin'
+    import { mapGetters } from 'vuex'
     export default {
         components: { Search,DialogPagin },
+        computed: {
+            ...mapGetters(['caseTimeStatus'])
+        },
         filters: {
             mapStatus(status){
                 const statusMap = {
@@ -88,6 +86,7 @@
                     case_name: '',
                     case_bh: '',
                     timeYear: '',
+                    time_status: '',
                     case_take_user_name: '',
                     case_type_id: '',
                 },
@@ -95,9 +94,12 @@
                     { dom: 'case_bh', value: '', placeholder: '请输入案卷号', itemId: 0, name: 'input' },
                     { dom: 'case_name', value: '', placeholder: '请输入案卷名称', itemId: 1, name: 'input' },
                     { dom: 'timeYear', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
-                    { dom: 'case_take_user_name', value: '', placeholder: '请输入承办人', itemId: 4, name: 'input' },
+                    { dom: 'time_status', value: null,placeholder: '请选择状态', itemId: 5, name: 'selectTimeStatus' },
+                    { dom: 'case_take_user_name', value: '', placeholder: '请输入办案人', itemId: 4, name: 'input' },
                 ],
-                selectOption: {},
+                selectOption: {
+                    time_status: []
+                },
                 showModel: {
                     activeNameTab: "0",
                     tableList:[],   // 类型
@@ -132,6 +134,7 @@
             }
         },
         mounted(){
+            this.selectOption.time_status = this.caseTimeStatus
             this.getCaseType();
         },
         methods: {
@@ -151,10 +154,6 @@
                 this.pagination.case_type_id = e.paneName
                 this.getTableList(this.pagination)
             },
-            // 选中
-            handleSelectionChange(val){
-                console.log(val)
-            },
             // 类型分类
             getCaseType(){
                 this.$api.getCaseType().then(async (res)=>{
@@ -163,7 +162,7 @@
                     // 角标
                     let dataInfo = {...this.pagination};
                     // 每个页面字段不同(cout_for)
-                    dataInfo.cout_for = 'weigui';
+                    dataInfo.case_none_confirm = '';
 
                     ['pageNum','pageSize','case_type_id'].map(item=> delete dataInfo[item])
                     const resultData = await this.$api.getCornerMarkType(dataInfo);
@@ -183,7 +182,7 @@
                 this.loading = true;
                 this.showModel.dialogTableVisible = false;
                 let getData = { ...dataInfo }
-                const resultData = await this.$api.getUndocumented(getData);
+                const resultData = await this.$api.getAllByPage(getData);
                 const pagination = { ...this.pagination };
                 let resultData_table = [];
                 resultData.data.list.map(item=>{
@@ -205,24 +204,11 @@
                     this.$refs.dialogTablePagin.dialogTablePagin(1)
                 })
             },
-            // 补打条形码
-            async printQrCodeAgain(exhibit_id){
-                let resultData = await this.$api.printAgain({exhibit_id})
-                if(resultData && resultData.code == '0') this.$message.success('已发送打印请求')
-            },
-            // 作废
-            async deleteCancel(exhibit_id){
-                let resultData = await this.$api.editCaseData({exhibit_id,exhibit_status: 0})
-                if(resultData && resultData.code == '0') {
-                    this.$message.success('操作成功')
-                    this.getCaseType()
-                }
-            },
         },
     }
 </script>
 <style lang="scss">
-    .uncompletedHanderPage{
+    .caseShallComplletedPage{
         margin: 20px;
         .head-tab{
             margin-top: 30px;

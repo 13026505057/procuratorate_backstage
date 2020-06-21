@@ -10,6 +10,7 @@ const getDefaultState = () => {
     org_list: [],
     user_true_name: '',
     roles: [],
+    address_id: {}
   }
 }
 const state = getDefaultState()
@@ -35,16 +36,25 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
-  }
+  },
+  SET_ORG_ADDRESS_ID: (state, address_id) => {
+    // state.province_id = address_id.province_id,
+    // state.city_id = address_id.city_id,
+    // state.area_id = address_id.area_id,
+    state.address_id = address_id
+  },
+  
 }
 // 递归获取机构列表
-const filtersOrgData = (list,resData) =>{
+const filtersOrgData = (list,resData,byself) =>{
   if(Array.isArray(list) && list.length>0){
     list.forEach((v,i)=>{
       resData[i]={};
       resData[i].value=v['org_id'];
       resData[i].label=v['org_name'];
-      resData[i].level=v['org_level'];
+      resData[i].province_id=v['province_id'];
+      resData[i].city_id=v['city_id'];
+      resData[i].area_id=v['area_id'];
       var arr=[];
       resData[i].children=arr;
       filtersOrgData(v.orgs,arr);
@@ -73,7 +83,7 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { org_name, user_true_name, org_id } = data[0]
+        const { org_name, user_true_name, org_id, province_id, city_id, area_id } = data[0]
         const roles = new Array(data[0].username)
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
@@ -84,6 +94,7 @@ const actions = {
         commit('SET_ORG_NAME', org_name)
         commit('SET_USER_NAME', user_true_name)
         commit('SET_ORG_ID', org_id)
+        commit('SET_ORG_ADDRESS_ID', { province_id, city_id, area_id })
         resolve(roles)
       }).catch(error => {
         reject(error)
@@ -94,6 +105,7 @@ const actions = {
     return new Promise((resolve, reject) =>{
       api.orgTreeGet().then(resultData=>{
         let data = filtersOrgData(resultData.data,[])
+        
         commit('SET_ORG_LIST', data)
         resolve(data)
       }).catch(error => {
@@ -117,7 +129,7 @@ const actions = {
       resolve()
     })
   },
-
+  
   // dynamically modify permissions
   changeRoles({ commit, dispatch }, role) {
     return new Promise(async resolve => {

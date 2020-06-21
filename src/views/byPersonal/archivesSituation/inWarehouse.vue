@@ -1,5 +1,5 @@
 <template>
-    <div class="uncompletedHanderPage">
+    <div class="inWarehousePage">
         <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
@@ -9,7 +9,7 @@
                         <el-badge :value="item.contNum" v-if="item.contNum == '0'?false:true" class="item tab-badge-num"></el-badge>
                     </span>
                     <div class="table-dataList" >
-                        <el-table :data="showModel.tableData" border style="width: 100%" @selection-change="handleSelectionChange">
+                        <el-table :data="showModel.tableData" border style="width: 100%">
                             <el-table-column align="center" type="index"></el-table-column>
                             <el-table-column :label="item.dataIndex"
                                 v-for="item in columns" :key="item.itemId" align="center">
@@ -18,7 +18,7 @@
                                     <span v-else>{{ row[item.title] }}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column align="center" label="操作" width="250">
+                            <el-table-column align="center" label="操作">
                                 <template slot-scope="{row}">
                                     <el-button @click="showDialogPanel(row.exhibits)" class="highlight-btn" size="small">已有案卷</el-button>
                                 </template>
@@ -47,12 +47,6 @@
                         <span v-if="item.itemId == 6" :style="{'color':row[item.title]=='in'?'':'red'}">{{ row[item.title]=='in'?'已入库':'待入库' }}</span>
                         <span v-else-if="item.itemId == 7" :style="{'color':row[item.title]=='0'?'red':''}">{{ row[item.title]=='0'?'失效':'有效' }}</span>
                         <span v-else>{{ row[item.title] }}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" label="操作" width="300">
-                    <template slot-scope="{row}">
-                        <el-button @click="printQrCodeAgain(row.exhibit_id)" class="highlight-btn" type="operation" size="small">补打条码</el-button>
-                        <el-button @click="deleteCancel(row.exhibit_id)" class="highlight-btn" type="operation" size="small">作废</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -92,10 +86,10 @@
                     case_type_id: '',
                 },
                 addSearch: [
-                    { dom: 'case_bh', value: '', placeholder: '请输入案卷号', itemId: 0, name: 'input' },
-                    { dom: 'case_name', value: '', placeholder: '请输入案卷名称', itemId: 1, name: 'input' },
-                    { dom: 'timeYear', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
-                    { dom: 'case_take_user_name', value: '', placeholder: '请输入承办人', itemId: 4, name: 'input' },
+                    { dom: 'case_bh', value: '',placeholder: '案卷号查询', itemId: 1, name: 'input' },
+                    { dom: 'case_name', value: '',placeholder: '请输入案件名', itemId: 2, name: 'input' },
+                    { dom: 'timeYear', value: '',placeholder: '选择年份', itemId: 3, name: 'dataPicker' },
+                    { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
                 ],
                 selectOption: {},
                 showModel: {
@@ -130,6 +124,7 @@
                     { title: 'wait_quantity', dataIndex: '待入库案卷数', itemId: 7 },
                 ],
             }
+           
         },
         mounted(){
             this.getCaseType();
@@ -151,10 +146,6 @@
                 this.pagination.case_type_id = e.paneName
                 this.getTableList(this.pagination)
             },
-            // 选中
-            handleSelectionChange(val){
-                console.log(val)
-            },
             // 类型分类
             getCaseType(){
                 this.$api.getCaseType().then(async (res)=>{
@@ -163,7 +154,7 @@
                     // 角标
                     let dataInfo = {...this.pagination};
                     // 每个页面字段不同(cout_for)
-                    dataInfo.cout_for = 'weigui';
+                    dataInfo.stock_status_str = 'in,out,wout,win';
 
                     ['pageNum','pageSize','case_type_id'].map(item=> delete dataInfo[item])
                     const resultData = await this.$api.getCornerMarkType(dataInfo);
@@ -183,7 +174,7 @@
                 this.loading = true;
                 this.showModel.dialogTableVisible = false;
                 let getData = { ...dataInfo }
-                const resultData = await this.$api.getUndocumented(getData);
+                const resultData = await this.$api.getInByPage(getData);
                 const pagination = { ...this.pagination };
                 let resultData_table = [];
                 resultData.data.list.map(item=>{
@@ -196,7 +187,7 @@
             // 确认搜索
             comfirmSearch(data){
                 this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] }  })
-                this.getCaseType()
+                this.getCaseType(this.pagination)
             },
             showDialogPanel(dataInfo){
                 this.showModel.dialogTableVisible = true;
@@ -205,24 +196,11 @@
                     this.$refs.dialogTablePagin.dialogTablePagin(1)
                 })
             },
-            // 补打条形码
-            async printQrCodeAgain(exhibit_id){
-                let resultData = await this.$api.printAgain({exhibit_id})
-                if(resultData && resultData.code == '0') this.$message.success('已发送打印请求')
-            },
-            // 作废
-            async deleteCancel(exhibit_id){
-                let resultData = await this.$api.editCaseData({exhibit_id,exhibit_status: 0})
-                if(resultData && resultData.code == '0') {
-                    this.$message.success('操作成功')
-                    this.getCaseType()
-                }
-            },
         },
     }
 </script>
 <style lang="scss">
-    .uncompletedHanderPage{
+    .inWarehousePage{
         margin: 20px;
         .head-tab{
             margin-top: 30px;
@@ -263,8 +241,6 @@
                 top: -2px;
             }
         }
-        .checkboxSelect{
-            padding: 15px 0 0 10%;;
-        }
     }
+    
 </style>

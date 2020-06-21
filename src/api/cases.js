@@ -59,5 +59,18 @@ const cases = {
     getConfirmedNotInByPage(data) {
         return request({ url: '/cases/cases/getConfirmedNotInByPage', method: 'post', data })
     },
+    // 个人相关
+    // 等待质量评查
+    getGeRenNotConfirmByPage(data) {
+        return request({ url: '/cases/cases/getGeRenNotConfirmByPage', method: 'post', data })
+    },
+    //  未归档案件
+    getBiGuiByPage(data) {
+        return request({ url: '/cases/cases/getBiGuiByPage', method: 'post', data })
+    },
+    //  应归档案件
+    getAllByPage(data) {
+        return request({ url: '/cases/cases/getAllByPage', method: 'post', data })
+    },
 }
 export default cases

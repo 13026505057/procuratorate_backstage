@@ -31,6 +31,14 @@ import PutStorage from '@/views/archivesManage/putStorage/index'
 import UncompletedPut from '@/views/archivesManage/putStorage/uncompleted'
 import CompletedPut from '@/views/archivesManage/putStorage/completed'
 import Temporary from '@/views/archivesManage/putStorage/temporary'
+
+// 档案利用
+import OutWarehouse from '@/views/utilizeArchives/outWarehouse'
+import InWarehouse from '@/views/utilizeArchives/inWarehouse'
+
+//档案绩效评价
+import PerformanceEvaluation from '@/views/performanceEvaluation/index'
+
 // 分析评估
 import QualifiedType from '@/views/appraise/qualifiedType'
 import CompletedType from '@/views/appraise/completedType'
@@ -82,6 +90,13 @@ let routesNav = {
     CompletedPut: CompletedPut,
     Temporary: Temporary,
     
+    // 档案利用
+    OutWarehouse:OutWarehouse,
+    InWarehouse:InWarehouse,
+
+    //档案绩效评价
+    PerformanceEvaluation:PerformanceEvaluation,
+
     // 分析评估
     QualifiedType: QualifiedType,
     CompletedType: CompletedType,

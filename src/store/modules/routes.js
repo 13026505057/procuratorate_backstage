@@ -80,7 +80,7 @@ const asyncDataRoutes = [
         "component": "layout",
         "meta": {"title": "档案绩效评价", "icon": "lock"},
         "name": "PerformanceEvaluation_F", 
-        "path": "performanceEvaluation_F",
+        "path": "/performanceEvaluation",
         "redirect": "/performanceEvaluation",
         "children": [
             {"path": "performanceEvaluation", "component": "views/performanceEvaluation/index", "name": "PerformanceEvaluation", "meta":{ "title":"档案绩效评价" }},

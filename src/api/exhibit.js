@@ -17,5 +17,21 @@ const exhibit = {
     addExhibitData(data) {
         return request({ url: '/exhibit/exhibit/add', method: 'post', data })
     },
+    //获取待出库案卷列表
+    getExhibitOut(data){
+        return request({ url: '/user/approve/getWaitOutByPage', method: 'post', data })
+    },
+    //卷宗出库
+    exhibitOut(data){
+        return request({ url: '/user/approve/out', method: 'post', data })
+    },
+    // 获取待归还列表 
+    getBorrowList(data){
+        return request({ url: '/borrowLog/getOutByPage', method: 'post', data }) 
+    },
+    //卷宗入库
+    exhibitIn(data){
+        return request({ url: '/stock/stock/in', method: 'post', data })
+    }
 }
 export default exhibit

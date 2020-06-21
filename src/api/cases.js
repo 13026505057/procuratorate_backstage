@@ -72,5 +72,10 @@ const cases = {
     getAllByPage(data) {
         return request({ url: '/cases/cases/getAllByPage', method: 'post', data })
     },
+    //档案利用
+    //查询卷宗类型 如：诉讼 文书 技术
+    getExhibitType(){
+        return request({ url: '/exhibitTypeGet', method: 'post' })
+    }
 }
 export default cases

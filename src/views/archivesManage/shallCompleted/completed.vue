@@ -9,7 +9,7 @@
                         <el-badge :value="item.contNum" v-if="item.contNum == '0'?false:true" class="item tab-badge-num"></el-badge>
                     </span>
                     <div class="table-dataList" >
-                        <el-table height="500" :data="showModel.tableData" border style="width: 100%">
+                        <el-table :data="showModel.tableData" border style="width: 100%">
                             <el-table-column align="center" type="index"></el-table-column>
                             <el-table-column :label="item.dataIndex"
                                 v-for="item in columns" :key="item.itemId" align="center">
@@ -229,8 +229,6 @@
         .head-tab{
             margin-top: 30px;
             .table-dataList{
-                height: 560px;
-                // overflow-y: auto;
                 .highlight-btn,.ash-btn{
                     font-size: 14px;
                     color: #ffffff;

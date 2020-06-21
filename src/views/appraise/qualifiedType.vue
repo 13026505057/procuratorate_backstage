@@ -1,7 +1,8 @@
 <template>
     <div class="qualifiedPage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch"/>
+        
         <div class="head-tab">
+            <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch"/>
             <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
                     <span slot="label">
@@ -9,7 +10,7 @@
                         <el-badge :value="item.contNum" v-if="item.contNum == '0'?false:true" class="item tab-badge-num"></el-badge>
                     </span>
                     <div class="table-dataList" >
-                        <el-table height="500" :data="showModel.tableData" border style="width: 100%" @selection-change="handleSelectionChange">
+                        <el-table :data="showModel.tableData" border style="width: 100%" @selection-change="handleSelectionChange">
                             <el-table-column align="center" type="index"></el-table-column>
                             <el-table-column :label="item.dataIndex"
                                 v-for="item in columns" :key="item.itemId" align="center">
@@ -235,8 +236,6 @@
         .head-tab{
             margin-top: 30px;
             .table-dataList{
-                height: 560px;
-                // overflow-y: auto;
                 .highlight-btn,.ash-btn{
                     font-size: 14px;
                     color: #ffffff;

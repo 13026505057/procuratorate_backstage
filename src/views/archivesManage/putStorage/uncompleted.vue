@@ -11,7 +11,7 @@
                     <div class="table-dataList" >
                         <el-table :data="showModel.tableData" border style="width: 100%">
                             <el-table-column align="center" type="index"></el-table-column>
-                            <el-table-column :label="item.dataIndex"
+                            <el-table-column :label="item.dataIndex" show-overflow-tooltip
                                 v-for="item in columns" :key="item.itemId" align="center">
                                 <template slot-scope="{row}">
                                     <span v-if="item.itemId == 4">{{ row[item.title] | mapStatus }}</span>
@@ -37,50 +37,13 @@
                 </el-tab-pane>
             </el-tabs>
         </div>
-        <!-- 案卷详情 -->
-        <el-dialog title="案卷详情" :visible.sync="showModel.dialogTableVisible">
-            <el-table :data="showModel.gridData" align="center">
-                <el-table-column type="index" label="#"></el-table-column>
-                <el-table-column :label="item.dataIndex"
-                    v-for="item in showModel.gridData_columns" :key="item.itemId" align="center">
-                    <template slot-scope="{row}">
-                        <span v-if="item.itemId == 6" :style="{'color':row[item.title]=='in'?'':'red'}">{{ row[item.title]=='in'?'已入库':'待入库' }}</span>
-                        <span v-else-if="item.itemId == 7" :style="{'color':row[item.title]=='0'?'red':''}">{{ row[item.title]=='0'?'失效':'有效' }}</span>
-                        <span v-else>{{ row[item.title] }}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" label="操作" width="200">
-                    <template slot-scope="{row}">
-                        <el-button @click="printQrCodeAgain(row.exhibit_id)" class="highlight-btn" type="operation" size="small">补打条码</el-button>
-                        <el-button @click="deleteCancel(row.exhibit_id)" class="highlight-btn" type="operation" size="small">作废</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <DialogPagin ref="dialogTablePagin" :tableData="showModel.gridData_temporary" @dialogTablePagin="dialogTablePagin"/>
-        </el-dialog>
     </div>
 </template>
 <script>
     import Search from '@/components/Search'
     import DialogPagin from '@/components/DialogPagin'
-    import { mapGetters } from 'vuex'
     export default {
         components: { Search,DialogPagin },
-        filters: {
-            mapStatus(status){
-                const statusMap = {
-                    "in": "已归档",
-                    "in_jj_out": "已归档（交卷超期）",
-                    "in_rk_out": "已归档（入库超期）",
-                    "in_all_out": "已归档（双超期）",
-                    "none": "未归档",
-                    "none_jj_out": "未归档（交卷超期）",
-                    "none_rk_out": "未归档（入库超期）",
-                    "none_all_out": "未归档（双超期）",
-                }
-                return statusMap[status]
-            }
-        },
         data()  {
             return  {
                 pagination: {
@@ -106,16 +69,6 @@
                     dialogTableVisible: false,
                     gridData: [],
                     gridData_temporary: [],
-                    gridData_columns: [
-                        { title: 'out_exhibit_id', dataIndex: '条形码号', itemId: 1 },
-                        { title: 'case_name', dataIndex: '卷宗名称', itemId: 2 },
-                        { title: 'dh', dataIndex: '档号', itemId: 3 },
-                        { title: 'jh', dataIndex: '卷号', itemId: 4 },
-                        { title: 'bgr', dataIndex: '被告人/嫌疑人', itemId: 5 },
-                        { title: 'stock_status', dataIndex: '案卷状态', itemId: 6 },
-                        { title: 'exhibit_status', dataIndex: '是否有效', itemId: 7 },
-                        { title: 'cell_name', dataIndex: '存储位置', itemId: 8 },
-                    ],
                 },
                 // table表头
                 columns: [

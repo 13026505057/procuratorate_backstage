@@ -5,6 +5,18 @@ const setting = {
     caseTimeStatus(data) {
         return request({ url: '/caseTimeStatusGet', method: 'post', data })
     },
+    // 获取案件状态设置
+    getStockStatus(data) {
+        return request({ url: '/exhibitStockStatusGet', method: 'post', data })
+    },
+    // 获取案卷类型状态设置
+    getExhibitType(data) {
+        return request({ url: '/exhibitTypeGet', method: 'post', data })
+    },
+    // 获取储存案卷时间设置
+    getExhibitTimeStatus(data) {
+        return request({ url: '/exhibitBgqxGet', method: 'post', data })
+    },
     // 单位设置
     getUnitList(data) {
         return request({ url: '/orgGetByPage', method: 'post', data })

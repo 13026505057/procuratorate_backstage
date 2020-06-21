@@ -7,6 +7,7 @@ const getDefaultState = () => {
     token: getToken(),
     org_name: '',
     org_id: '',
+    user_id: '',
     org_list: [],
     user_true_name: '',
     roles: [],
@@ -34,13 +35,13 @@ const mutations = {
   SET_USER_NAME: (state, user_true_name) => {
     state.user_true_name = user_true_name
   },
+  SET_USER_ID: (state, user_id) => {
+    state.user_id = user_id
+  },
   SET_ROLES: (state, roles) => {
     state.roles = roles
   },
   SET_ORG_ADDRESS_ID: (state, address_id) => {
-    // state.province_id = address_id.province_id,
-    // state.city_id = address_id.city_id,
-    // state.area_id = address_id.area_id,
     state.address_id = address_id
   },
   
@@ -83,7 +84,7 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { org_name, user_true_name, org_id, province_id, city_id, area_id } = data[0]
+        const { user_id, org_name, user_true_name, org_id, province_id, city_id, area_id } = data[0]
         const roles = new Array(data[0].username)
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
@@ -93,6 +94,7 @@ const actions = {
         commit('SET_ROLES', roles)
         commit('SET_ORG_NAME', org_name)
         commit('SET_USER_NAME', user_true_name)
+        commit('SET_USER_ID', user_id)
         commit('SET_ORG_ID', org_id)
         commit('SET_ORG_ADDRESS_ID', { province_id, city_id, area_id })
         resolve(roles)

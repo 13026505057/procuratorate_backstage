@@ -72,5 +72,17 @@ const cases = {
     getAllByPage(data) {
         return request({ url: '/cases/cases/getAllByPage', method: 'post', data })
     },
+    //  未绑案件查询
+    getCasesByPage(data) {
+        return request({ url: '/cases/cases/getCasesByPage', method: 'post', data })
+    },
+    //  模糊查询符合条件的案件
+    getLikeCases(data) {
+        return request({ url: '/cases/cases/getLikeCases', method: 'post', data })
+    },
+    //  个人整改的案件
+    caseRefuseHistoryGetByPage(data) {
+        return request({ url: '/caseRefuseHistoryGetByPage', method: 'post', data })
+    },
 }
 export default cases

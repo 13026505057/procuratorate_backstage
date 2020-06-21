@@ -90,9 +90,9 @@
             return  {
                 tableItems:[
                     { label: "部门名称",  prop: "dept_name" },
-                    { label: "创建者", prop: "dept_create_user_name" ,},
+                    // { label: "创建者", prop: "dept_create_user_name" ,},
                     { label: "创建时间", prop: "dept_create_time" ,},
-                    { label: "所属部门", prop: "dept_total_name" ,},
+                    // { label: "所属部门", prop: "dept_total_name" ,},
                 ],
                 tableData: [],
                 headStyle:{

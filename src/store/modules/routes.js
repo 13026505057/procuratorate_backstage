@@ -137,6 +137,7 @@ const asyncDataRoutes = [
             {path: "unit", component: 'views/setting/unit', name: "Unit", meta:{ title:'单位设置' }},
             {path: "department", component: 'views/setting/department', name: "Department", meta:{ title:'部门设置' }},
             {path: "position", component: 'views/setting/position', name: "Position", meta:{ title:'职位设置' }},
+            {path: "role", component: 'views/setting/role', name: "Role", meta:{ title:'角色设置' }},
             {path: "personnel", component: 'views/setting/personnel', name: "Personnel", meta:{ title:'人员设置' }},
             {path: "storageLocation", component: 'views/setting/storageLocation', name: "StorageLocation", meta:{ title:'存储位置设置' }},
         ],

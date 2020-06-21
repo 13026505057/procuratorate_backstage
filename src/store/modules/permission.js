@@ -6,13 +6,20 @@ import asyncDataRoutes from './routes'
 import Layout from '@/layout'
 import Page404 from '@/views/error-page/404'
 
-
+// 通用设置
 import Unit from '@/views/setting/unit'
+import Department from '@/views/setting/department'
+import Position from '@/views/setting/position'
+import Role from '@/views/setting/role'
+import StorageLocation from '@/views/setting/storageLocation'
+
+// 案管
 import FilingCondition from '@/views/caseManage/filingCondition/index'
 import CompletedCase from '@/views/caseManage/filingCondition/completed'
 import UncompletedCase from '@/views/caseManage/filingCondition/uncompleted'
 import WaitAssessment from '@/views/caseManage/waitAssessment'
 import Progress from '@/views/caseManage/progress'
+
 import AddPermission from '@/views/permission/add'
 import RolePermission from '@/views/permission/role'
 
@@ -44,7 +51,13 @@ import UncompletedHandler from '@/views/appraise/uncompletedHandler'
 window.pageList = {
   Page404: Page404,
 
+//   通用设置
   Unit:Unit,
+  Department:Department,
+  Position:Position,
+  Role:Role,
+  StorageLocation:StorageLocation,
+//   案管
   FilingCondition: FilingCondition,
   CompletedCase: CompletedCase,
   UncompletedCase: UncompletedCase,

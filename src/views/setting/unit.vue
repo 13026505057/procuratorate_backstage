@@ -13,6 +13,8 @@
                     style="width: 100%">
                     <el-table-column
                         align="center"
+                        label="序号"
+                        width="60"
                         type="index">
                     </el-table-column>
                     <el-table-column
@@ -28,7 +30,14 @@
                         label="操作">
                         <template slot-scope="{ row }">
                             <el-button @click="addUnitClick('update',row)" class="ash-btn" size="small">修改</el-button>
-                            <el-button @click="examineClick" class="highlight-btn" size="small">删除</el-button>
+                            <el-popconfirm
+                                icon="el-icon-info"
+                                iconColor="red"
+                                title="确定删除吗？"
+                                @onConfirm = "confirmDel"
+                                >
+                                <el-button slot="reference" @click="delUnitClick(row.org_id)" class="highlight-btn" size="small">删除</el-button>
+                            </el-popconfirm>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -137,10 +146,13 @@
                 this.type = type;
                 this.org_id = row_org_id.org_id;
                 if(type == "add"){
-                    this.dialogTitle = "新增单位"
+                    this.dialogTitle = "新增单位";
+                    this.unit_form = {
+                        org_name :'',
+                        org_code:'',
+                    }
                 }else{
                     this.dialogTitle = "修改单位"
-                    for(let key in row_org_id){ this.unit_form[key] = row_org_id[key] }
                     this.unit_form.org_name = row_org_id.org_name;
                     this.unit_form.org_code = row_org_id.org_code;
                 }
@@ -156,7 +168,7 @@
             },
             async confirmClick(){
                 const dataInfo = { ...this.unit_form }
-                 if(this.type == "add"){
+                if(this.type == "add"){
                     const resultData = await this.$api.addUnit(dataInfo);
                     if(resultData&&resultData.code == 0){
                         this.$message({
@@ -176,12 +188,23 @@
                         });
                         this.dialogVisible = false;
                     }
-                    
                 }
+                this.getDataList();
             },
-            // 小弹窗
-            examineClick(){
-                this.dialogVisible = true;
+            // 删除
+            delUnitClick(org_id){
+                this.org_id = org_id
+            },
+            async confirmDel(){
+                const dataInfo = {org_id: this.org_id}
+                const resultData = await this.$api.deleteUnit(dataInfo);
+                if(resultData&&resultData.code == 0){
+                    this.$message({
+                        message: '删除成功',
+                        type: 'success'
+                    });
+                }
+                this.getDataList();
             },
         }
 

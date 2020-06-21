@@ -104,7 +104,7 @@
 <script>
     import Search from '@/components/Search'
     import { mapGetters } from 'vuex'
-import { setTimeout } from 'timers';
+    import { setTimeout } from 'timers';
 
 
     export default {

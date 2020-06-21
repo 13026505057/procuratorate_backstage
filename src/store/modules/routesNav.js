@@ -1,9 +1,14 @@
     
 import Page404 from '@/views/error-page/404'  
 // 设置
-import Unit from '@/views/setting/unit'
 import AddRole from '@/views/setting/addRole'
+import Unit from '@/views/setting/unit'
+import Department from '@/views/setting/department'
+import Position from '@/views/setting/position'
+import Role from '@/views/setting/role'
+import StorageLocation from '@/views/setting/storageLocation'
 
+// 案管
 import FilingCondition from '@/views/caseManage/filingCondition/index'
 import CompletedCase from '@/views/caseManage/filingCondition/completed'
 import UncompletedCase from '@/views/caseManage/filingCondition/uncompleted'
@@ -48,7 +53,12 @@ let routesNav = {
     // 设置
     Unit: Unit,
     AddRole: AddRole,
+    Department:Department,
+    Position:Position,
+    Role:Role,
+    StorageLocation:StorageLocation,
     
+    // 案管
     FilingCondition: FilingCondition,
     CompletedCase: CompletedCase,
     UncompletedCase: UncompletedCase,

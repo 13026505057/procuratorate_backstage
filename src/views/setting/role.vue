@@ -1,8 +1,8 @@
 <template>
     <div class="overall-content unit-content">
         <div class="search-box">
-            <div>部门列表</div>
-            <el-button @click="addUnitClick('add','')">新增部门</el-button>
+            <div>角色列表</div>
+            <el-button @click="addUnitClick('add','')">新增角色</el-button>
         </div>
         <div class="table-list">
             <div class="table-dataList" >
@@ -36,7 +36,7 @@
                                 title="确定删除吗？"
                                 @onConfirm = "confirmDel"
                                 >
-                                <el-button slot="reference" @click="delUnitClick(row.dept_id)" class="highlight-btn" size="small">删除</el-button>
+                                <el-button slot="reference" @click="delUnitClick(row.position_id)" class="highlight-btn" size="small">删除</el-button>
                             </el-popconfirm>
                         </template>
                     </el-table-column>
@@ -59,8 +59,18 @@
                 center>
                 <span>
                     <el-form ref="form" :model="unit_form" label-width="80px">
-                        <el-form-item label="部门名称">
-                            <el-input v-model="unit_form.dept_name"></el-input>
+                        <el-form-item label="职位名称">
+                            <el-input v-model="unit_form.position_name"></el-input>
+                        </el-form-item>
+                        <el-form-item label="权限">
+                            <el-cascader
+                                clearable
+                                :props="props"
+                                style="width:100%"
+                                v-model="unit_form.jurisdiction"
+                                :options="jurisdictionOptions"
+                                @change="handleChange">
+                            </el-cascader>
                         </el-form-item>
                     </el-form>  
                 </span>
@@ -89,10 +99,9 @@
         data()  {
             return  {
                 tableItems:[
-                    { label: "部门名称",  prop: "dept_name" },
-                    { label: "创建者", prop: "dept_create_user_name" ,},
-                    { label: "创建时间", prop: "dept_create_time" ,},
-                    { label: "所属部门", prop: "dept_total_name" ,},
+                    { label: "职位名称",  prop: "position_name" },
+                    { label: "创建者", prop: "position_create_user_name" ,},
+                    { label: "创建时间", prop: "position_create_time" ,},
                 ],
                 tableData: [],
                 headStyle:{
@@ -108,23 +117,65 @@
                 dialogVisible:false,
                 dialogTitle:'',
                 unit_form:{
-                    dept_name: '',
+                    position_name: '',
+                    jurisdiction:[],
                     org_id: '',
                 },
                 type:'',
-                dept_id:'',
+                position_id:'',
                 popconfirmTitle:'',
+                props: { multiple: true },
+                jurisdictionOptions:[
+                    {
+                        value: 'zhinan',
+                        label: '指南',
+                        children: [{
+                            value: 'shejiyuanze',
+                            label: '设计原则',
+                        }],
+                    },
+                    {
+                        value: 'tooltip',
+                        label: 'Tooltip 文字提示',
+                        children: [ {
+                            value: 'dropdown',
+                            label: 'Dropdown 下拉菜单'
+                            }, {
+                            value: 'steps',
+                            label: 'Steps 步骤条'
+                        }],
+                    }, {
+                        value: 'others',
+                        label: 'Others',
+                        children: [{
+                            value: 'dialog',
+                            label: 'Dialog 对话框'
+                            }, {
+                            value: 'tooltip',
+                            label: 'Tooltip 文字提示'
+                            }, {
+                            value: 'popover',
+                            label: 'Popover 弹出框'
+                            },
+                        ]
+                    }
+                    
+                ]
 
             }
         },
         mounted(){
-            this.unit_form.org_id = this.org_id
+            // this.unit_form.org_id = this.org_id
             this.getDataList();
         },
         methods: {
+            handleChange(value) {
+                console.log(value);
+                console.log(this.unit_form.jurisdiction)
+            },
             async getDataList(){
                 const dataInfo = {pageNum:this.currentPage1,pageSize:this.pageSize,org_id:this.unit_form.org_id}
-                const resultData = await this.$api.getDepartmentList(dataInfo);
+                const resultData = await this.$api.getPositionList(dataInfo);
                 if(resultData&&resultData.code == 0){
                     this.tableData = resultData.data.list;
                     this.total1 = resultData.data.total;
@@ -140,18 +191,18 @@
                 this.getDataList();
             },
             // 新增
-            addUnitClick(type,row_dept_id){
+            addUnitClick(type,row_position_id){
                 this.dialogVisible = true;
                 this.type = type;
-                this.dept_id = row_dept_id.dept_id;
+                this.position_id = row_position_id.position_id;
                 if(type == "add"){
-                    this.dialogTitle = "新增部门";
+                    this.dialogTitle = "新增职位";
                     this.unit_form = {
-                        dept_name :'',
+                        position_name :'',
                     }
                 }else{
-                    this.dialogTitle = "修改部门"
-                    this.unit_form.dept_name = row_dept_id.dept_name;
+                    this.dialogTitle = "修改职位"
+                    this.unit_form.position_name = row_position_id.position_name;
                 }
             },
             // 新增&&修改
@@ -166,7 +217,7 @@
             async confirmClick(){
                 const dataInfo = { ...this.unit_form }
                 if(this.type == "add"){
-                    const resultData = await this.$api.addDepartment(dataInfo);
+                    const resultData = await this.$api.addPosition(dataInfo);
                     if(resultData&&resultData.code == 0){
                         this.$message({
                             message: '新增成功',
@@ -175,9 +226,9 @@
                         this.dialogVisible = false;
                     }
                 }else{
-                    dataInfo['dept_id'] = this.dept_id;
+                    dataInfo['position_id'] = this.position_id;
                     console.log(dataInfo)
-                    const resultData = await this.$api.updateDepartment(dataInfo);
+                    const resultData = await this.$api.updatePosition(dataInfo);
                     if(resultData&&resultData.code == 0){
                         this.$message({
                             message: '修改成功',
@@ -189,12 +240,12 @@
                 this.getDataList();
             },
             // 删除
-            delUnitClick(dept_id){
-                this.dept_id = dept_id
+            delUnitClick(position_id){
+                this.position_id = position_id
             },
             async confirmDel(){
-                const dataInfo = {dept_id: this.dept_id}
-                const resultData = await this.$api.deleteDepartment(dataInfo);
+                const dataInfo = {position_id: this.position_id}
+                const resultData = await this.$api.deletePosition(dataInfo);
                 if(resultData&&resultData.code == 0){
                     this.$message({
                         message: '删除成功',

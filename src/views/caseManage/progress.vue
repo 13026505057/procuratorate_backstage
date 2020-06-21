@@ -103,8 +103,7 @@
 </template>
 <script>
     import Search from '@/components/Search'
-import { setTimeout } from 'timers';
-
+    import { setTimeout } from 'timers';
 
     export default {
         components: { Search },

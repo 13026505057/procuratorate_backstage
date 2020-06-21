@@ -37,7 +37,7 @@ import OutWarehouse from '@/views/utilizeArchives/outWarehouse'
 import InWarehouse from '@/views/utilizeArchives/inWarehouse'
 
 //档案绩效评价
-import PerformanceEvaluation from '@/views/performanceEvaluation/index'
+import PerformanceEvaluationItem from '@/views/performanceEvaluation/index'
 
 // 分析评估
 import QualifiedType from '@/views/appraise/qualifiedType'
@@ -102,7 +102,7 @@ let routesNav = {
     InWarehouse:InWarehouse,
 
     //档案绩效评价
-    PerformanceEvaluation:PerformanceEvaluation,
+    PerformanceEvaluationItem:PerformanceEvaluationItem,
 
     // 分析评估
     QualifiedType: QualifiedType,

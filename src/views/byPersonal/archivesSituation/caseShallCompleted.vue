@@ -9,9 +9,9 @@
                         <el-badge :value="item.contNum" v-if="item.contNum == '0'?false:true" class="item tab-badge-num"></el-badge>
                     </span>
                     <div class="table-dataList" >
-                        <el-table :data="showModel.tableData" border style="width: 100%" @selection-change="handleSelectionChange">
+                        <el-table :data="showModel.tableData" border style="width: 100%">
                             <el-table-column align="center" type="index"></el-table-column>
-                            <el-table-column :label="item.dataIndex"
+                            <el-table-column :label="item.dataIndex" show-overflow-tooltip
                                 v-for="item in columns" :key="item.itemId" align="center">
                                 <template slot-scope="{row}">
                                     <span v-if="item.itemId == 4">{{ row[item.title] | mapStatus }}</span>

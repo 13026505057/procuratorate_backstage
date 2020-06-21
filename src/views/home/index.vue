@@ -1,7 +1,7 @@
 <template>
   <div class="homePage">
     <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch"/>
-    123123123312
+    
     <svg class="icon iconcccc" aria-hidden="true">
       <use xlink:href="#iconcaihongSVG"></use>
     </svg>

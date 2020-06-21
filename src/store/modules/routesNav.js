@@ -56,6 +56,13 @@ import GiveBack from '@/views/byPersonal/archivesSituation/giveBack'
 import NotInWarehouse from '@/views/byPersonal/archivesSituation/notInWarehouse'
 import InWarehouseArchives from '@/views/byPersonal/archivesSituation/inWarehouse'
 
+// 历史案卷
+import HistoryCaseItem from '@/views/historyCase/historyCase'
+import BySelfMatch from '@/views/historyCase/bySelfMatch'
+import NotBindCheck from '@/views/historyCase/notBindCheck'
+import MatchingHistory from '@/views/historyCase/matchingHistory'
+import HistoricalCases from '@/views/historyCase/historicalCases'
+
 let routesNav = {
     Page404: Page404,
     // 设置
@@ -115,5 +122,11 @@ let routesNav = {
     NotInWarehouse: NotInWarehouse,
     InWarehouseArchives: InWarehouseArchives,
 
+    // 历史案卷
+    HistoryCaseItem: HistoryCaseItem,
+    BySelfMatch: BySelfMatch,
+    NotBindCheck: NotBindCheck,
+    MatchingHistory: MatchingHistory,
+    HistoricalCases: HistoricalCases,
 }
 export default routesNav

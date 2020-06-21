@@ -31,8 +31,11 @@
 
 <script>
 import path from 'path'
+import axios from 'axios'
+import { mapGetters } from 'vuex'
 import { deepClone } from '@/utils'
-import { filterAsyncRoutes, checkedNullInfo } from '@/store/modules/permission'
+import { getToken } from '@/utils/auth'
+import { filterAsyncRoutes_respones,checkedNullInfo_respones } from '@/store/modules/permission'
 
 export default {
   data() {
@@ -53,6 +56,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['base_url']),
     routesData() {
       return this.routes
     }
@@ -67,9 +71,8 @@ export default {
         const resultData = await this.$api.getDefaultRoutes()
         console.log(resultData.data)
         let accessedRoutes;
-        const accessedRoute = checkedNullInfo(resultData.data)
-        accessedRoutes = filterAsyncRoutes(accessedRoute,true)
-        console.log(accessedRoutes)
+        const accessedRoute = checkedNullInfo_respones(resultData.data)
+        accessedRoutes = filterAsyncRoutes_respones(accessedRoute,true)
         this.routes = accessedRoutes
     },
     // 获取权限组列表
@@ -94,20 +97,32 @@ export default {
       this.dialogVisible = true
       this.checkStrictly = true
       let resultData = await this.$api.getRoutesData({group_name})
-      let accessedRoutes;
-      const accessedRoute = checkedNullInfo(resultData.data[0].routes)
-      accessedRoutes = filterAsyncRoutes(accessedRoute,true)
-      this.role.vue_role_id = resultData.data[0].vue_role_id
-      this.role.group_name = resultData.data[0].group_name
+      let accessedRoutes = []
+      if(resultData.data.length>0) {
+        const accessedRoute = checkedNullInfo_respones(resultData.data[0].routes)
+        accessedRoutes = filterAsyncRoutes_respones(accessedRoute,true)
+        this.role.vue_role_id = resultData.data[0].vue_role_id
+        this.role.group_name = resultData.data[0].group_name
+      }
       this.$nextTick(() => {
         this.$refs.tree.setCheckedNodes(this.generateArr(accessedRoutes))
-        // set checked state of a node not affects its father and child nodes
         this.checkStrictly = false
+      })
+    },
+    editRouteFun(params){
+      return new Promise((resolve, reject) => {
+        axios({
+          method: 'post',
+          url: this.base_url+'/vueRoleUpdate',
+          data: params,
+          headers: { 'kf-token': getToken() },
+        }).then(res=>{
+          resolve(res.data)
+        }).catch(error => reject(error) )
       })
     },
     generateTree(routes, checkedKeys) {
       const res = []
-
       for (const route of routes) {
         const routeName = route.name
         // recursive child routes
@@ -124,10 +139,11 @@ export default {
         const checkedKeys = this.$refs.tree.getCheckedKeys()
         this.role.routes = this.generateTree(this.routes, checkedKeys)
         console.log(this.role)
-        console.log(this.role.routes)
-        let resultData = await this.$api.editRoutesData(this.role)
-        console.log(resultData)
-        if(resultData && resultData.code =='0') this.$message.success('操作成功')
+        const resultData = await this.editRouteFun(this.role)
+        if(resultData && resultData.code =='0') {
+          this.dialogVisible = false;
+          this.$message.success('操作成功')
+        }
     }
   }
 }

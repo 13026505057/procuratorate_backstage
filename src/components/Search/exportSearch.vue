@@ -1,5 +1,5 @@
 <template>
-    <div class="searchInfo">
+    <div class="exportSearch">
         <div class="searchItem" v-for="item in searchList" :key="item.itemId">
             <template v-if="item.name == 'input'">
                 <el-input v-model="item.value" :placeholder="item.placeholder" 
@@ -36,6 +36,7 @@
             </template>
         </div>
         <el-button type="search" @click="comfirmSearch">查询</el-button>
+        <el-button type="search" @click="exportData">导出</el-button>
     </div>
 </template>
 
@@ -54,9 +55,6 @@ export default {
         return{
             selectOrgId: '',
             searchList: [
-                { dom: 'case_bh', value: '', placeholder: '请输入案卷号', itemId: 0, name: 'input' },
-                { dom: 'case_name', value: '', placeholder: '请输入案卷名称', itemId: 1, name: 'input' },
-                { dom: 'case_name', value: '', placeholder: '请输入罪名', itemId: 2, name: 'input' },
                 { dom: 'timeYear', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
             ],
             org_dataList: [{level:'area'}]
@@ -66,12 +64,15 @@ export default {
         this.$emit('receivedAddress',this.address_id)
         if(this.resetData) this.searchList = this.addSearch
             else if(this.addSearch && this.addSearch.length>0) this.searchList.push(...this.addSearch)
-        
     },
     methods: {
         comfirmSearch(){
             let dataInfo = this.resultDataInfo()
             this.$emit('comfirmSearch',dataInfo)
+        },
+        exportData(){
+            let dataInfo = this.resultDataInfo()
+            this.$emit('exportDataInfo',dataInfo)
         },
         resultDataInfo(){
             let dataInfo = {}
@@ -97,7 +98,7 @@ export default {
 }
 </script>
 <style lang="scss">
-    .searchInfo{
+    .exportSearch{
         border: 1px solid #8fcbff;
         background-color: #eaf5ff;
         padding: 15px 0;

@@ -8,7 +8,7 @@ import { getToken } from '@/utils/auth'
 // create an axios instance
 const service = axios.create({
   // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  // baseURL: 'http://192.168.2.98:8080/dossier_qd',
+  // baseURL: 'http://141.113.80.45/dossier_qd',
   baseURL: 'http://106.12.68.167/dossier_qd',
 //   withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
@@ -17,7 +17,7 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use( config => {
   // do something before request is sent
-
+  store.dispatch('app/setBaseUrl',config.baseURL)
   if (store.getters.token) {
     config.headers['kf-token'] = getToken()
   }
@@ -25,6 +25,7 @@ service.interceptors.request.use( config => {
     ? config.data = qs.stringify(config.data)
     : config.params = {...config.params};
   // config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+  // config.headers['Content-Type'] = 'application/json;charset=utf-8';
   return config
 }, error => {
   // do something with request error
@@ -40,7 +41,7 @@ service.interceptors.response.use(
     }else if(res.code == '402'){
       //登录超时
       setTimeout(()=>{ Message.info('登录超时, 请重新登录') },1000)
-      setTimeout(()=>{ router.push({path:'./login'}) },3000)
+      setTimeout(()=>{ router.push({path:'/login'}) },3000)
     }else if(res.code == '500'){
       Message.error('操作异常或信息填写错误，请重新再试一次');
     }else{

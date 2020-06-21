@@ -11,7 +11,11 @@ const state = {
   fixedHeader: fixedHeader,
   sidebarLogo: sidebarLogo,
 
-  caseTimeStatus: []
+  caseTimeStatus: [],
+  exhibit_type: [],
+  exhibit_time_bg: [],
+  case_type: [],
+  stock_status: []
 }
 
 const mutations = {
@@ -22,6 +26,18 @@ const mutations = {
   },
   SET_Time_Status(state,caseTimeStatus){
     state.caseTimeStatus = caseTimeStatus
+  },
+  SET_Exhibit_Type(state,exhibit_type){
+    state.exhibit_type = exhibit_type
+  },
+  SET_Exhibit_Time(state,exhibit_time_bg){
+    state.exhibit_time_bg = exhibit_time_bg
+  },
+  SET_CASE_TYPE(state,case_type){
+    state.case_type = case_type
+  },
+  SET_STOCK_STATUS(state,stock_status){
+    state.stock_status = stock_status
   },
 }
 
@@ -36,6 +52,59 @@ const actions = {
 
         commit('SET_Time_Status', data)
         resolve(data)
+      }).catch(error => reject(error) )
+    })
+  },
+  exhibitTypeGet({ commit }){
+    return new Promise((resolve, reject) => {
+      api.getExhibitType().then(response => {
+        const { data } = response
+        let exhibit_type = [];
+        data.map(item=>{
+          exhibit_type.push({ value: item.exhibit_type_code, label: item.exhibit_type_name })
+        })
+        commit('SET_Exhibit_Type', exhibit_type)
+        resolve(exhibit_type)
+      }).catch(error => reject(error) )
+    })
+  },
+  exhibitTimeBGGet({ commit }){
+    return new Promise((resolve, reject) => {
+      api.getExhibitTimeStatus().then(response => {
+        const { data } = response
+        let bgqx = [];
+        data.map(item=>{
+            bgqx.push({ value: item.exhibit_bgqx_code, lable: item.exhibit_bgqx_name })
+        })
+        commit('SET_Exhibit_Time', bgqx)
+        resolve(bgqx)
+      }).catch(error => reject(error) )
+    })
+  },
+  getCaseType({ commit }){
+    return new Promise((resolve, reject) => {
+      api.getCaseType().then(response => {
+        const { data } = response
+        let selectOption = []
+        data.list.map(item=>{
+          selectOption.push({ value: item.case_type_id, label: item.case_type_name })
+        })
+        selectOption.unshift({ value: '',label: '全部' })
+        commit('SET_CASE_TYPE', selectOption)
+        resolve(selectOption)
+      }).catch(error => reject(error) )
+    })
+  },
+  getCaseStatus({ commit }){
+    return new Promise((resolve, reject) => {
+      api.getStockStatus().then(response => {
+        const { data } = response
+        let stock_status = []
+        data.map(item=>{
+          stock_status.push({ value: item.exhibit_stock_status_code, label: item.exhibit_stock_status_name })
+        })
+        commit('SET_STOCK_STATUS', stock_status)
+        resolve(stock_status)
       }).catch(error => reject(error) )
     })
   },

@@ -12,7 +12,7 @@
                         <el-table :data="showModel.tableData" border style="width: 100%" @selection-change="handleSelectionChange">
                             <el-table-column align="center" type="index"></el-table-column>
                             <el-table-column type="selection" width="55"></el-table-column>
-                            <el-table-column :label="item.dataIndex"
+                            <el-table-column :label="item.dataIndex" show-overflow-tooltip
                                 v-for="item in columns" :key="item.itemId" align="center">
                                 <template slot-scope="{row}">
                                     <span v-if="item.itemId == 4">{{ row[item.title] | mapStatus }}</span>
@@ -71,12 +71,12 @@
                 <el-input v-model="submitDataInfo[item.dom]" v-if="item.itemId<4 ||item.itemId == 5"
                     :placeholder="item.placeholder" style="width: auto"></el-input>
                 <el-select v-model="submitDataInfo[item.dom]" :placeholder="item.placeholder" v-else-if="item.itemId == 4">
-                    <el-option v-for="itemChild in showModel.selectOption_type" :key="itemChild.type_item" 
-                        :label="itemChild.type_name" :value="itemChild.type_value"></el-option>
+                    <el-option v-for="itemChild in showModel.selectOption_type" :key="itemChild.value" 
+                        :label="itemChild.label" :value="itemChild.value"></el-option>
                 </el-select>
                 <el-select v-model="submitDataInfo[item.dom]" :placeholder="item.placeholder" v-else-if="item.itemId == 6">
-                    <el-option v-for="itemChild in showModel.selectOption_time" :key="itemChild.time_id" 
-                        :label="itemChild.time_name" :value="itemChild.time_value"></el-option>
+                    <el-option v-for="itemChild in showModel.selectOption_time" :key="itemChild.value" 
+                        :label="itemChild.label" :value="itemChild.value"></el-option>
                 </el-select>
             </div>
             <div class="checkboxSelect">
@@ -96,6 +96,9 @@
     import { mapGetters } from 'vuex'
     export default {
         components: { Search,DialogPagin },
+        computed :{
+            ...mapGetters(['exhibit_type','exhibit_time_bg'])
+        },
         filters: {
             mapStatus(status){
                 const statusMap = {
@@ -146,18 +149,8 @@
                     ],
                     // 新增案卷
                     dialogReceivedVisible: false,
-                    selectOption_type: [
-                        { type_value: 'SS', type_name: '诉讼', type_id: 1 },
-                        { type_value: 'JS', type_name: '技术', type_id: 2 },
-                        { type_value: 'WS', type_name: '文书', type_id: 3 },
-                    ],
-                    selectOption_time: [
-                        { time_value: '1', time_name: '永久', time_id: 1 },
-                        { time_value: '2', time_name: '长期', time_id: 2 },
-                        { time_value: '3', time_name: '短期', time_id: 3 },
-                        { time_value: '30', time_name: '30年', time_id: 4 },
-                        { time_value: '60', time_name: '60年', time_id: 5 },
-                    ],
+                    selectOption_type: [],
+                    selectOption_time: [],
                 },
                 // table表头
                 columns: [
@@ -195,6 +188,7 @@
         },
         mounted(){
             this.getCaseType();
+            this.getTypeList();
         },
         methods: {
             receivedAddress(data){
@@ -216,6 +210,14 @@
             // 选中
             handleSelectionChange(val){
                 console.log(val)
+            },
+            getTypeList(){
+                console.log(this.exhibit_time_bg,this.exhibit_type)
+                let dataArr = [
+                    { showModel: 'selectOption_time', store: 'exhibit_time_bg' },
+                    { showModel: 'selectOption_type', store: 'exhibit_type' },
+                ]
+                dataArr.map(item=> this.showModel[item.showModel] = this[item.store] )
             },
             // 类型分类
             getCaseType(){
@@ -295,8 +297,8 @@
             resetSubmitInfo(){
                 for( let key in this.submitDataInfo){ this.submitDataInfo[key] = '' }
                 this.submitDataInfo.nd = new Date().getFullYear()
-                this.submitDataInfo.exhibit_type = this.showModel.selectOption_type[0].type_value;
-                this.submitDataInfo.bgqx = this.showModel.selectOption_time[0].time_value;
+                this.submitDataInfo.exhibit_type = this.showModel.selectOption_type[0].value;
+                this.submitDataInfo.bgqx = this.showModel.selectOption_time[0].value;
             },
             // 确认提交
             async confirmBtn(){

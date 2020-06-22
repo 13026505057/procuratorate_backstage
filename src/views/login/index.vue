@@ -28,18 +28,14 @@
         <el-button :loading="loading" type="loginBtn" style="width:100%" @click.native.prevent="handleLogin">登录</el-button>
       </el-form>
     </div>
-    
-    <!-- <social-sign /> -->
   </div>
 </template>
 
 <script>
-// import SocialSign from './components/SocialSignin'
 import md5 from 'js-md5';
 import { mapActions } from 'vuex'
 export default {
   name: 'Login',
-  // components: { SocialSign },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!value) callback(new Error('请输入正确的用户名'))
@@ -80,7 +76,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions({'setTokenData':'user/setTokenData','getUserInfo':'user/getInfo'}),
+    ...mapActions({'setTokenData':'user/setTokenData'}),
     checkCapslock(e) {
       const { key } = e
       this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
@@ -110,7 +106,7 @@ export default {
           } else this.loading = false
         } else false
       })
-    }
+    },
   }
 }
 </script>

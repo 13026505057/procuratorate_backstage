@@ -69,6 +69,7 @@ const actions = {
   // setTokenData
   setTokenData({commit},token){
     commit('SET_TOKEN',token)
+    console.log(token)
     setToken(token)
   },
   SET_ROLES({commit},roles){

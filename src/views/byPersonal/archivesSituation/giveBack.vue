@@ -53,13 +53,13 @@
                 // table表头
                 columns: [
                     { title: 'case_bh', dataIndex: '统一涉案号', itemId: 1 },
-                    { title: 'case_name', dataIndex: '条形码号', itemId: 10 },
+                    { title: 'out_exhibit_id', dataIndex: '条形码号', itemId: 10 },
                     { title: 'case_type_name', dataIndex: '档号', itemId: 2 },
-                    { title: 'case_desc', dataIndex: '卷号', itemId: 11 },
+                    { title: 'jh', dataIndex: '卷号', itemId: 11 },
                     { title: 'time_status', dataIndex: '案件名称', itemId: 4 },
-                    { title: 'case_take_user_name', dataIndex: '退查时间', itemId: 3 },
-                    { title: 'total_quantity', dataIndex: '操作人', itemId: 5 },
-                    { title: 'in_quantity', dataIndex: '退查原因', itemId: 6 },
+                    { title: 'create_time', dataIndex: '退查时间', itemId: 3 },
+                    { title: 'create_user_name', dataIndex: '操作人', itemId: 5 },
+                    { title: 'mark', dataIndex: '退查原因', itemId: 6 },
                 ],
             }
            
@@ -112,43 +112,34 @@
 <style lang="scss">
     .giveBackPage{
         margin: 20px;
-        .head-tab{
-            margin-top: 30px;
-            .table-dataList{
-                .highlight-btn,.ash-btn{
-                    font-size: 14px;
-                    color: #ffffff;
-                    border: none;
-                }
-                .highlight-btn{
-                    background-color: #6cb5ff;
-                }
-                .ash-btn{
-                    background-color: #d1d1d1;
-                }
+        .table-dataList{
+            padding-top: 20px;
+            .highlight-btn,.ash-btn{
+                font-size: 14px;
+                color: #ffffff;
+                border: none;
             }
-            .pagination{
-                margin-top: 40px;
-                display: flex;
-                justify-content: center;
-                .page-change{
-                    height: 28px;
-                    line-height: 28px;
-                    font-size: 13px;
-                    margin: 2px 5px;
-                    padding: 0px 6px;
-                    // background-image: $gradual-color;
-                    color: #ffffff;
-                    border-radius: 4px;
-                    cursor: pointer;
-                }
+            .highlight-btn{
+                background-color: #6cb5ff;
             }
-            .tab-pane-position {
-                position: relative;
+            .ash-btn{
+                background-color: #d1d1d1;
             }
-            .tab-badge-num{
-                position: absolute;
-                top: -2px;
+        }
+        .pagination{
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            .page-change{
+                height: 28px;
+                line-height: 28px;
+                font-size: 13px;
+                margin: 2px 5px;
+                padding: 0px 6px;
+                // background-image: $gradual-color;
+                color: #ffffff;
+                border-radius: 4px;
+                cursor: pointer;
             }
         }
     }

@@ -2,7 +2,7 @@
     <div class="header">
         <div class="leftBox">
             <img src="@/assets/header/headerIcon.png" alt="" class="iconImg">
-            <span class="title">智慧档案管理系统</span>
+            <span class="title">档案归档监督系统</span>
         </div>
         <div class="rightBox">
             <em class="title">青岛市检察机关档案管理系统</em>

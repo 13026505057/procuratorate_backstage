@@ -33,6 +33,7 @@ const asyncDataRoutes = [
                 {"path": "checkArchives", "component": "views/archivesManage/checkArchives/index", 
                 "name": "CheckArchives", "meta":{ "title":"档案检查" },
                 "children": [
+                    {"path": "readyItem", "component": "views/archivesManage/checkArchives/readyItem", "name": "ReadyItem", "meta":{ "title":"档案预入库" }},
                     {"path": "receiveItem", "component": "views/archivesManage/checkArchives/receiveItem", "name": "ReceiveItem", "meta":{ "title":"档案接收" }},
                     {"path": "checkItem", "component": "views/archivesManage/checkArchives/checkItem", "name": "CheckItem", "meta":{ "title":"档案检查" }}
                 ]

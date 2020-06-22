@@ -24,6 +24,7 @@ import CompletedArchives from '@/views/archivesManage/shallCompleted/completed'
 import CheckArchives from '@/views/archivesManage/checkArchives/index'
 import ReceiveItem from '@/views/archivesManage/checkArchives/receiveItem'
 import CheckItem from '@/views/archivesManage/checkArchives/checkItem'
+import ReadyItem from '@/views/archivesManage/checkArchives/readyItem'
 import CheckHistory from '@/views/archivesManage/checkHistory/index'
 import Agree from '@/views/archivesManage/checkHistory/agree'
 import Disagree from '@/views/archivesManage/checkHistory/disagree'
@@ -88,6 +89,7 @@ let routesNav = {
     UncompletedPut: UncompletedPut,
     CompletedPut: CompletedPut,
     Temporary: Temporary,
+    ReadyItem: ReadyItem,
     
     // 分析评估
     QualifiedType: QualifiedType,

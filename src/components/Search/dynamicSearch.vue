@@ -36,7 +36,7 @@
             </template>
         </div>
         <el-button type="search" @click="comfirmSearch">查询</el-button>
-        <el-button type="search" @click="addCaseItem">新增</el-button>
+        <el-button type="search" @click="addCaseItem">新增案件</el-button>
 
         <!-- 新增案件 -->
         <el-dialog title="新增案件" :visible.sync="showModel.dialogReceivedVisible">
@@ -92,9 +92,8 @@ export default {
                 { dom: 'case_name', value: '', placeholder: '请输入罪名', itemId: 2, name: 'input' },
                 { dom: 'timeYear', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
             ],
-            org_dataList: [{level:'area'}],
             showModel: {
-                // 新增案卷
+                // 新增案件
                 dialogReceivedVisible: false,
                 exhibit_type: [],
                 bgqx: [],
@@ -158,7 +157,11 @@ export default {
         },
         async confirmAddCase(){
             let resultData = await this.$api.addOldExhibit(this.submitDataInfo)
-            if(resultData && resultData.code =='0') this.$message.success('操作成功')
+            if(resultData && resultData.code =='0') {
+                this.showModel.dialogReceivedVisible = false;
+                this.$message.success('操作成功')
+            }
+
         },
         getTypeList(){
             let dataArr = [

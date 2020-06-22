@@ -87,9 +87,9 @@ const mutations = {
 }
 
 const actions = {
-  generateRoutes({ commit }, roles) {
+  generateRoutes({ commit }, group_name) {
     return new Promise(resolve => {
-      // api.getRoutesData({group_name: '12312'}).then((result)=>{
+      // api.getRoutesData({group_name}).then((result)=>{
       //   let accessedRoutes
       //   const accessedRoute = checkedNullInfo(result.data)
       //   accessedRoute.push({ path: '*', redirect: '/404', hidden: true })

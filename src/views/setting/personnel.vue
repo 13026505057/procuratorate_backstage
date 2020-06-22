@@ -97,7 +97,7 @@
                         <el-form-item label="权限设置">
                             <el-select v-model="unit_form.vue_role_id" clearable placeholder="请选择" style="width:100%">
                                 <el-option
-                                    v-for="item in routesGroupsList"
+                                    v-for="item in routesGroupsArr"
                                     :key="item.vue_role_id"
                                     :label="item.group_name"
                                     :value="item.vue_role_id">
@@ -195,7 +195,7 @@
                 props: { multiple: true },
                 // jurisdictionOptions:[]
                 userName:'',
-                routesGroupsList: [],
+                routesGroupsArr: [],
                 seatchData: {
                     user_true_name: '',
                     dept_id: ''
@@ -252,7 +252,7 @@
                 const dataInfo = {pageNum:1,pageSize:100}
                 const resultData = await this.$api.getRoutesData(dataInfo);
                 if(resultData&&resultData.code == 0){
-                    this.RoutesGroupsList = resultData.data;
+                    this.routesGroupsArr = resultData.data;
                 }
             },
             // 查角色
@@ -276,13 +276,14 @@
             },
             // 新增
             addUnitClick(type,row_user_id){
-               
+               console.log(row_user_id)
                 this.dialogVisible = true;
                 this.type = type;
                 this.user_id = row_user_id.user_id;
                 this.unit_form.username = '';
                 this.unit_form.password = '';
                 this.unit_form.user_true_name = '';
+                this.unit_form.vue_role_id = '';
                 this.unit_form.role_ids = [];
                 this.unit_form.position_ids = [];
                 this.unit_form.dept_ids = [];
@@ -293,6 +294,7 @@
                     this.unit_form.username = row_user_id.username;
                     this.unit_form.password = '';
                     this.unit_form.user_true_name = row_user_id.user_true_name;
+                    this.unit_form.vue_role_id = row_user_id.vue_role_id;
 
                     // this.unit_form.position = row_user_id.userPositions;
                      console.log(row_user_id.userDepts)

@@ -1,70 +1,63 @@
 <template>
     <div class="progress-content">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
         <div class="head-tab">
-            <el-tabs v-model="activeName" @tab-click="handleClick">
-                <el-tab-pane class="tab-pane-position" v-for="tabItem in tabItems" :key="tabItem.case_type_id" :name="tabItem.case_type_id" >
-                    <span slot="label">
-                        {{tabItem.case_type_name}}
-                        <el-badge :value="tabItem.contNum" v-if="tabItem.contNum == '0'?false:true" class="item tab-badge-num"></el-badge>
-                    </span>
-                    <div class="table-dataList" >
-                        <el-table
-                            :data="tableData"
-                            :header-cell-style="headerRowStyle"
-                            border
-                            style="width: 100%">
-                            <el-table-column
-                                align="center"
-                                label="序号"
-                                width="60"
-                                type="index">
-                            </el-table-column>
-                            <el-table-column
-                                align="center"
-                                show-overflow-tooltip
-                                v-for="tableItem in tableItems"
-                                :prop="tableItem.prop"
-                                :label="tableItem.label"
-                                :key="tableItem.label"
-                                >
-                                <template slot-scope="{row}">
-                                    <span v-if="tableItem.tableId == 5">{{ row[tableItem.prop] | pigeonhole }}</span>
-                                    <span v-else-if="tableItem.tableId == 7">{{row[tableItem.prop]==0?'未成卷':'已成卷'}}</span>
-                                    <span v-else-if="tableItem.tableId == 10">
-                                    </span>
-                                    <span v-else>{{row[tableItem.prop]}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                                label="待入库案卷数"
-                                align="center">
-                                <template slot-scope="props">
-                                    <span>{{props.row.total_quantity-props.row.in_quantity}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                                width="190"
-                                align="center"
-                                label="操作">
-                                <template slot-scope="props">
-                                    <el-button :disabled="disabled1" :loading="disabled1" @click="examineClick(props.row)" class="highlight-btn" size="small">查看进度</el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                    </div>
-                    <div class="pagination">
-                        <el-pagination
-                            background
-                            @current-change="handleCurrentChange1"
-                            :current-page.sync="currentPage1"
-                            :page-size="pageSize"
-                            layout="prev, pager, next, jumper"
-                            :total="total1">
-                        </el-pagination>
-                    </div>
-                </el-tab-pane>
-            </el-tabs>
+           
+            <div class="table-dataList" >
+                <el-table
+                    :data="tableData"
+                    :header-cell-style="headerRowStyle"
+                    border
+                    style="width: 100%">
+                    <el-table-column
+                        align="center"
+                        label="序号"
+                        width="60"
+                        type="index">
+                    </el-table-column>
+                    <el-table-column
+                        align="center"
+                        show-overflow-tooltip
+                        v-for="tableItem in tableItems"
+                        :prop="tableItem.prop"
+                        :label="tableItem.label"
+                        :key="tableItem.label"
+                        >
+                        <template slot-scope="{row}">
+                            <span v-if="tableItem.tableId == 2">{{Number(row.in_count)+Number(row.chaoqi_count)}}</span>
+                            <span v-if="tableItem.tableId == 22">{{Number(row.all_count)-Number(row.in_count)}}</span>
+                            <span v-else>{{row[tableItem.prop]}}</span>
+                        </template>
+                    </el-table-column>
+                    <!-- <el-table-column
+                        label="待入库案卷数"
+                        align="center">
+                        <template slot-scope="props">
+                            <span>{{props.row.total_quantity-props.row.in_quantity}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        width="190"
+                        align="center"
+                        label="操作">
+                        <template slot-scope="props">
+                            <el-button :disabled="disabled1" :loading="disabled1" @click="examineClick(props.row)" class="highlight-btn" size="small">查看进度</el-button>
+                        </template>
+                    </el-table-column> -->
+                </el-table>
+            </div>
+            <div class="pagination">
+                <el-pagination
+                    background
+                    @current-change="handleCurrentChange1"
+                    :current-page.sync="currentPage1"
+                    :page-size="pageSize"
+                    layout="prev, pager, next, jumper"
+                    :total="total1">
+                </el-pagination>
+            </div>
+               
+            
             <el-dialog
                 title="案件进度"
                 :visible.sync="dialogVisible"
@@ -118,15 +111,41 @@
                 tableData:[],
                 badgeList:[],
                 tableItems:[
-                    {label: "统一受案号", prop: "case_bh", tableId:1},
-                    {label: "案件名称", prop: "case_name", tableId:2},
-                    {label: "案件类型", prop: "case_type_name", tableId:3},
-                    {label: "案件描述", prop: "case_desc", tableId:4},
-                    {label: "是否归档", prop: "time_status", tableId:5},
-                    {label: "承办人", prop: "case_take_user_name", tableId:6},
-                    {label: "是否成卷", prop: "chengjuan", tableId:7},
-                    {label: "总案卷数", prop: "total_quantity", tableId:8},
-                    {label: "在库案卷数", prop: "in_quantity", tableId:9},
+                    {label: "单位名称", prop: "org_name", tableId:1},
+                    {label: "应交卷数量", prop: "", tableId:2},
+                    {label: "实交卷数量", prop: "in_count", tableId:3},
+                    {label: "超期未交卷数量", prop: "chaoqi_count", tableId:4},
+                    {label: "交卷率", prop: "persent", tableId:5},
+                    // {label: "承办人", prop: "case_take_user_name", tableId:6},
+                    // {label: "是否成卷", prop: "chengjuan", tableId:7},
+                    // {label: "总案卷数", prop: "total_quantity", tableId:8},
+                    // {label: "在库案卷数", prop: "in_quantity", tableId:9},
+                    // {label: "待入库案卷数", prop: "", tableId:10},
+                    // total_quantity-in_quantity
+
+                ],
+                tableItemsCity:[
+                    {label: "单位名称", prop: "org_name", tableId:1},
+                    {label: "应交卷数量", prop: "", tableId:2},
+                    {label: "实交卷数量", prop: "in_count", tableId:3},
+                    {label: "超期未交卷数量", prop: "chaoqi_count", tableId:4},
+                    {label: "交卷率", prop: "persent", tableId:5},
+                    // {label: "承办人", prop: "case_take_user_name", tableId:6},
+                    // {label: "是否成卷", prop: "chengjuan", tableId:7},
+                    // {label: "总案卷数", prop: "total_quantity", tableId:8},
+                    // {label: "在库案卷数", prop: "in_quantity", tableId:9},
+                    // {label: "待入库案卷数", prop: "", tableId:10},
+                    // total_quantity-in_quantity
+
+                ],
+                tableItemsArea:[
+                    {label: "办案人姓名", prop: "case_take_user_name", tableId:1},
+                    {label: "单位名称", prop: "org_name", tableId:3},
+                    {label: "部门名称", prop: "dept_name", tableId:4},
+                    {label: "应交卷数量", prop: "all_count", tableId:5},
+                    {label: "实交卷数量", prop: "in_count", tableId:6},
+                    {label: "未交卷数量", prop: "", tableId:22},
+                    {label: "交卷率", prop: "persent", tableId:7},
                     // {label: "待入库案卷数", prop: "", tableId:10},
                     // total_quantity-in_quantity
 
@@ -209,13 +228,25 @@
                 let dataInfo = { ...this.seatchData }
                 dataInfo ['pageNum'] = this.currentPage1;
                 dataInfo ['pageSize'] = this.pageSize;
-                dataInfo ['case_type_id'] = this.activeName;
-                
-                const resultData = await this.$api.getProgressCase(dataInfo);
-                if(resultData && resultData.code == '0') {
-                    this.tableData = resultData.data.list,
-                    this.total1 = resultData.data.total
+                // dataInfo ['case_type_id'] = this.activeName;
+                if(this.seatchData.city_id==this.seatchData.area_id){
+                    //查询基层院的归档率
+                    this.tableItems = this.tableItemsArea;
+                    const resultData = await this.$api.caseJauge(dataInfo);
+                    if(resultData && resultData.code == '0') {
+                        this.tableData = resultData.data.list,
+                        this.total1 = resultData.data.total
+                    }
+                }else{
+                    //查询地级市的归档率
+                    this.tableItems = this.tableItemsCity;
+                    const resultData = await this.$api.caseJaugeAll(dataInfo);
+                    if(resultData && resultData.code == '0') {
+                        this.tableData = resultData.data
+                        // this.total1 = resultData.data.total
+                    }
                 }
+                
             },
             comfirmSearch(data){
                 console.log(data)

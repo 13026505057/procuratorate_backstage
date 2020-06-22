@@ -53,5 +53,17 @@ const exhibit = {
     attachExhibitToCase(data) {
         return request({ url: '/exhibit/exhibit/attachExhibitToCase', method: 'post', data })
     },
+    //查询存储设备信息
+    getStock(data){
+        return request({ url: '/shale/shale/getByPage', method: 'post', data })
+    },
+    //打印存储设备码
+    printCode(data){
+        return request({ url: '/shale/shale/printShaleCode', method: 'post', data })
+    },
+    //新增存储设备
+    addStock(data){
+        return request({ url: '/shale/shale/add', method: 'post', data })
+    },
 }
 export default exhibit

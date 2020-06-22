@@ -62,7 +62,7 @@
             <el-dialog
                 title="案卷详情"
                 :visible.sync="dialogVisibleDetails"
-                width="58%"
+                width="68%"
                 center>
                 <span>
                     <div class="table-dataList" >

@@ -1,11 +1,9 @@
+
 <template>
     <div class="overall-content unit-content">
-        <div>
-            <!--  class="search-box" -->
-            <!-- <div>部门列表</div> -->
-            <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
-
-            <el-button @click="addUnitClick('add','')">新增部门</el-button>
+        <div class="search-box">
+            <div>存储设备列表</div>
+            <el-button @click="addUnitClick('add','')">新增设备</el-button>
         </div>
         <div class="table-list">
             <div class="table-dataList" >
@@ -32,15 +30,15 @@
                         align="center"
                         label="操作">
                         <template slot-scope="{ row }">
-                            <el-button @click="addUnitClick('update',row)" class="ash-btn" size="small">修改</el-button>
-                            <el-popconfirm
+                            <el-button @click="printClick(row)" class="ash-btn" size="small">条码打印</el-button>
+                            <!-- <el-popconfirm
                                 icon="el-icon-info"
                                 iconColor="red"
                                 title="确定删除吗？"
                                 @onConfirm = "confirmDel"
                                 >
-                                <el-button slot="reference" @click="delUnitClick(row.dept_id)" class="highlight-btn" size="small">删除</el-button>
-                            </el-popconfirm>
+                                <el-button slot="reference" @click="delUnitClick(row.position_id)" class="highlight-btn" size="small">删除</el-button>
+                            </el-popconfirm> -->
                         </template>
                     </el-table-column>
                 </el-table>
@@ -61,9 +59,15 @@
                 width="34%"
                 center>
                 <span>
-                    <el-form ref="form" :model="unit_form" label-width="80px">
-                        <el-form-item label="部门名称">
-                            <el-input v-model="unit_form.dept_name"></el-input>
+                    <el-form ref="form" :model="stockForm" label-width="80px">
+                        <el-form-item label="货架名称">
+                            <el-input v-model="stockForm.shale_name"></el-input>
+                        </el-form-item>
+                        <el-form-item label="货架行数">
+                            <el-input v-model="stockForm.hang"></el-input>
+                        </el-form-item>
+                        <el-form-item label="货架列数">
+                            <el-input v-model="stockForm.lie"></el-input>
                         </el-form-item>
                     </el-form>  
                 </span>
@@ -79,25 +83,58 @@
                     <el-button type="primary" @click="dialogVisible = false">关 闭</el-button>
                 </span>
             </el-dialog>
+            <el-dialog
+                :title="printTitle"
+                :visible.sync="printVisible"
+                width="34%"
+                center>
+                <span>
+                    <el-form ref="form" :model="printForm" label-width="80px">
+                        <el-form-item label="打印选项">
+                            <el-radio v-model="printType" label="shale">全部打印</el-radio>
+                            <el-radio v-model="printType" label="cell">单项打印</el-radio>
+                        </el-form-item>
+                        
+                        <el-form-item v-if="printType=='cell'?true:false" label="设备行数">
+                            <el-input v-model="printForm.hang"></el-input>
+                        </el-form-item>
+                        <el-form-item v-if="printType=='cell'?true:false" label="设备列数">
+                            <el-input v-model="printForm.lie"></el-input>
+                        </el-form-item>
+                        <!-- <el-form-item label="货架名称">
+                            <el-input v-model="stockForm.shale_name"></el-input>
+                        </el-form-item>
+                        <el-form-item label="货架行数">
+                            <el-input v-model="stockForm.hang"></el-input>
+                        </el-form-item>
+                        <el-form-item label="货架列数">
+                            <el-input v-model="stockForm.lie"></el-input>
+                        </el-form-item> -->
+                    </el-form>  
+                </span>
+                <span slot="footer" class="dialog-footer">
+                    <el-button slot="reference" type="primary" @click="confirmPrint">确 定</el-button>
+                    <!-- <el-button type="primary" @click="confirmAddUnit">确 定</el-button> -->
+                    <el-button type="primary" @click="printVisible = false">关 闭</el-button>
+                </span>
+            </el-dialog>
         </div>
     </div>
 </template>
 <script>
-    import Search from '@/components/Search'
     import { mapGetters } from 'vuex'
     
     export default {
-        components: { Search },
         computed:{
             ...mapGetters(['org_id'])
         },
         data()  {
             return  {
                 tableItems:[
-                    { label: "设备名称",  prop: "shale_name" },
-                    { label: "设备状态", prop: "dept_create_user_name" ,},
-                    { label: "创建时间", prop: "dept_create_time" ,},
-                    // { label: "所属部门", prop: "dept_total_name" ,},
+                    { label: "货架名称",  prop: "shale_name" },
+                    { label: "货架行数", prop: "hang" ,},
+                    { label: "货架列数", prop: "lie" ,},
+                    { label: "创建时间", prop: "create_time" ,},
                 ],
                 tableData: [],
                 headStyle:{
@@ -107,35 +144,67 @@
                     fontSize: '18px',
                     color: '#2c2c2c'
                 },
+                printTitle:'打印条码',
                 currentPage1:1,
                 total1:1,
                 pageSize:10,
                 dialogVisible:false,
+                printVisible:false,
                 dialogTitle:'',
-                unit_form:{
-                    dept_name: '',
-                    org_id: '',
+                stockForm:{
+                    shale_name: '',
+                    hang: '',
+                    lie:''
+                },
+                printType:'shale',
+                printForm:{
+                    shale_id:'',
+                    hang: '',
+                    lie:''
                 },
                 type:'',
-                dept_id:'',
+                position_id:'',
                 popconfirmTitle:'',
 
             }
         },
         mounted(){
-            // this.unit_form.org_id = this.org_id
+            this.stockForm.org_id = this.org_id;
             this.getDataList();
         },
         methods: {
             async getDataList(){
-                const dataInfo = {pageNum:this.currentPage1,pageSize:this.pageSize,org_id:this.unit_form.org_id}
-                const resultData = await this.$api.getStorageList(dataInfo);
+                const dataInfo = {pageNum:this.currentPage1,pageSize:this.pageSize,org_id:this.stockForm.org_id}
+                const resultData = await this.$api.getStock(dataInfo);
                 if(resultData&&resultData.code == 0){
                     this.tableData = resultData.data.list;
                     this.total1 = resultData.data.total;
                 }
             },
-            
+            async print(){
+                
+                if(this.printType=='shale'){
+                    
+                    var dataInfo = {print_type:'shale',shale_id:this.printForm.shale_id,hang:'',lie:'',org_id:this.stockForm.org_id}
+                }else{
+                    var dataInfo = {print_type:'cell',shale_id:this.printForm.shale_id,hang:this.printForm.hang,lie:this.printForm.lie,org_id:this.stockForm.org_id}
+                }
+                
+                const resultData = await this.$api.printCode(dataInfo);
+                if(resultData&&resultData.code == 0){
+                    this.$message({
+                        message: '打印请求发送成功',
+                        type: 'success'
+                    });
+                    this.printVisible = false;
+                    // this.tableData = resultData.data.list;
+                    // this.total1 = resultData.data.total;
+                }
+            },
+            //确定打印
+            confirmPrint(){
+                this.print();
+            },
             headerRowStyle({row, rowIndex}){ 
                 return this.headStyle
             },
@@ -145,19 +214,24 @@
                 this.getDataList();
             },
             // 新增
-            addUnitClick(type,row_dept_id){
+            addUnitClick(type,row_position_id){
                 this.dialogVisible = true;
                 this.type = type;
-                this.dept_id = row_dept_id.dept_id;
+                this.position_id = row_position_id.position_id;
                 if(type == "add"){
-                    this.dialogTitle = "新增部门";
-                    this.unit_form = {
-                        dept_name :'',
+                    this.dialogTitle = "新增职位";
+                    this.stockForm = {
+                        position_name :'',
                     }
                 }else{
-                    this.dialogTitle = "修改部门"
-                    this.unit_form.dept_name = row_dept_id.dept_name;
+                    this.dialogTitle = "修改职位"
+                    this.stockForm.position_name = row_position_id.position_name;
                 }
+            },
+            //点击打印条码
+            printClick(data){
+                this.printVisible = true;
+                this.printForm.shale_id = data.shale_id;
             },
             // 新增&&修改
             async confirmAddUnit(){
@@ -169,9 +243,9 @@
                 
             },
             async confirmClick(){
-                const dataInfo = { ...this.unit_form }
+                const dataInfo = { ...this.stockForm }
                 if(this.type == "add"){
-                    const resultData = await this.$api.addDepartment(dataInfo);
+                    const resultData = await this.$api.addStock(dataInfo);
                     if(resultData&&resultData.code == 0){
                         this.$message({
                             message: '新增成功',
@@ -180,9 +254,9 @@
                         this.dialogVisible = false;
                     }
                 }else{
-                    dataInfo['dept_id'] = this.dept_id;
+                    dataInfo['position_id'] = this.position_id;
                     console.log(dataInfo)
-                    const resultData = await this.$api.updateDepartment(dataInfo);
+                    const resultData = await this.$api.updatePosition(dataInfo);
                     if(resultData&&resultData.code == 0){
                         this.$message({
                             message: '修改成功',
@@ -194,12 +268,12 @@
                 this.getDataList();
             },
             // 删除
-            delUnitClick(dept_id){
-                this.dept_id = dept_id
+            delUnitClick(position_id){
+                this.position_id = position_id
             },
             async confirmDel(){
-                const dataInfo = {dept_id: this.dept_id}
-                const resultData = await this.$api.deleteDepartment(dataInfo);
+                const dataInfo = {shale_id: this.position_id}
+                const resultData = await this.$api.deleteStock(dataInfo);
                 if(resultData&&resultData.code == 0){
                     this.$message({
                         message: '删除成功',

@@ -474,9 +474,9 @@
                 position: absolute;
                 top: -2px;
             }
-            .customClass{
-                // background-color: #47ccff;
-            }
+            // .customClass{
+            //     // background-color: #47ccff;
+            // }
             .step-flex{
                 display: flex;
                 justify-content: center;

@@ -244,7 +244,7 @@
                 let case_ids = case_id_arr.join(",")
                 const dataInfo = {case_ids:case_ids}
                 console.log(case_ids)
-                let resultData  = await this.$api.confirmExamine(dataInfo);
+                let resultData  = await this.$api.confirmNone(dataInfo);
                 if(resultData && resultData.code=='0'){
                     this.$message.success('操作成功')
                     this.activeName = this.activeName2;

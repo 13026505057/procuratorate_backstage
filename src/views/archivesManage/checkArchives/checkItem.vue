@@ -76,12 +76,12 @@
                 </span>
                 <el-input v-model="submitDataInfo['mark']" clearable placeholder="请填写退查原因" style="width: auto"></el-input>
             </div>
-            <div style="display:table;width: 100%;margin-bottom: 10px" v-else-if="submitDataInfoType=='flaw'">
+            <!-- <div style="display:table;width: 100%;margin-bottom: 10px" v-else-if="submitDataInfoType=='flaw'">
                 <span style="display:table-cell;width: 25%;text-align: right;padding-right: 20px">
                     标识原因：
                 </span>
                 <el-input v-model="submitDataInfo['mark']" clearable placeholder="请填写标识原因" style="width: auto"></el-input>
-            </div>
+            </div> -->
             <span slot="footer" class="dialog-footer">
                 <el-button @click="showModel.dialogReceivedVisible = false">取 消</el-button>
                 <el-button type="primary" @click="confirmBtn(submitDataInfoCaseId)">确 定</el-button>
@@ -147,9 +147,10 @@
                     // 新增案卷
                     dialogReceivedVisible: false,
                     selectOption_type: [
-                        { type_value: 'agree', type_name: '通过', type_id: 1 },
+                        { type_value: 'normal', type_name: '通过', type_id: 1 },
                         { type_value: 'disagree', type_name: '审核不通过', type_id: 2 },
                         { type_value: 'flaw', type_name: '不成卷(瑕疵卷)', type_id: 3 },
+                        { type_value: 'datas', type_name: '资料', type_id: 4 },
                     ],
                 },
                 // table表头
@@ -269,9 +270,10 @@
             // 确认提交
             confirmBtn(case_ids){
                 const typeFun = [
-                    { type: 'agree', fun: 'agreeCheckFun' },
+                    { type: 'normal', fun: 'agreeCheckFun' },
                     { type: 'disagree', fun: 'disagreeCheckFun' },
-                    { type: 'flaw', fun: 'flawCheckFun' },
+                    { type: 'flaw', fun: 'agreeCheckFun' },
+                    { type: 'datas', fun: 'agreeCheckFun' },
                 ]
                 typeFun.map(item=>{
                     if(this.submitDataInfoType == item.type) {
@@ -280,20 +282,15 @@
                     }
                 })
             },
-            // 审查通过
-            async agreeCheckFun(case_ids){
-                let resultData = await this.$api.confirmNone({case_ids})
+            // 审查通过(普通卷/瑕疵卷/资料)
+            async agreeCheckFun(case_ids,type_status){
+                let resultData = await this.$api.confirmNone({case_ids,type_status})
                 if(resultData && resultData.code=='0') this.$message.success('操作成功')
             },
             // 审查不通过
             async disagreeCheckFun(case_ids){
                 const dataInfo = { case_ids,mark: this.submitDataInfo.mark }
                 let resultData = await this.$api.refuseConfirmNone(dataInfo)
-                if(resultData && resultData.code=='0') this.$message.success('操作成功')
-            },
-            // 不成卷(瑕疵卷)
-            async flawCheckFun(case_ids){
-                let resultData = await this.$api.confirmNone({case_ids})
                 if(resultData && resultData.code=='0') this.$message.success('操作成功')
             },
         },

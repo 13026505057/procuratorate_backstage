@@ -50,7 +50,7 @@ const asyncDataRoutes = [
                 "children": [
                     {"path": "uncompleted", "component": "views/archivesManage/putStorage/uncompleted", "name": "UncompletedPut", "meta":{ "title":"待入库上架" }},
                     {"path": "completed", "component": "views/archivesManage/putStorage/completed", "name": "CompletedPut", "meta":{ "title":"已入库上架" }},
-                    {"path": "temporary", "component": "views/archivesManage/putStorage/temporary", "name": "Temporary", "meta":{ "title":"卷宗暂存" }}
+                    // {"path": "temporary", "component": "views/archivesManage/putStorage/temporary", "name": "Temporary", "meta":{ "title":"卷宗暂存" }}
                 ]
             }
         ]
@@ -100,7 +100,7 @@ const asyncDataRoutes = [
             {   "path": "archivesSituation", "component": "views/byPersonal/archivesSituation/index", 
                 "name": "ArchivesSituation", "meta":{ "title":"案件归档情况" },
                 "children": [
-                    {"path": "caseNum", "component": "views/byPersonal/archivesSituation/caseNum", "name": "CaseNum", "meta":{ "title":"受理案件数量" }},
+                    // {"path": "caseNum", "component": "views/byPersonal/archivesSituation/caseNum", "name": "CaseNum", "meta":{ "title":"受理案件数量" }},
                     {"path": "caseShallCompleted", "component": "views/byPersonal/archivesSituation/caseShallCompleted", "name": "CaseShallCompleted", "meta":{ "title":"应归档案件" }},
                     {"path": "waitAssessment", "component": "views/byPersonal/archivesSituation/waitAssessment", "name": "WaitAssessmentArchives", "meta":{ "title":"等待质量评查" }},
                     {"path": "unTransfer", "component": "views/byPersonal/archivesSituation/unTransfer", "name": "UnTransfer", "meta":{ "title":"未移交归档案件" }},
@@ -133,7 +133,7 @@ const asyncDataRoutes = [
         "path": "/setting",
         "redirect": "/setting/unit",
         "children": [
-            {"path": "addRole", "component": "views/setting/addRole", "name": "AddRole", "meta":{ "title":"路由权限组" }},
+            {"path": "addRole", "component": "views/setting/addRole", "name": "AddRole", "meta":{ "title":"路由权限组设置" }},
             {"path": "unit", "component": "views/setting/unit", "name": "Unit", "meta":{ "title":"单位设置" }},
             {"path": "department", "component": "views/setting/department", "name": "Department", "meta":{ "title":"部门设置" }},
             {"path": "position", "component": "views/setting/position", "name": "Position", "meta":{ "title":"职位设置" }},
@@ -144,5 +144,5 @@ const asyncDataRoutes = [
         ]
     }
 ]
-
+        
 export default asyncDataRoutes

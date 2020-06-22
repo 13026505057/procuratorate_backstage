@@ -85,14 +85,19 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { user_id, org_name, user_true_name, org_id, province_id, city_id, area_id } = data[0]
-        const roles = new Array(data[0].username)
+        const { user_id, org_name, user_true_name, org_id, province_id, city_id, area_id, userVueRoleList, username } = data[0]
+        // const roles = new Array(data[0].username)
+        const roles = {
+          group_name: userVueRoleList.length>0?userVueRoleList[0].group_name:'defalut',
+          username: username
+        } 
+        console.log(roles)
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
         }
 
-        commit('SET_ROLES', roles)
+        commit('SET_ROLES', roles.group_name)
         commit('SET_ORG_NAME', org_name)
         commit('SET_USER_NAME', user_true_name)
         commit('SET_USER_ID', user_id)

@@ -35,10 +35,6 @@ const cases = {
     getDangAnConfirmByPage(data) {
         return request({ url: '/cases/cases/getDangAnConfirmByPage', method: 'post', data })
     },
-    // 确认已审查
-    confirmExamine(data) {
-        return request({ url: '/cases/cases/confirmNone', method: 'post', data })
-    },
     // 未归档案件
     getUndocumented(data) {
         return request({ url: '/cases/cases/getConfirmedNoneByPage', method: 'post', data })

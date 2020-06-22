@@ -63,10 +63,10 @@
                     { title: 'dh', dataIndex: '档号', itemId: 2 },
                     { title: 'jh', dataIndex: '卷号', itemId: 8 },
                     { title: 'exhibit_name', dataIndex: '案卷名称', itemId: 11 },
-                    { title: 'case_take_user_name', dataIndex: '存储位置', itemId: 3 },
+                    { title: 'cell_name', dataIndex: '存储位置', itemId: 3 },
                     { title: 'nd', dataIndex: '年度', itemId: 5 },
                     { title: 'stock_status', dataIndex: '入库状态', itemId: 6 },
-                    { title: 'wait_quantity', dataIndex: '隶属案件类型', itemId: 7 },
+                    { title: 'case_type_name', dataIndex: '隶属案件类型', itemId: 7 },
                 ],
             }
         },

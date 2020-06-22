@@ -87,18 +87,19 @@ const mutations = {
 }
 
 const actions = {
-  generateRoutes({ commit }, group_name) {
+  generateRoutes({ commit }, userInfo) {
     return new Promise(resolve => {
-      // api.getRoutesData({group_name}).then((result)=>{
-      //   let accessedRoutes
-      //   const accessedRoute = checkedNullInfo(result.data)
-      //   accessedRoute.push({ path: '*', redirect: '/404', hidden: true })
-      //   accessedRoutes = filterAsyncRoutes(accessedRoute,true)
-      //   commit('SET_ROUTES', accessedRoutes)
-      //   resolve(accessedRoutes)
-      // })
-      let accessedRoutes
-      const accessedRoute = asyncDataRoutes
+      let accessedRoutes,accessedRoute = []
+      // if(userInfo.username == 'admin') {
+      //   accessedRoute = asyncDataRoutes
+      // } else {
+      //     if(userInfo.group_name !== 'defalut'){
+      //       api.getRoutesData({group_name:userInfo.group_name}).then((result)=>{
+      //         accessedRoute = checkedNullInfo(result.data[0].routes)
+      //       })
+      //     }
+      //   }
+      accessedRoute = asyncDataRoutes
       accessedRoute.push({ path: '*', redirect: '/404', hidden: true })
       accessedRoutes = filterAsyncRoutes(accessedRoute,true)
       commit('SET_ROUTES', accessedRoutes)

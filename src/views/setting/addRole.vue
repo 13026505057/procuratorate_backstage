@@ -10,7 +10,7 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog :visible.sync="dialogVisible" title="修改权限配置">
+    <el-dialog :visible.sync="dialogVisible" title="修改权限配置" @close="resetRoutes">
       <el-form :model="role" label-width="100px" label-position="left">
         <el-form-item label="权限组名称">
           <el-input v-model="role.group_name" placeholder="请输入权限组名称" style="width:auto"/>
@@ -69,7 +69,6 @@ export default {
     // 获取默认路由列表
     async getDefaultRoutes() {
         const resultData = await this.$api.getDefaultRoutes()
-        console.log(resultData.data)
         let accessedRoutes;
         const accessedRoute = checkedNullInfo_respones(resultData.data)
         accessedRoutes = filterAsyncRoutes_respones(accessedRoute,true)
@@ -109,6 +108,10 @@ export default {
         this.checkStrictly = false
       })
     },
+    // 默认Tree树
+    resetRoutes(){
+      this.getDefaultRoutes()
+    },
     editRouteFun(params){
       return new Promise((resolve, reject) => {
         axios({
@@ -137,7 +140,8 @@ export default {
     },
     async confrimBtn(){
         const checkedKeys = this.$refs.tree.getCheckedKeys()
-        this.role.routes = this.generateTree(this.routes, checkedKeys)
+        const routesArr = [ ...this.routes ]
+        this.role.routes = this.generateTree(routesArr, checkedKeys)
         console.log(this.role)
         const resultData = await this.editRouteFun(this.role)
         if(resultData && resultData.code =='0') {

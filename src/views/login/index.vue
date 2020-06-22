@@ -46,8 +46,8 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: 'admin'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -147,8 +147,8 @@ $cursor: #fff;
         color: $light_gray;
       }
       &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-text-fill-color: $cursor !important;
+        box-shadow: 0 0 0px 1000px #cce6fd inset !important;
+        -webkit-text-fill-color: #646464 !important;
       }
     }
   }

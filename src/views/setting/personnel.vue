@@ -95,7 +95,7 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="权限设置">
-                            <el-select v-model="unit_form.vue_role_id" clearable placeholder="请选择" style="width:100%">
+                            <el-select v-model="unit_form.vue_role_ids" clearable placeholder="请选择" style="width:100%">
                                 <el-option
                                     v-for="item in routesGroupsArr"
                                     :key="item.vue_role_id"
@@ -139,9 +139,6 @@
     
     export default {
         components: { Search },
-        computed:{
-            ...mapGetters(['org_id'])
-        },
         data()  {
             return  {
                 addSearch: [
@@ -178,8 +175,7 @@
                     role_ids:[], 
                     position_ids:[], 
                     dept_ids:[],
-                    org_id: '',
-                    vue_role_id: ''
+                    vue_role_ids: ''
                 },
                 formItems:[
                     { name:'账号', inp:'username', formId:'0'},
@@ -203,7 +199,6 @@
             }
         },
         mounted(){
-            this.unit_form.org_id = this.org_id
             this.getDataList();
             this.getDeptList();
             this.getGroupList();
@@ -223,7 +218,7 @@
                 this.getDataList();
             },
             async getDataList(){
-                const dataInfo = {pageNum:this.currentPage1,pageSize:this.pageSize,org_id:this.org_id,
+                const dataInfo = {pageNum:this.currentPage1,pageSize:this.pageSize,
                     ...this.seatchData }
                 const resultData = await this.$api.getPersonnelList(dataInfo);
                 if(resultData&&resultData.code == 0){
@@ -233,7 +228,7 @@
             },
             // 查部门
             async getDeptList(){
-                const dataInfo = {pageNum:1,pageSize:1000,org_id:this.org_id}
+                const dataInfo = {pageNum:1,pageSize:1000}
                 const resultData = await this.$api.getDepartmentList(dataInfo);
                 if(resultData&&resultData.code == 0){
                     this.deptOptions = resultData.data.list;
@@ -241,7 +236,7 @@
             },
             // 查职位
             async getPositionList(){
-                const dataInfo = {pageNum:1,pageSize:1000,org_id:this.org_id}
+                const dataInfo = {pageNum:1,pageSize:1000}
                 const resultData = await this.$api.getPositionList(dataInfo);
                 if(resultData&&resultData.code == 0){
                     this.positionData = resultData.data.list;
@@ -257,7 +252,7 @@
             },
             // 查角色
             async getGroupList(){
-                const dataInfo = {pageNum:1,pageSize:2000,org_id:this.org_id};
+                const dataInfo = {pageNum:1,pageSize:2000};
                 const resultData = await this.$api.getRoleList(dataInfo);
                 if(resultData&&resultData.code == 0){
                     this.groupOptions = resultData.data.list;
@@ -281,9 +276,9 @@
                 this.type = type;
                 this.user_id = row_user_id.user_id;
                 this.unit_form.username = '';
-                this.unit_form.password = '';
+                this.unit_form.password = 'admin';
                 this.unit_form.user_true_name = '';
-                this.unit_form.vue_role_id = '';
+                this.unit_form.vue_role_ids = '';
                 this.unit_form.role_ids = [];
                 this.unit_form.position_ids = [];
                 this.unit_form.dept_ids = [];
@@ -292,9 +287,10 @@
                 }else{
                     this.dialogTitle = "修改人员"
                     this.unit_form.username = row_user_id.username;
-                    this.unit_form.password = '';
+                    this.unit_form.password = 'admin';
                     this.unit_form.user_true_name = row_user_id.user_true_name;
-                    this.unit_form.vue_role_id = row_user_id.vue_role_id;
+                    if(row_user_id.userVueRoleList.length>0) this.unit_form.vue_role_ids = row_user_id.userVueRoleList[0].vue_role_id
+                    
 
                     // this.unit_form.position = row_user_id.userPositions;
                      console.log(row_user_id.userDepts)
@@ -353,7 +349,7 @@
                 this.user_id = user_id
             },
             async confirmDel(){
-                const dataInfo = {user_id: this.user_id,org_id:this.org_id}
+                const dataInfo = {user_id: this.user_id}
                 const resultData = await this.$api.deletePersonnel(dataInfo);
                 if(resultData&&resultData.code == 0){
                     this.$message({

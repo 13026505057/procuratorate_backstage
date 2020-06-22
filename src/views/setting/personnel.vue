@@ -293,6 +293,7 @@
                     this.unit_form.username = row_user_id.username;
                     this.unit_form.password = '';
                     this.unit_form.user_true_name = row_user_id.user_true_name;
+                    this.unit_form.vue_role_id = row_user_id.vue_role_id;
 
                     // this.unit_form.position = row_user_id.userPositions;
                      console.log(row_user_id.userDepts)

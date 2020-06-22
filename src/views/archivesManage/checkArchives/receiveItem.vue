@@ -227,7 +227,7 @@
                     // 角标
                     let dataInfo = {...this.pagination};
                     // 每个页面字段不同(cout_for)
-
+                    dataInfo['case_none_confirm'] = '1';
                     ['pageNum','pageSize','case_type_id'].map(item=> delete dataInfo[item])
                     const resultData = await this.$api.getCornerMarkType(dataInfo);
                     Object.keys(resultData.data).map(item=>{

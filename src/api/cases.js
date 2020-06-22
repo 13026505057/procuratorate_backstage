@@ -27,6 +27,10 @@ const cases = {
     getConfirmedByPage(data) {
         return request({ url: '/cases/cases/getConfirmedByPage', method: 'post', data })
     },
+    // 档案待审查的案件
+    getDangAnNotConfirmByPage(data) {
+        return request({ url: '/cases/cases/getDangAnNotConfirmByPage', method: 'post', data })
+    },
     // 档案通过审查案件
     getDangAnConfirmByPage(data) {
         return request({ url: '/cases/cases/getDangAnConfirmByPage', method: 'post', data })

@@ -120,6 +120,7 @@
                     timeYear: '',
                     case_take_user_name: '',
                     case_type_id: '',
+                    case_none_confirm:'1'
                 },
                 addSearch: [
                     { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
@@ -199,7 +200,7 @@
                     // 角标
                     let dataInfo = {...this.pagination};
                     // 每个页面字段不同(cout_for)
-
+                    dataInfo['cout_for'] = 'danganjieshoushencha'
                     ['pageNum','pageSize','case_type_id'].map(item=> delete dataInfo[item])
                     const resultData = await this.$api.getCornerMarkType(dataInfo);
                     Object.keys(resultData.data).map(item=>{
@@ -219,7 +220,7 @@
                 this.showModel.dialogTableVisible = false;
                 this.showModel.dialogReceivedVisible = false;
                 let getData = { ...dataInfo }
-                const resultData = await this.$api.getConfirmedByPage(getData);
+                const resultData = await this.$api.getDangAnNotConfirmByPage(getData);
                 const pagination = { ...this.pagination };
                 let resultData_table = [];
                 resultData.data.list.map(item=>{

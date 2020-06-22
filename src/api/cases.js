@@ -72,6 +72,11 @@ const cases = {
     getAllByPage(data) {
         return request({ url: '/cases/cases/getAllByPage', method: 'post', data })
     },
+    //档案利用
+    //查询卷宗类型 如：诉讼 文书 技术
+    getExhibitType(){
+        return request({ url: '/exhibitTypeGet', method: 'post' })
+    },
     //  未绑案件查询
     getCasesByPage(data) {
         return request({ url: '/cases/cases/getCasesByPage', method: 'post', data })
@@ -84,5 +89,18 @@ const cases = {
     caseRefuseHistoryGetByPage(data) {
         return request({ url: '/caseRefuseHistoryGetByPage', method: 'post', data })
     },
+    //档案绩效评价
+    //地市查询归档率
+    caseJauge(data){
+        return request({ url: '/statistalGetByPage', method: 'post', data })
+    },
+    caseJaugeAll(data){
+        return request({ url: '/chart/city/getStockPersentByCity', method: 'post', data })
+    },
+    //档案绩效评价
+    //基层院查询归档率
+    // caseJauge(data){
+    //     return request({ url: '/chart/area/getStockCountByArea', method: 'post', data })
+    // }
 }
 export default cases

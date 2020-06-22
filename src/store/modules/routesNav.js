@@ -5,7 +5,10 @@ import AddRole from '@/views/setting/addRole'
 import Unit from '@/views/setting/unit'
 import Department from '@/views/setting/department'
 import Position from '@/views/setting/position'
+
+import PermissionGroup from '@/views/setting/permissionGroup'
 import Role from '@/views/setting/role'
+import Personnel from '@/views/setting/personnel'
 import StorageLocation from '@/views/setting/storageLocation'
 
 // 案管
@@ -32,6 +35,14 @@ import PutStorage from '@/views/archivesManage/putStorage/index'
 import UncompletedPut from '@/views/archivesManage/putStorage/uncompleted'
 import CompletedPut from '@/views/archivesManage/putStorage/completed'
 import Temporary from '@/views/archivesManage/putStorage/temporary'
+
+// 档案利用
+import OutWarehouse from '@/views/utilizeArchives/outWarehouse'
+import InWarehouse from '@/views/utilizeArchives/inWarehouse'
+
+//档案绩效评价
+import PerformanceEvaluationItem from '@/views/performanceEvaluation/index'
+
 // 分析评估
 import QualifiedType from '@/views/appraise/qualifiedType'
 import CompletedType from '@/views/appraise/completedType'
@@ -64,6 +75,8 @@ let routesNav = {
     Department:Department,
     Position:Position,
     Role:Role,
+    Personnel:Personnel,
+    PermissionGroup:PermissionGroup,
     StorageLocation:StorageLocation,
     
     // 案管
@@ -91,6 +104,13 @@ let routesNav = {
     Temporary: Temporary,
     ReadyItem: ReadyItem,
     
+    // 档案利用
+    OutWarehouse:OutWarehouse,
+    InWarehouse:InWarehouse,
+
+    //档案绩效评价
+    PerformanceEvaluationItem:PerformanceEvaluationItem,
+
     // 分析评估
     QualifiedType: QualifiedType,
     CompletedType: CompletedType,

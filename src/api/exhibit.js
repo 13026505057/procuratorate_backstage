@@ -17,6 +17,22 @@ const exhibit = {
     addExhibitData(data) {
         return request({ url: '/exhibit/exhibit/add', method: 'post', data })
     },
+    //获取待出库案卷列表
+    getExhibitOut(data){
+        return request({ url: '/user/approve/getWaitOutByPage', method: 'post', data })
+    },
+    //卷宗出库
+    exhibitOut(data){
+        return request({ url: '/user/approve/out', method: 'post', data })
+    },
+    // 获取待归还列表 
+    getBorrowList(data){
+        return request({ url: '/borrowLog/getOutByPage', method: 'post', data }) 
+    },
+    //卷宗入库
+    exhibitIn(data){
+        return request({ url: '/stock/stock/in', method: 'post', data })
+    },
     // 未绑历史案卷
     historyExhibitList(data) {
         return request({ url: '/exhibit/exhibit/getOldByPage', method: 'post', data })
@@ -36,6 +52,18 @@ const exhibit = {
     // 案卷绑定案件信息
     attachExhibitToCase(data) {
         return request({ url: '/exhibit/exhibit/attachExhibitToCase', method: 'post', data })
+    },
+    //查询存储设备信息
+    getStock(data){
+        return request({ url: '/shale/shale/getByPage', method: 'post', data })
+    },
+    //打印存储设备码
+    printCode(data){
+        return request({ url: '/shale/shale/printShaleCode', method: 'post', data })
+    },
+    //新增存储设备
+    addStock(data){
+        return request({ url: '/shale/shale/add', method: 'post', data })
     },
 }
 export default exhibit

@@ -99,6 +99,7 @@
                     ],
                 },
                 activeName: "0",
+                activeName2: "",
                 tabItems:[],
                 tableData:[],
                 badgeList:[],
@@ -169,7 +170,12 @@
             getCaseType(seatchData){
                 this.$api.getCaseType().then(async (res)=>{
                     this.tabItems = res.data.list;
-                    this.activeName = res.data.list[0].case_type_id;
+                    if(this.activeName2!=''){
+                        this.activeName = this.activeName2;
+                    }else{
+                        this.activeName = res.data.list[0].case_type_id;
+                    }
+                    
                     this.getDataList(seatchData);
                     let dataInfo = { ...seatchData }
                     
@@ -236,8 +242,15 @@
                     case_id_arr.push(item.case_id)
                 })
                 let case_ids = case_id_arr.join(",")
+                const dataInfo = {case_ids:case_ids}
                 console.log(case_ids)
-                const resultData = await this.$api.confirmExamine(case_ids);
+                let resultData  = await this.$api.confirmExamine(dataInfo);
+                if(resultData && resultData.code=='0'){
+                    this.$message.success('操作成功')
+                    this.activeName = this.activeName2;
+                    this.getCaseType(this.seatchData)
+                    this.getDataList(this.seatchData)
+                }
                 setTimeout(()=>{
                     this.disabled2 = false;
                 },2000)
@@ -247,7 +260,11 @@
             },
             // 标签页
             handleClick(tab, event) {
-                console.log(tab, event);
+                // console.log(tab, event);
+                // console.log(this.activeName);
+                //暂存数据
+                this.activeName2 = this.activeName;
+
                 this.getDataList(this.seatchData);
             },
             // 页面分页

@@ -133,10 +133,12 @@ const asyncDataRoutes = [
         "path": "/setting",
         "redirect": "/setting/unit",
         "children": [
-            {"path": "addRole", "component": "views/setting/addRole", "name": "AddRole", "meta":{ "title":"新增权限组" }},
+            {"path": "addRole", "component": "views/setting/addRole", "name": "AddRole", "meta":{ "title":"路由权限组" }},
             {"path": "unit", "component": "views/setting/unit", "name": "Unit", "meta":{ "title":"单位设置" }},
             {"path": "department", "component": "views/setting/department", "name": "Department", "meta":{ "title":"部门设置" }},
             {"path": "position", "component": "views/setting/position", "name": "Position", "meta":{ "title":"职位设置" }},
+            {"path": "PermissionGroup", "component": "views/setting/permissionGroup", "name": "PermissionGroup", "meta":{ "title":"API权限组设置" }},
+            {"path": "Role", "component": "views/setting/role", "name": "Role", "meta":{ "title":"角色设置" }},
             {"path": "personnel", "component": "views/setting/personnel", "name": "Personnel", "meta":{ "title":"人员设置" }},
             {"path": "storageLocation", "component": "views/setting/storageLocation", "name": "StorageLocation", "meta":{ "title":"存储位置设置" }}
         ]

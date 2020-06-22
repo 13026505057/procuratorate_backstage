@@ -130,6 +130,8 @@ export default {
     },
     mounted(){
         this.getTypeList();
+        if(this.resetData) this.searchList = this.addSearch
+            else if(this.addSearch && this.addSearch.length>0) this.searchList.push(...this.addSearch)
     },
     methods: {
         comfirmSearch(){
@@ -156,7 +158,7 @@ export default {
             this.showModel.dialogReceivedVisible = true;
         },
         async confirmAddCase(){
-            let resultData = await this.$api.addOldExhibit(this.submitDataInfo)
+            let resultData = await this.$api.yrExhibitAdd(this.submitDataInfo)
             if(resultData && resultData.code =='0') {
                 this.showModel.dialogReceivedVisible = false;
                 this.$message.success('操作成功')

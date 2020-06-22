@@ -8,7 +8,7 @@ import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login'] // no redirect whitelist
+const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
   // start progress bar
@@ -42,8 +42,7 @@ router.beforeEach(async(to, from, next) => {
           await store.dispatch('settings/exhibitTimeBGGet')
           await store.dispatch('settings/getCaseType')
           await store.dispatch('settings/getCaseStatus')
-          // const roles = ['admin']
-          // store.dispatch('user/SET_ROLES',roles)
+          
           // generate accessible routes map based on roles
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
           // dynamically add accessible routes
@@ -64,7 +63,7 @@ router.beforeEach(async(to, from, next) => {
   } else {
     /* has no token*/
 
-    if (whiteList.indexOf(to.path) !== -1) {
+    if (whiteList.indexOf(to.path) !== -1 || (to.path == '/home' && Object.keys(to.query).length>0)) {
       // in the free login whitelist, go directly
       next()
     } else {

@@ -58,6 +58,53 @@ const setting = {
     deletePosition(data) {
         return request({ url: '/position/del', method: 'post', data })
     },
+    // 权限组
+    getPermissionGroupList(data) {
+        return request({ url: '/groupGetByPage', method: 'post', data })
+    },
+    getJurisdictionList(data) {
+        return request({ url: '/permissionGetByPage', method: 'post', data })
+    },
+    addJurisdiction(data) {
+        return request({ url: '/groupAdd', method: 'post', data })
+    },
+    updateJurisdiction(data) {
+        return request({ url: '/groupUpdate', method: 'post', data })
+    },
+    deleteJurisdiction(data) {
+        return request({ url: '/groupDel', method: 'post', data })
+    },
+    // 角色
+    getRoleList(data) {
+        return request({ url: '/roleGetByPage', method: 'post', data })
+    },
+    addRole(data) {
+        return request({ url: '/roleAdd', method: 'post', data })
+    },
+    updateRole(data) {
+        return request({ url: '/roleUpdate', method: 'post', data })
+    },
+    deleteRole(data) {
+        return request({ url: '/roleDel', method: 'post', data })
+    },
+    // 人员
+    getPersonnelList(data) {
+        return request({ url: '/user/getByPage', method: 'post', data })
+    },
+    addPersonnel(data) {
+        return request({ url: '/user/add', method: 'post', data })
+    },
+    updatePersonnel(data) {
+        return request({ url: '/user/update', method: 'post', data })
+    },
+    deletePersonnel(data) {
+        return request({ url: '/user/del', method: 'post', data })
+    },
+    // 存储位置
+    getStorageList(data) {
+        return request({ url: '/shale/shale/getByPage', method: 'post', data })
+    },
+    
 
 }
 export default setting

@@ -193,7 +193,7 @@
                 this.dept_id = dept_id
             },
             async confirmDel(){
-                const dataInfo = {dept_id: this.dept_id}
+                const dataInfo = {dept_id: this.dept_id,org_id:this.unit_form.org_id}
                 const resultData = await this.$api.deleteDepartment(dataInfo);
                 if(resultData&&resultData.code == 0){
                     this.$message({

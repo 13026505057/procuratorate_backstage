@@ -101,6 +101,14 @@ const cases = {
     caseJaugeAll(data){
         return request({ url: '/chart/city/getStockPersentByCity', method: 'post', data })
     },
+    // 案件预入库
+    yrExhibitGetByPage(data){
+        return request({ url: '/yrExhibitGetByPage', method: 'post', data })
+    },
+    // 案件预新增案件入库
+    yrExhibitAdd(data){
+        return request({ url: '/yrExhibitAdd', method: 'post', data })
+    },
     //档案绩效评价
     //基层院查询归档率
     // caseJauge(data){

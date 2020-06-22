@@ -1,8 +1,8 @@
 <template>
     <div class="overall-content unit-content">
         <div class="search-box">
-            <div>角色列表</div>
-            <el-button @click="addUnitClick('add','')">新增角色</el-button>
+            <div>权限组列表</div>
+            <el-button @click="addUnitClick('add','')">新增权限组</el-button>
         </div>
         <div class="table-list">
             <div class="table-dataList" >
@@ -36,7 +36,7 @@
                                 title="确定删除吗？"
                                 @onConfirm = "confirmDel"
                                 >
-                                <el-button slot="reference" @click="delUnitClick(row.role_id)" class="highlight-btn" size="small">删除</el-button>
+                                <el-button slot="reference" @click="delUnitClick(row.group_id)" class="highlight-btn" size="small">删除</el-button>
                             </el-popconfirm>
                         </template>
                     </el-table-column>
@@ -58,31 +58,24 @@
                 width="34%"
                 center>
                 <span>
-                    <el-form ref="form" :model="unit_form" label-width="80px">
-                        <el-form-item label="角色名称">
-                            <el-input v-model="unit_form.role_name"></el-input>
+                    <el-form ref="form" :model="unit_form" label-width="120px">
+                        <el-form-item label="权限组名称">
+                            <el-input v-model="unit_form.group_name"></el-input>
                         </el-form-item>
-                        <el-form-item label="权限组">
-                            <el-select v-model="unit_form.group" multiple clearable placeholder="请选择" style="width:100%">
+                        <el-form-item label="权限">
+                            <el-select 
+                                v-model="unit_form.jurisdiction_url"
+                                reserve-keyword filterable  multiple 
+                                v-el-select-loadmore="loadmore"
+                                clearable placeholder="请选择" style="width:100%">
                                 <el-option
-                                    v-for="item in groupOptions"
-                                    :key="item.group_id"
-                                    :label="item.group_name"
-                                    :value="item.group_id">
+                                    v-for="item in jurisdictionOptions"
+                                    :key="item.permission_id"
+                                    :label="item.permission_url_name"
+                                    :value="item.permission_id">
                                 </el-option>
                             </el-select>
                         </el-form-item>
-                    </el-form>  
-                        <!-- <el-form-item label="权限">
-                            <el-cascader
-                                clearable
-                                :props="props"
-                                style="width:100%"
-                                v-model="unit_form.jurisdiction"
-                                :options="jurisdictionOptions"
-                                @change="handleChange">
-                            </el-cascader>
-                        </el-form-item> -->
                     </el-form>  
                 </span>
                 <span slot="footer" class="dialog-footer">
@@ -104,15 +97,37 @@
     import { mapGetters } from 'vuex'
     
     export default {
+        directives: {
+            'el-select-loadmore': {
+                bind(el, binding) {
+                    // 获取element-ui定义好的scroll盒子
+                    const SELECTWRAP_DOM = el.querySelector('.el-select-dropdown .el-select-dropdown__wrap');
+                    SELECTWRAP_DOM.addEventListener('scroll', function () {
+                        /**
+                        * scrollHeight 获取元素内容高度(只读)
+                        * scrollTop 获取或者设置元素的偏移值,常用于, 计算滚动条的位置, 当一个元素的容器没有产生垂直方向的滚动条, 那它的scrollTop的值默认为0.
+                        * clientHeight 读取元素的可见高度(只读)
+                        * 如果元素滚动到底, 下面等式返回true, 没有则返回false:
+                        * ele.scrollHeight - ele.scrollTop === ele.clientHeight;
+                        */
+                        const condition = this.scrollHeight - this.scrollTop <= this.clientHeight;
+                        if (condition) {
+                            binding.value();
+                        }
+                    });
+                }
+            }
+        },
         computed:{
             ...mapGetters(['org_id'])
         },
         data()  {
             return  {
                 tableItems:[
-                    { label: "角色名称",  prop: "role_name" },
-                    // { label: "创建者", prop: "position_create_user_name" ,},
-                    // { label: "创建时间", prop: "position_create_time" ,},
+                    { label: "权限组名称",  prop: "group_name" },
+                    // { label: "创建者", prop: "dept_create_user_name" ,},
+                    // { label: "创建时间", prop: "create_time" ,},
+                    // { label: "所属部门", prop: "dept_total_name" ,},
                 ],
                 tableData: [],
                 headStyle:{
@@ -122,50 +137,53 @@
                     fontSize: '18px',
                     color: '#2c2c2c'
                 },
+                
                 currentPage1:1,
                 total1:1,
                 pageSize:10,
                 dialogVisible:false,
                 dialogTitle:'',
                 unit_form:{
-                    role_name: '',
-                    group:[],
+                    group_name: '',
+                    jurisdiction_url:[],
                     org_id: '',
                 },
-                groupOptions:[],
+                jurisdictionOptions:[],
+                formData: {
+                    pageIndex: 1,
+                    pageSize: 10,
+                },
                 type:'',
-                position_id:'',
+                group_id:'',
                 popconfirmTitle:'',
-                props: { multiple: true },
-                // jurisdictionOptions:[]
 
             }
         },
         mounted(){
-            // this.unit_form.org_id = this.org_id
+            this.unit_form.org_id = this.org_id
             this.getDataList();
-            this.getGroupList();
+            this.getJurisdictionOptions(this.formData);
         },
         methods: {
-            handleChange(value) {
-                console.log(value);
-                console.log(this.unit_form.jurisdiction)
-            },
             async getDataList(){
                 const dataInfo = {pageNum:this.currentPage1,pageSize:this.pageSize,org_id:this.unit_form.org_id}
-                const resultData = await this.$api.getRoleList(dataInfo);
+                const resultData = await this.$api.getPermissionGroupList(dataInfo);
                 if(resultData&&resultData.code == 0){
                     this.tableData = resultData.data.list;
                     this.total1 = resultData.data.total;
                 }
             },
-            // 查权限组
-            async getGroupList(){
-                const dataInfo = {pageNum:1,pageSize:2000};
-                const resultData = await this.$api.getPermissionGroupList(dataInfo);
+            // 查权限
+            async getJurisdictionOptions(formData){
+                const dataInfo = {pageNum:formData.pageIndex,pageSize:formData.pageSize,neet_auth:'1',org_id:this.unit_form.org_id}
+                const resultData = await this.$api.getJurisdictionList(dataInfo);
                 if(resultData&&resultData.code == 0){
-                    this.groupOptions = resultData.data.list;
+                    this.jurisdictionOptions = this.jurisdictionOptions.concat(resultData.data.list);
                 }
+            },
+            loadmore() {
+                this.formData.pageIndex++;
+                this.getJurisdictionOptions(this.formData);
             },
             headerRowStyle({row, rowIndex}){ 
                 return this.headStyle
@@ -175,26 +193,25 @@
                 console.log(`当前页: ${val}`);
                 this.getDataList();
             },
-            // 新增
-            addUnitClick(type,row_role_id){
+            // 新增&&修改
+            addUnitClick(type,row_group){
                 this.dialogVisible = true;
                 this.type = type;
-                this.role_id = row_role_id.role_id;
+                this.group_id = row_group.group_id;
                 this.unit_form = {
-                        role_name :'',
-                        group:[],
-                    }
+                    group_name :'',
+                    jurisdiction_url:[],
+                }
                 if(type == "add"){
-                    this.dialogTitle = "新增角色";
+                    this.dialogTitle = "新增权限组";
                     
                 }else{
-                    this.dialogTitle = "修改角色"
-                    this.unit_form.role_name = row_role_id.role_name;
-                    console.log(row_role_id)
-                    row_role_id.roleGroupList.map(item=>{
-                        this.unit_form.group.push(item.group_id)
+                    this.dialogTitle = "修改权限组"
+                    this.unit_form.group_name = row_group.group_name;
+                    // this.unit_form.jurisdiction_url = row_group.groupPermissionList;
+                    row_group.groupPermissionList.map(item=>{
+                        this.unit_form.jurisdiction_url.push(item.permission_id)
                     })
-                    
                 }
             },
             // 新增&&修改
@@ -207,10 +224,12 @@
                 
             },
             async confirmClick(){
-                // const dataInfo = { ...this.unit_form }
-                const dataInfo = { role_name:this.unit_form.role_name,group_ids: this.unit_form.group.join(',')}
+                console.log(this.unit_form.jurisdiction_url)
+                const dataInfo = { group_name:this.unit_form.group_name,
+                    permission_ids: this.unit_form.jurisdiction_url.join(','),
+                    org_id:this.unit_form.org_id}
                 if(this.type == "add"){
-                    const resultData = await this.$api.addRole(dataInfo);
+                    const resultData = await this.$api.addJurisdiction(dataInfo);
                     if(resultData&&resultData.code == 0){
                         this.$message({
                             message: '新增成功',
@@ -219,9 +238,8 @@
                         this.dialogVisible = false;
                     }
                 }else{
-                    dataInfo['role_id'] = this.role_id;
-                    console.log(dataInfo)
-                    const resultData = await this.$api.updateRole(dataInfo);
+                    dataInfo['group_id'] = this.group_id;
+                    const resultData = await this.$api.updateJurisdiction(dataInfo);
                     if(resultData&&resultData.code == 0){
                         this.$message({
                             message: '修改成功',
@@ -233,12 +251,12 @@
                 this.getDataList();
             },
             // 删除
-            delUnitClick(role_id){
-                this.role_id = role_id
+            delUnitClick(group_id){
+                this.group_id = group_id
             },
             async confirmDel(){
-                const dataInfo = {role_id: this.role_id}
-                const resultData = await this.$api.deleteRole(dataInfo);
+                const dataInfo = {group_id: this.group_id,org_id:this.unit_form.org_id}
+                const resultData = await this.$api.deleteJurisdiction(dataInfo);
                 if(resultData&&resultData.code == 0){
                     this.$message({
                         message: '删除成功',

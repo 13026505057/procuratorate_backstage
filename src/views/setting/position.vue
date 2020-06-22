@@ -117,7 +117,7 @@
             }
         },
         mounted(){
-            // this.unit_form.org_id = this.org_id
+            this.unit_form.org_id = this.org_id
             this.getDataList();
         },
         methods: {
@@ -192,7 +192,7 @@
                 this.position_id = position_id
             },
             async confirmDel(){
-                const dataInfo = {position_id: this.position_id}
+                const dataInfo = {position_id: this.position_id,org_id:this.unit_form.org_id}
                 const resultData = await this.$api.deletePosition(dataInfo);
                 if(resultData&&resultData.code == 0){
                     this.$message({

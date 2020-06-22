@@ -3,7 +3,7 @@ import roles from './role'
 import cases from './cases'
 import exhibit from './exhibit'
 import setting from './setting'
-
+import chart from './chart'
 
 export default {
     ...user,
@@ -11,4 +11,5 @@ export default {
     ...cases,
     ...exhibit,
     ...setting,
+    ...chart,
 }

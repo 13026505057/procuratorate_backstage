@@ -2,12 +2,12 @@
     <div class="progress-content">
         <div class="scan-table">
             <span style="margin-left:20px;">入库操作：</span>
-            <!-- <el-radio-group v-model="radio" class="scan-select">
-                <el-radio v-for="exhibitItem in exhibitType" :key="exhibitItem.exhibit_type_id" :label="exhibitItem.exhibit_type_id">{{exhibitItem.exhibit_type_name}}</el-radio>
-            </el-radio-group> -->
+            <el-radio-group v-model="exhibit_type" class="scan-select">
+                <el-radio v-for="exhibitItem in exhibitType" :key="exhibitItem.exhibit_type_id" :label="exhibitItem.exhibit_type_code">{{exhibitItem.exhibit_type_name}}</el-radio>
+            </el-radio-group>
             <el-input class="scan-input" v-model="stockNum" ref="stockNumRef" @change="stockNumChange" placeholder="扫描货架码"></el-input>
             <el-input class="scan-input" v-model="exhibitNum" ref="exhibitNumRef" @change="exhibitNumChange" placeholder="扫描案卷码"></el-input>
-            <span style="margin-left:20px;">先扫描货架码，光标自动移动到案卷码位置后在扫描案卷码，出现提示后在进行下一次案卷码扫描</span>
+            <span style="margin-left:10px;">先扫描货架码，光标自动移动到案卷码位置后在扫描案卷码</span>
         </div>
         <Search class="searchInfo" :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
         <div class="head-tab">
@@ -219,6 +219,8 @@
                     fontSize: '18px',
                     color: '#2c2c2c'
                 },
+                exhibit_id:'',
+                exhibit_type:'SS',
                 progressList:{},
                 seatchData: {
                     timeYear:'',
@@ -276,15 +278,42 @@
             exhibitNumChange(data){
                 this.exhibitNum = data;
                 // 默认数据列表
-                this.exhibitIn();
+                this.getIds();
                 
 
+            },
+            async getIds(){
+                    // console.log({...this.seatchData})
+                    let dataInfo = {}
+                    dataInfo ['exhibit_type'] = this.exhibit_type;
+                    dataInfo ['code'] = this.exhibitNum;
+                    
+                    const resultData = await this.$api.getIds(dataInfo);
+                    if(resultData && resultData.code == '0') {
+                        console.log(resultData)
+                        console.log(resultData.data)
+                        console.log(resultData.data.type)
+                        if(resultData.data.type=="exhibit"){
+                            this.exhibit_id = resultData.data.exhibit.exhibit_id;
+                            // self.Warehousing()
+                            this.exhibitIn();
+                        }else if(resultData.data.type=="cell"){
+                            
+                        }
+                        // this.getDataList();
+                        // this.$message({
+                        //     message: '入库成功',
+                        //     type: 'success'
+                        // });
+                        // this.exhibitNum = "";
+                        // this.getFocus('exhibitNumRef');
+                    }
             },
             async exhibitIn(){
                     // console.log({...this.seatchData})
                     let dataInfo = {}
                     dataInfo ['cell_id'] = this.stockNum;
-                    dataInfo ['exhibit_id'] = this.exhibitNum;
+                    dataInfo ['exhibit_id'] = this.exhibit_id;
                     
                     const resultData = await this.$api.exhibitIn(dataInfo);
                     if(resultData && resultData.code == '0') {
@@ -400,7 +429,7 @@
             background-color: #eaf5ff;
             display: flex;
             .scan-select{
-                width: 500px;
+                width: 230px;
                 margin: 23px 30px;
             }
             .scan-input{

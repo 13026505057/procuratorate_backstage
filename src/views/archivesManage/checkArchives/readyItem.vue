@@ -98,7 +98,7 @@
             // 确认搜索
             comfirmSearch(data){
                 this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] }  })
-                this.getTableList()
+                this.getTableList(this.pagination)
             },
         },
     }

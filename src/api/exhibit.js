@@ -65,5 +65,9 @@ const exhibit = {
     addStock(data){
         return request({ url: '/shale/shale/add', method: 'post', data })
     },
+    //换取卷宗id
+    getIds(data){
+        return request({ url: '/stock/stock/getScanCode', method: 'post', data })
+    },
 }
 export default exhibit

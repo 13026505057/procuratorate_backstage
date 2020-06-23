@@ -92,7 +92,7 @@ const cases = {
     //档案绩效评价
     //地市查询归档率
     caseJauge(data){
-        return request({ url: '/statistalGetByPage', method: 'post', data })
+        return request({ url: '/chart/area/getStockCountByArea', method: 'post', data })
     },
     caseJaugeAll(data){
         return request({ url: '/chart/city/getStockPersentByCity', method: 'post', data })

@@ -5,7 +5,7 @@
             <div class="table-dataList" >
                 <el-table :data="showModel.tableData" border style="width: 100%">
                     <el-table-column align="center" type="index"></el-table-column>
-                    <el-table-column :label="item.dataIndex" show-overflow-tooltip
+                    <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
                         v-for="item in columns" :key="item.itemId" align="center">
                         <template slot-scope="{row}">
                             <span v-if="item.itemId == 4">{{ row[item.title] | mapStatus }}</span>
@@ -149,7 +149,7 @@
                     { title: 'case_name', dataIndex: '案件名称', itemId: 10 },
                     { title: 'case_type_name', dataIndex: '案件类型', itemId: 2 },
                     { title: 'case_none_status', dataIndex: '案件状态', itemId: 8 },
-                    { title: 'case_desc', dataIndex: '案件描述', itemId: 11 },
+                    { title: 'case_desc', dataIndex: '案件描述', overflow: true, itemId: 11 },
                     { title: 'time_status', dataIndex: '是否归档', itemId: 4 },
                     { title: 'case_take_user_name', dataIndex: '承办人', itemId: 3 },
                     { title: 'total_quantity', dataIndex: '总案卷数', itemId: 5 },

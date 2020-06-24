@@ -40,8 +40,10 @@ service.interceptors.response.use(
     // if the custom code is not 0, it is judged as an error.
     }else if(res.code == '402'){
       //登录超时
-      setTimeout(()=>{ Message.info('登录超时, 请重新登录') },1000)
-      setTimeout(()=>{ router.push({path:'/login'}) },3000)
+      store.dispatch('user/resetToken').then(() => {
+        setTimeout(()=>{ Message.info('登录超时, 请重新登录') },300)
+        setTimeout(()=>{ location.reload() },1000)
+      })
     }else if(res.code == '500'){
       Message.error('操作异常或信息填写错误，请重新再试一次');
     }else{

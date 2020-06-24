@@ -7,7 +7,7 @@
                 <div class="table-dataList" >
                     <el-table :data="showModel_left.tableData" border style="width: 100%">
                         <el-table-column align="center" type="index"></el-table-column>
-                        <el-table-column :label="item.dataIndex" show-overflow-tooltip
+                        <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
                             v-for="item in columns_left" :key="item.itemId" align="center">
                             <template slot-scope="{row}">
                                 <span>{{ row[item.title] }}</span>
@@ -33,7 +33,7 @@
                 <div class="table-dataList" >
                     <el-table :data="showModel_right.tableData" border style="width: 100%">
                         <el-table-column align="center" type="index"></el-table-column>
-                        <el-table-column :label="item.dataIndex" show-overflow-tooltip
+                        <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
                             v-for="item in columns_right" :key="item.itemId" align="center">
                             <template slot-scope="{row}">
                                 <span>{{ row[item.title] }}</span>

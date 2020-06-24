@@ -27,7 +27,7 @@
                                 type="index">
                             </el-table-column>
                             <el-table-column
-                                show-overflow-tooltip
+                                :show-overflow-tooltip="tableItem.overflow"
                                 align="center"
                                 v-for="tableItem in tableItems"
                                 :prop="tableItem.prop"
@@ -109,7 +109,7 @@
                     {label: "案件类型", prop: "case_type_name", tableId:3},
                     {label: "案件状态", prop: "stock_status", tableId:4},
                     {label: "评查是否超期", prop: "anguan_pingcha_chaoqi", tableId:5},
-                    {label: "案件描述", prop: "case_desc", tableId:6},
+                    {label: "案件描述", prop: "case_desc", overflow: true, tableId:6},
                     {label: "是否归档", prop: "time_status", tableId:7},
                     {label: "承办人", prop: "case_take_user_name", tableId:8},
                     {label: "总案卷数", prop: "total_quantity", tableId:9},

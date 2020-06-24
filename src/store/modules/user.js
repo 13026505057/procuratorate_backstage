@@ -69,7 +69,7 @@ const actions = {
   // setTokenData
   setTokenData({commit},token){
     commit('SET_TOKEN',token)
-    console.log(token)
+    // console.log(token)
     setToken(token)
   },
   SET_ROLES({commit},roles){
@@ -88,10 +88,9 @@ const actions = {
         const { user_id, org_name, user_true_name, org_id, province_id, city_id, area_id, userVueRoleList, username } = data[0]
         // const roles = new Array(data[0].username)
         const roles = {
-          group_name: userVueRoleList.length>0?userVueRoleList[0].group_name:'defalut',
+          group_name: userVueRoleList.length>0?[userVueRoleList[0].group_name]:['defalut'],
           username: username
-        } 
-        console.log(roles)
+        }
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')

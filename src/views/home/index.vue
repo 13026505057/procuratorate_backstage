@@ -24,6 +24,7 @@ import Statistics from '@/components/Charts/homeChart'
 import { mapActions } from 'vuex'
 import router from '@/router'
 import store from '@/store'
+import { setToken } from '@/utils/auth'
 export default {
   components:{ Statistics },
   data(){

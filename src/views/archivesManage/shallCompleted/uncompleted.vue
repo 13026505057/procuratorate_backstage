@@ -11,7 +11,7 @@
                     <div class="table-dataList" >
                         <el-table :data="showModel.tableData" border style="width: 100%">
                             <el-table-column align="center" type="index"></el-table-column>
-                            <el-table-column :label="item.dataIndex" show-overflow-tooltip
+                            <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
                                 v-for="item in columns" :key="item.itemId" align="center">
                                 <template slot-scope="{row}">
                                     <span v-if="item.itemId == 4">{{ row[item.title]=='0'?'未交卷':'已交卷' }}</span>
@@ -109,14 +109,14 @@
                 },
                 // table表头
                 columns: [
-                    { title: 'case_bh', dataIndex: '案件编号', itemId: 1 },
-                    { title: 'case_name', dataIndex: '案件名称', itemId: 10 },
-                    { title: 'case_desc', dataIndex: '案件描述', itemId: 11 },
-                    { title: 'case_type_name', dataIndex: '案件类型', itemId: 2 },
-                    { title: 'case_take_user_name', dataIndex: '承办人', itemId: 3 },
-                    { title: 'dangan_accept_status', dataIndex: '是否交卷', itemId: 4 },
-                    { title: 'dangan_accept_time', dataIndex: '交卷日期', itemId: 5 },
-                    { title: 'dangan_accept_day', dataIndex: '交卷天数', itemId: 6 },
+                    { title: 'case_bh', dataIndex: '案件编号', overflow: false, itemId: 1 },
+                    { title: 'case_name', dataIndex: '案件名称', overflow: false, itemId: 10 },
+                    { title: 'case_desc', dataIndex: '案件描述', overflow: true, itemId: 11 },
+                    { title: 'case_type_name', dataIndex: '案件类型', overflow: false, itemId: 2 },
+                    { title: 'case_take_user_name', dataIndex: '承办人', overflow: false, itemId: 3 },
+                    { title: 'dangan_accept_status', dataIndex: '是否交卷', overflow: false, itemId: 4 },
+                    { title: 'dangan_accept_time', dataIndex: '交卷日期', overflow: false, itemId: 5 },
+                    { title: 'dangan_accept_day', dataIndex: '交卷天数', overflow: false, itemId: 6 },
                 ],
             }
            

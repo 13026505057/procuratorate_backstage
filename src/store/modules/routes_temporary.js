@@ -1,7 +1,7 @@
 const asyncDataRoutes = [
     {
         "component": "layout",
-        "meta": {"title": "案管部门", "icon": "iconjinduchaxun"},
+        "meta": {"title": "案管部门", "icon": "lock"},
         "name": "CaseManage", 
         "path": "/caseManage",
         "redirect": "/caseManage/progress",

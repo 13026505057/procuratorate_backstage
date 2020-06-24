@@ -17,7 +17,7 @@
                     </el-table-column>
                     <el-table-column
                         align="center"
-                        show-overflow-tooltip
+                        :show-overflow-tooltip="item.overflow"
                         v-for="tableItem in tableItems"
                         :prop="tableItem.prop"
                         :label="tableItem.label"

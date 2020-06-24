@@ -5,7 +5,7 @@
             <div class="table-dataList" >
                 <el-table :data="showModel.tableData" border style="width: 100%">
                     <el-table-column align="center" type="index"></el-table-column>
-                    <el-table-column :label="item.dataIndex" show-overflow-tooltip
+                    <el-table-column :label="item.dataIndex"
                         v-for="item in columns" :key="item.itemId" align="center">
                         <template slot-scope="{row}">
                             <span v-if="item.itemId == 6">{{ row[item.title]=='none'?'未入库':'已入库' }}</span>

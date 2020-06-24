@@ -176,10 +176,10 @@
         },
         mounted(){
             this.getCaseType(this.seatchData);
+            console.log(this.seatchData)
         },
         methods: {
             receivedAddress(data){
-                console.log(data)
                 Object.keys(data).map(item=> this.seatchData[item] = data[item] )
             },
             // 分类&&角标
@@ -206,7 +206,7 @@
             
             // 默认数据列表
             async getDataList(){
-                console.log({...this.seatchData})
+                // console.log({...this.seatchData})
                 let dataInfo = { ...this.seatchData }
                 dataInfo ['pageNum'] = this.currentPage1;
                 dataInfo ['pageSize'] = this.pageSize;

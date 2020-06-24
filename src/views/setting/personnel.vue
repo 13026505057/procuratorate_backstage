@@ -1,10 +1,13 @@
 <template>
-    <div class="overall-content unit-content">
+    <div class="unit-content">
         <!-- <div class="search-box"> -->
+        <div class="head-search">
             <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
             <!-- <el-input class="search-inp" placeholder="请输入姓名" v-model="userName" ></el-input> -->
-            <el-button @click="searchClick">查询</el-button>
+            <!-- <el-button @click="searchClick">查询</el-button> -->
             <el-button @click="addUnitClick('add','')">新增人员</el-button>
+        </div>
+            
         <!-- </div> -->
         <div class="table-list">
             <div class="table-dataList" >
@@ -368,22 +371,8 @@
     .unit-content{
         margin: 20px;
         
-        .search-box{
-            border: 2px solid #97cfff;
-            height: 70px;
-            padding: 15px 0;
-            background-color: #eaf5ff;
-            display: flex;
-            .search-inp{
-                width: 200px;
-            }
-            div,button{
-                margin-left: 30px;
-            }
-            div{
-               height: 38px;
-               line-height: 38px; 
-            }
+        .head-search{
+            // position:
             button{
                 // width:94px;
                 height: 38px;

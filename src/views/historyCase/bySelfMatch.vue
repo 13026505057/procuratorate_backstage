@@ -7,7 +7,7 @@
                 <div class="table-dataList" >
                     <el-table :data="showModel_left.tableData" border style="width: 100%" @cell-click="selectCellItem">
                         <el-table-column align="center" type="index"></el-table-column>
-                        <el-table-column :label="item.dataIndex" show-overflow-tooltip
+                        <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
                             v-for="item in columns_left" :key="item.itemId" align="center">
                             <template slot-scope="{row}">
                                 <span>{{ row[item.title] }}</span>
@@ -31,7 +31,7 @@
                 <div class="table-dataList" >
                     <el-table :data="showModel_right.tableData_top" border style="width: 100%" v-loading="loading_right_top">
                         <el-table-column align="center" type="index"></el-table-column>
-                        <el-table-column :label="item.dataIndex" show-overflow-tooltip
+                        <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
                             v-for="item in columns_right" :key="item.itemId" align="center">
                             <template slot-scope="{row}">
                                 <span v-if="item.itemId == 5">{{ row[item.title]=='1'?'已绑定':'未绑定' }}</span>
@@ -55,7 +55,7 @@
                     <div class="table-dataList" >
                         <el-table :data="showModel_right.tableData_bottom" border style="width: 100%">
                             <el-table-column align="center" type="index"></el-table-column>
-                            <el-table-column :label="item.dataIndex" show-overflow-tooltip
+                            <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
                                 v-for="item in columns_right" :key="item.itemId" align="center">
                                 <template slot-scope="{row}">
                                     <span v-if="item.itemId == 5">{{ row[item.title]=='1'?'已绑定':'未绑定' }}</span>

@@ -22,7 +22,7 @@
                             </el-table-column>
                             <el-table-column
                                 align="center"
-                                show-overflow-tooltip
+                                :show-overflow-tooltip="tableItem.overflow"
                                 v-for="tableItem in tableItems"
                                 :prop="tableItem.prop"
                                 :label="tableItem.label"
@@ -121,7 +121,7 @@
                     {label: "统一受案号", prop: "case_bh", tableId:1},
                     {label: "案件名称", prop: "case_name", tableId:2},
                     {label: "案件类型", prop: "case_type_name", tableId:3},
-                    {label: "案件描述", prop: "case_desc", tableId:4},
+                    {label: "案件描述", prop: "case_desc", overflow: true, tableId:4},
                     {label: "是否归档", prop: "time_status", tableId:5},
                     {label: "承办人", prop: "case_take_user_name", tableId:6},
                     {label: "是否成卷", prop: "chengjuan", tableId:7},

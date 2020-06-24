@@ -100,7 +100,6 @@ export default {
           })
           if(resultData && resultData.code == '0') {
             this.setTokenData(resultData.data.token)
-            console.log(this.redirect)
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
           } else this.loading = false

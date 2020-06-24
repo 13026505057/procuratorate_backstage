@@ -1,7 +1,7 @@
 const asyncDataRoutes = [
     {
         "component": "layout",
-        "meta": {"title": "案管部门", "icon": "iconjinduchaxun"},
+        "meta": {"title": "案管部门", "icon": "lock"},
         "name": "CaseManage", 
         "path": "/caseManage",
         "redirect": "/caseManage/progress",
@@ -19,7 +19,7 @@ const asyncDataRoutes = [
     },
     {
         "component": "layout",
-        "meta": {"title": "档案部门", "icon": "lock"},
+        "meta": {"title": "档案管理", "icon": "lock"},
         "name": "ArchivesManage", 
         "path": "/archivesManage",
         "redirect": "/archivesManage/shallCompleted",
@@ -67,9 +67,9 @@ const asyncDataRoutes = [
         "path": "/utilizeArchives",
         "redirect": "/utilizeArchives/outWarehouse",
         "children": [
-            {"path": "outWarehouse", "component": "views/utilizeArchives/outWarehouse", "name": "OutWarehouse", "meta":{ "title":"档案借阅" }},
-            {"path": "inWarehouse", "component": "views/utilizeArchives/inWarehouse", "name": "InWarehouse", "meta":{ "title":"档案归还" }},
-            // {"path": "historyWarehouse", "component": "views/utilizeArchives/historyWarehouse", "name": "HistoryWarehouse", "meta":{ "title":"出入库记录" }}
+            {"path": "outWarehouse", "component": "views/utilizeArchives/outWarehouse", "name": "OutWarehouse", "meta":{ "title":"档案借阅（出库）" }},
+            {"path": "inWarehouse", "component": "views/utilizeArchives/inWarehouse", "name": "InWarehouse", "meta":{ "title":"档案归还（入库）" }},
+            {"path": "historyWarehouse", "component": "views/utilizeArchives/historyWarehouse", "name": "HistoryWarehouse", "meta":{ "title":"出入库记录" }}
         ]
     },
     {

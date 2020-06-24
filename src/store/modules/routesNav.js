@@ -5,7 +5,6 @@ import AddRole from '@/views/setting/addRole'
 import Unit from '@/views/setting/unit'
 import Department from '@/views/setting/department'
 import Position from '@/views/setting/position'
-
 import PermissionGroup from '@/views/setting/permissionGroup'
 import Role from '@/views/setting/role'
 import Personnel from '@/views/setting/personnel'
@@ -17,8 +16,6 @@ import CompletedCase from '@/views/caseManage/filingCondition/completed'
 import UncompletedCase from '@/views/caseManage/filingCondition/uncompleted'
 import WaitAssessment from '@/views/caseManage/waitAssessment'
 import Progress from '@/views/caseManage/progress'
-import AddPermission from '@/views/permission/add'
-import RolePermission from '@/views/permission/role'
 
 // 档案Routes
 import ShallCompleted from '@/views/archivesManage/shallCompleted/index'
@@ -85,8 +82,6 @@ let routesNav = {
     UncompletedCase: UncompletedCase,
     WaitAssessment: WaitAssessment,
     Progress: Progress,
-    AddPermission: AddPermission, 
-    RolePermission: RolePermission,
     
     // 档案Routes
     ShallCompleted: ShallCompleted,

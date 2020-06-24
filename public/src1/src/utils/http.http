@@ -1,8 +1,0 @@
-@baseUrl = 'http://106.12.68.167/dossier_qd'
-
-# @name login
-POST {{baseUrl}}/user/getInfo HTTP/1.1
-Content-type: application/x-www-form-urlencoded
-kf-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJrb2ZhbiIsInVzZXJOYW1lIjoiMSIsImV4cCI6MTU4NzE3NDc3NywidXNlcklkIjoiMSIsImlhdCI6MTU4NzA4ODM3N30.YcwbIjY73IhuSFqr7GX0Kj8HNMrmFvjQe_biDP-1SUc
-
-###

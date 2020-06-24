@@ -5,6 +5,7 @@
            
             <div class="table-dataList" >
                 <el-table
+                    :loading="isLoading"
                     :data="tableData"
                     :header-cell-style="headerRowStyle"
                     border
@@ -176,6 +177,7 @@
                     case_take_user_name:'',
 
                 },
+                isLoading:false,
                 disabled1:false,
 
             }
@@ -228,7 +230,7 @@
             // 默认数据列表
             async getDataList(){
                 console.log({...this.seatchData})
-                
+                this.isLoading = true;
                 // dataInfo ['case_type_id'] = this.activeName;
                 if(this.seatchData.area_id&&this.seatchData.area_id!=''){
                     //查询基层院的归档率
@@ -243,7 +245,8 @@
                     const resultData = await this.$api.caseJauge(dataInfo);
                     if(resultData && resultData.code == '0') {
                         this.tableData = resultData.data.list,
-                        this.total1 = resultData.data.total
+                        this.total1 = resultData.data.total,
+                        this.isLoading = false
                     }
                 }else{
                     //查询地级市的归档率
@@ -256,7 +259,8 @@
                     this.tableItems = this.tableItemsCity;
                     const resultData = await this.$api.caseJaugeAll(dataInfo);
                     if(resultData && resultData.code == '0') {
-                        this.tableData = resultData.data
+                        this.tableData = resultData.data,
+                        this.isLoading = false
                         // this.total1 = resultData.data.total
                     }
                 }

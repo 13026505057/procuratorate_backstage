@@ -1,6 +1,15 @@
 <template>
     <div class="uncompletedPutPage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
+        <div class="scan-table">
+            <span style="margin-left:20px;">入库操作：</span>
+            <el-radio-group v-model="exhibit_type" class="scan-select">
+                <el-radio v-for="exhibitItem in exhibitType" :key="exhibitItem.exhibit_type_id" :label="exhibitItem.exhibit_type_code">{{exhibitItem.exhibit_type_name}}</el-radio>
+            </el-radio-group>
+            <el-input class="scan-input" v-model="stockNum" ref="stockNumRef" @change="stockNumChange" placeholder="扫描货架码"></el-input>
+            <el-input class="scan-input" v-model="exhibitNum" ref="exhibitNumRef" @change="exhibitNumChange" placeholder="扫描案卷码"></el-input>
+            <span style="margin-left:10px;">先扫描货架码，光标自动移动到案卷码位置后在扫描案卷码</span>
+        </div>
+        <Search style="margin-top:10px;" :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
@@ -55,6 +64,10 @@
                     end_time: '',
                     stock_log_type: 'init',
                 },
+                exhibit_type:'SS',
+                stockNum:'',
+                exhibitNum:'',
+                exhibitType:[],
                 addSearch: [
                     { dom: 'case_bh', value: '',placeholder: '请输入统一涉案号', itemId: 5, name: 'input' },
                     { dom: 'case_name', value: '',placeholder: '请输入案件名', itemId: 6, name: 'input' },
@@ -87,8 +100,89 @@
         },
         mounted(){
             this.getCaseType();
+            this.getFocus();
+            this.getExhibitType();
         },
         methods: {
+            //查询卷宗类别如：诉讼 文书 技术
+            async getExhibitType(){
+                // console.log({...this.seatchData})
+                // let dataInfo = { ...this.seatchData }
+                // dataInfo ['pageNum'] = this.currentPage1;
+                // dataInfo ['pageSize'] = this.pageSize;
+                // dataInfo ['case_type_id'] = this.activeName;
+                
+                const resultData = await this.$api.getExhibitType();
+                if(resultData && resultData.code == '0') {
+                    this.exhibitType = resultData.data
+                    // console.log(this.exhibitType)
+                    // this.total1 = resultData.data.total
+                }
+            },
+            //自动获取焦点
+            getFocus(){
+                this.$refs.stockNumRef.focus();
+            },
+            getFocus2(){
+                this.$refs.exhibitNumRef.focus();
+            },
+            //货架号扫码枪扫描后处理
+            stockNumChange(data){
+                this.stockNum = data;
+                this.getFocus2();
+            },
+            //卷宗号扫码枪扫描后处理
+            exhibitNumChange(data){
+                this.exhibitNum = data;
+                // 默认数据列表
+                this.getIds();
+                
+
+            },
+            async getIds(){
+                    // console.log({...this.seatchData})
+                    let dataInfo = {}
+                    dataInfo ['exhibit_type'] = this.exhibit_type;
+                    dataInfo ['code'] = this.exhibitNum;
+                    
+                    const resultData = await this.$api.getIds(dataInfo);
+                    if(resultData && resultData.code == '0') {
+                        console.log(resultData)
+                        console.log(resultData.data)
+                        console.log(resultData.data.type)
+                        if(resultData.data.type=="exhibit"){
+                            this.exhibit_id = resultData.data.exhibit.exhibit_id;
+                            // self.Warehousing()
+                            this.exhibitIn();
+                        }else if(resultData.data.type=="cell"){
+                            
+                        }
+                        // this.getDataList();
+                        // this.$message({
+                        //     message: '入库成功',
+                        //     type: 'success'
+                        // });
+                        // this.exhibitNum = "";
+                        // this.getFocus('exhibitNumRef');
+                    }
+            },
+            async exhibitIn(){
+                    // console.log({...this.seatchData})
+                    let dataInfo = {}
+                    dataInfo ['cell_id'] = this.stockNum;
+                    dataInfo ['exhibit_id'] = this.exhibit_id;
+                    
+                    const resultData = await this.$api.exhibitIn(dataInfo);
+                    if(resultData && resultData.code == '0') {
+                        this.getDataList();
+                        this.$message({
+                            message: '入库成功',
+                            type: 'success'
+                        });
+                        this.exhibitNum = "";
+                        this.getFocus('exhibitNumRef');
+                    }
+            },
             receivedAddress(data){
                 Object.keys(data).map(item=> this.pagination[item] = data[item] )
             },
@@ -113,7 +207,7 @@
                     // 角标
                     let dataInfo = {...this.pagination};
                     // 每个页面字段不同(cout_for)
-                    dataInfo.stock_status_str = 'in,out,wout,win';
+                    dataInfo.cout_for = 'dangAnJianChaTongGuo';
 
                     ['pageNum','pageSize','case_type_id'].map(item=> delete dataInfo[item])
                     const resultData = await this.$api.getCornerMarkType(dataInfo);
@@ -133,7 +227,7 @@
                 this.loading = true;
                 this.showModel.dialogTableVisible = false;
                 let getData = { ...dataInfo }
-                const resultData = await this.$api.getInByPage(getData);
+                const resultData = await this.$api.getDangAnConfirmByPage(getData);
                 const pagination = { ...this.pagination };
                 let resultData_table = [];
                 resultData.data.list.map(item=>{
@@ -180,6 +274,24 @@
 <style lang="scss">
     .uncompletedPutPage{
         margin: 20px;
+        .scan-table{
+            margin-top: -20px;
+            width: 100%;
+            height: 60px;
+            line-height: 60px;
+            border:1px solid #6db4ff;
+            background-color: #eaf5ff;
+            display: flex;
+            .scan-select{
+                width: 230px;
+                margin: 23px 30px;
+            }
+            .scan-input{
+                width: 250px;
+                margin-left: 20px;
+                
+            }
+        }
         .head-tab{
             margin-top: 30px;
             .table-dataList{

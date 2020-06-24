@@ -179,6 +179,7 @@
         },
         methods: {
             receivedAddress(data){
+                console.log(data)
                 Object.keys(data).map(item=> this.seatchData[item] = data[item] )
             },
             // 分类&&角标

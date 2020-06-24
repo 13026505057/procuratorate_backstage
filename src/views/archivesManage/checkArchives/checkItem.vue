@@ -277,7 +277,7 @@
                 ]
                 typeFun.map(item=>{
                     if(this.submitDataInfoType == item.type) {
-                        this[item.fun](case_ids);
+                        this[item.fun](case_ids,item.type);
                         this.resetSubmitInfo();
                     }
                 })
@@ -286,12 +286,14 @@
             async agreeCheckFun(case_ids,type_status){
                 let resultData = await this.$api.confirmNone({case_ids,type_status})
                 if(resultData && resultData.code=='0') this.$message.success('操作成功')
+                this.getTableList(this.pagination)
             },
             // 审查不通过
             async disagreeCheckFun(case_ids){
                 const dataInfo = { case_ids,mark: this.submitDataInfo.mark }
                 let resultData = await this.$api.refuseConfirmNone(dataInfo)
                 if(resultData && resultData.code=='0') this.$message.success('操作成功')
+                this.getTableList(this.pagination)
             },
         },
     }

@@ -91,7 +91,7 @@
                     case_type_id: '',
                 },
                 addSearch: [
-                    { dom: 'case_bh', value: '', placeholder: '请输入案卷号', itemId: 0, name: 'input' },
+                    { dom: 'case_bh', value: '', placeholder: '统一受案号', itemId: 0, name: 'input' },
                     { dom: 'case_name', value: '', placeholder: '请输入案卷名称', itemId: 1, name: 'input' },
                     { dom: 'timeYear', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
                     { dom: 'time_status', value: null,placeholder: '请选择状态', itemId: 5, name: 'selectTimeStatus' },

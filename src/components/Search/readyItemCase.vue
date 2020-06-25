@@ -39,7 +39,7 @@
         <el-button type="search" @click="addCaseItem">新增案件</el-button>
 
         <!-- 新增案件 -->
-        <el-dialog title="新增案件" :visible.sync="showModel.dialogReceivedVisible">
+        <el-dialog v-dialogDrag title="新增案件" :visible.sync="showModel.dialogReceivedVisible">
             <div class="addCaseBox_container">
                 <div class="addCaseBox_item">
                     <div v-for="(item,index) in eachDataInfoList.slice(0,6)" :key="index" class="item">

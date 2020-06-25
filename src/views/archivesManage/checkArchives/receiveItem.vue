@@ -40,7 +40,7 @@
             </el-tabs>
         </div>
         <!-- 案卷详情 -->
-        <el-dialog title="案卷详情" :visible.sync="showModel.dialogTableVisible">
+        <el-dialog v-dialogDrag title="案卷详情" :visible.sync="showModel.dialogTableVisible">
             <el-table :data="showModel.gridData" align="center">
                 <el-table-column type="index" label="#"></el-table-column>
                 <el-table-column :label="item.dataIndex"
@@ -62,7 +62,7 @@
             <DialogPagin ref="dialogTablePagin" :tableData="showModel.gridData_temporary" @dialogTablePagin="dialogTablePagin"/>
         </el-dialog>
         <!-- 接收案卷 -->
-        <el-dialog title="接收案卷" :visible.sync="showModel.dialogReceivedVisible">
+        <el-dialog v-dialogDrag title="接收案卷" :visible.sync="showModel.dialogReceivedVisible">
             <div v-for="(item,index) in eachDataInfoList" :key="index"
                 style="display:table;width: 100%;margin-bottom: 10px">
                 <span style="display:table-cell;width: 25%;text-align: right;padding-right: 20px">
@@ -89,7 +89,7 @@
             </span>
         </el-dialog>
         <!-- 批量打印回执单 -->
-        <el-dialog title="批量打印回执单" :visible.sync="showModel.dialogPrintVisible" @close="resetPrintPagination" width="90%">
+        <el-dialog v-dialogDrag title="批量打印回执单" :visible.sync="showModel.dialogPrintVisible" @close="resetPrintPagination" width="90%">
             <el-table ref="multipleTable" :data="showModel.print_tableData" align="center" v-loading="loadingTable_print" @selection-change="handleSelectionChange">
                 <el-table-column type="index" label="#"></el-table-column>
                 <el-table-column type="selection" width="55"></el-table-column>

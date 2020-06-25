@@ -54,7 +54,7 @@
                     </div>
                 </el-tab-pane>
             </el-tabs>
-            <el-dialog
+            <el-dialog v-dialogDrag
                 title="案件进度"
                 :visible.sync="dialogVisible"
                 width="34%"
@@ -72,7 +72,7 @@
                     <el-button type="primary" @click="dialogVisible = false">关 闭</el-button>
                 </span>
             </el-dialog>
-            <el-dialog
+            <el-dialog v-dialogDrag
                 title="案卷详情"
                 :visible.sync="dialogVisibleDetails"
                 width="56%"

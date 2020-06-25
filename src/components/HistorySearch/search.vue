@@ -39,7 +39,7 @@
             <el-button type="search" @click="comfirmSearch">匹配历史</el-button> -->
         </div>
         <!-- 案件导入 -->
-        <el-dialog title="历史案件导入" :visible.sync="showModel.importCaseModel">
+        <el-dialog v-dialogDrag title="历史案件导入" :visible.sync="showModel.importCaseModel">
             <el-upload class="upload-demo" drag multiple :headers="showModel.headersUpload"
                 :action="base_url + '/cases/cases/addByExcel'" :on-success="uploadSuccess">
                 <i class="el-icon-upload"></i>

@@ -138,7 +138,7 @@
                 </el-pagination>
             </div>
                
-            <el-dialog
+            <el-dialog v-dialogDrag
                 title="案件进度"
                 :visible.sync="dialogVisible"
                 width="34%"

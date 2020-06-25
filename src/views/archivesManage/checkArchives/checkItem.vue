@@ -39,7 +39,7 @@
             </el-tabs>
         </div>
         <!-- 案卷详情 -->
-        <el-dialog title="案卷详情" :visible.sync="showModel.dialogTableVisible">
+        <el-dialog v-dialogDrag title="案卷详情" :visible.sync="showModel.dialogTableVisible">
             <el-table :data="showModel.gridData" align="center">
                 <el-table-column type="index" label="#"></el-table-column>
                 <el-table-column :label="item.dataIndex"
@@ -60,7 +60,7 @@
             <DialogPagin ref="dialogTablePagin" :tableData="showModel.gridData_temporary" @dialogTablePagin="dialogTablePagin"/>
         </el-dialog>
         <!-- 接收案卷 -->
-        <el-dialog title="档案检查" :visible.sync="showModel.dialogReceivedVisible" @close="resetSubmitInfo">
+        <el-dialog v-dialogDrag title="档案检查" :visible.sync="showModel.dialogReceivedVisible" @close="resetSubmitInfo">
             <div style="display:table;width: 100%;margin-bottom: 10px">
                 <span style="display:table-cell;width: 25%;text-align: right;padding-right: 20px">
                     检查结果：

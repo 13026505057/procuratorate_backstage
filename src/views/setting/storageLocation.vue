@@ -53,7 +53,7 @@
                     :total="total1">
                 </el-pagination>
             </div>
-             <el-dialog
+             <el-dialog v-dialogDrag
                 :title="dialogTitle"
                 :visible.sync="dialogVisible"
                 width="34%"
@@ -83,7 +83,7 @@
                     <el-button type="primary" @click="dialogVisible = false">关 闭</el-button>
                 </span>
             </el-dialog>
-            <el-dialog
+            <el-dialog v-dialogDrag
                 :title="printTitle"
                 :visible.sync="printVisible"
                 width="34%"

@@ -38,7 +38,7 @@
             </el-tabs>
         </div>
         <!-- 案卷详情 -->
-        <el-dialog title="案卷详情" :visible.sync="showModel.dialogTableVisible">
+        <el-dialog v-dialogDrag title="案卷详情" :visible.sync="showModel.dialogTableVisible">
             <el-table :data="showModel.gridData" align="center">
                 <el-table-column type="index" label="#"></el-table-column>
                 <el-table-column :label="item.dataIndex"

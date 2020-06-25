@@ -55,7 +55,7 @@
                     :total="total1">
                 </el-pagination>
             </div>
-             <el-dialog
+             <el-dialog v-dialogDrag
                 :title="dialogTitle"
                 :visible.sync="dialogVisible"
                 width="34%"

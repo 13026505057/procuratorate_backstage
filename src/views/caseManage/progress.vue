@@ -60,8 +60,7 @@
                     </div>
                 </el-tab-pane>
             </el-tabs>
-            <el-dialog
-                v-dialogDrag
+            <el-dialog v-dialogDrag
                 title="案件进度"
                 :visible.sync="dialogVisible"
                 width="34%"

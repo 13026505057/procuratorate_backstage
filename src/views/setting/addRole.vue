@@ -10,7 +10,7 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog :visible.sync="dialogVisible" title="修改权限配置" @close="resetRoutes">
+    <el-dialog v-dialogDrag :visible.sync="dialogVisible" title="修改权限配置" @close="resetRoutes">
       <el-form :model="role" label-width="100px" label-position="left">
         <el-form-item label="权限组名称">
           <el-input v-model="role.group_name" placeholder="请输入权限组名称" style="width:auto"/>

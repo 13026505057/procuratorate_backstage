@@ -1,10 +1,11 @@
 <template>
-    <div class="overall-content unit-content">
+    <div class="unit-content">
         <!-- <div class="search-box"> -->
+        <div class="head-search">
             <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
-            <!-- <el-input class="search-inp" placeholder="请输入姓名" v-model="userName" ></el-input> -->
-            <el-button @click="searchClick">查询</el-button>
             <el-button @click="addUnitClick('add','')">新增人员</el-button>
+        </div>
+            
         <!-- </div> -->
         <div class="table-list">
             <div class="table-dataList" >
@@ -105,17 +106,6 @@
                             </el-select>
                         </el-form-item>
                     </el-form>  
-                        <!-- <el-form-item label="权限">
-                            <el-cascader
-                                clearable
-                                :props="props"
-                                style="width:100%"
-                                v-model="unit_form.jurisdiction"
-                                :options="jurisdictionOptions"
-                                @change="handleChange">
-                            </el-cascader>
-                        </el-form-item> -->
-                    </el-form>  
                 </span>
                 <span slot="footer" class="dialog-footer">
                     <el-popconfirm
@@ -206,16 +196,14 @@
             this.getRoutesGroupsList();
         },
         methods: {
-            handleChange(value) {
-                console.log(value);
-                console.log(this.unit_form.jurisdiction)
-            },
+           
             receivedAddress(data){
+                console.log(data)
                 Object.keys(data).map(item=> this.seatchData[item] = data[item] )
             },
             comfirmSearch(data){
-                this.$nextTick(()=>{ for(let key in data) { this.seatchData[key] = data[key] } })
-                this.getDataList();
+                this.$nextTick(()=>{ for(let key in data) { this.seatchData[key] = data[key] } this.getDataList();})
+                
             },
             async getDataList(){
                 const dataInfo = {pageNum:this.currentPage1,pageSize:this.pageSize,
@@ -232,6 +220,14 @@
                 const resultData = await this.$api.getDepartmentList(dataInfo);
                 if(resultData&&resultData.code == 0){
                     this.deptOptions = resultData.data.list;
+                    var arr = [];
+                    resultData.data.list.map(item=>{
+                        arr.push({
+                            label:item.dept_name,
+                            value:item.dept_id
+                        })
+                    })
+                    this.selectOption.dept_id = arr
                 }
             },
             // 查职位
@@ -368,22 +364,8 @@
     .unit-content{
         margin: 20px;
         
-        .search-box{
-            border: 2px solid #97cfff;
-            height: 70px;
-            padding: 15px 0;
-            background-color: #eaf5ff;
-            display: flex;
-            .search-inp{
-                width: 200px;
-            }
-            div,button{
-                margin-left: 30px;
-            }
-            div{
-               height: 38px;
-               line-height: 38px; 
-            }
+        .head-search{
+            position: relative;
             button{
                 // width:94px;
                 height: 38px;
@@ -392,6 +374,9 @@
                 border: none;
                 font-size: 17px;
                 border-radius: 8px;
+                position: absolute;
+                right: 10px;
+                top: 15px;
             }
         }
         .table-list{

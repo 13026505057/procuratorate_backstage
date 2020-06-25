@@ -10,6 +10,7 @@
                     </span>
                     <div class="table-dataList" >
                         <el-table
+                            v-loading="tableLoading"
                             :data="tableData"
                             :header-cell-style="headerRowStyle"
                             border
@@ -90,10 +91,10 @@
                                 :key="tableItem.label"
                                 >
                                 <template slot-scope="{row}">
-                                    <span v-if="tableItem.tableId == 6">
+                                    <span v-if="tableItem.tableId == 6" :class="row[tableItem.prop] == 'in'?'':'colorRed'">
                                         {{row[tableItem.prop] == 'in'?'已入库':'待入库'}}
                                     </span>
-                                    <span v-else-if="tableItem.tableId == 7">
+                                    <span v-else-if="tableItem.tableId == 7" :class="row[tableItem.prop] == '0'?'colorRed':''">
                                         {{row[tableItem.prop] == '0'?'失效':'有效'}}
                                     </span>
                                     <span v-else>
@@ -124,8 +125,8 @@
     </div>
 </template>
 <script>
- import Search from '@/components/Search'
- import DialogPagin from '@/components/DialogPagin'
+    import Search from '@/components/Search'
+    import DialogPagin from '@/components/DialogPagin'
     import { setTimeout } from 'timers';
 
     export default {
@@ -190,6 +191,7 @@
                 disabled1:false,
                 disabled2:false,
                 disabled3:false,
+                tableLoading:false,
 
             }
            
@@ -244,14 +246,17 @@
             },
             // 默认数据列表
             async getDataList(seatchData){
+                this.tableLoading = true;
                 let dataInfo = { ...seatchData }
                 dataInfo ['pageNum'] = this.currentPage1;
                 dataInfo ['pageSize'] = this.pageSize;
                 dataInfo ['case_type_id'] = this.activeName;
                 const resultData = await this.$api.getInByPage(dataInfo);
                 if(resultData && resultData.code == '0') {
-                    this.tableData = resultData.data.list,
+                    this.tableData = resultData.data.list;
                     this.total1 = resultData.data.total
+                    this.tableLoading = false;
+
                 }
             },
             // 查询
@@ -393,6 +398,9 @@
             }
             .dialog-footer button{
                 margin: 0 60px;
+            }
+            .colorRed{
+                color: #ff0000;
             }
         }
     }

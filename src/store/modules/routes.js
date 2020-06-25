@@ -1,17 +1,17 @@
 const asyncDataRoutes = [
     {
         "component": "layout",
-        "meta": {"title": "案管部门", "icon": "iconjinduchaxun"},
+        "meta": {"title": "案管部门", "icon": "icon-jinduchaxun"},
         "name": "CaseManage", 
         "path": "/caseManage",
         "redirect": "/caseManage/progress",
         "children": [
-            {"path": "progress", "component": "views/caseManage/progress", "name": "Progress", "meta":{ "title":"案件进度查询" }},
+            {"path": "progress", "component": "views/caseManage/progress", "name": "Progress", "meta":{ "title":"案件进度查询","icon": "icon-jinduchaxun" }},
             {"path": "waitAssessment", "component": "views/caseManage/waitAssessment", "name": "WaitAssessment", "meta":{ "title":"等待质量评查" }},
             {   "path": "filingCondition", "component": "views/caseManage/filingCondition/index",
-                "name": "FilingCondition", "meta":{ "title":"符合归档条件案件" },
+                "name": "FilingCondition", "meta":{ "title":"符合归档条件案件","icon": "icon-jinduchaxun" },
                 "children": [
-                    {"path": "uncompleted", "component": "views/caseManage/filingCondition/uncompleted", "name": "UncompletedCase", "meta":{ "title":"未归档案件" }},
+                    {"path": "uncompleted", "component": "views/caseManage/filingCondition/uncompleted", "name": "UncompletedCase", "meta":{ "title":"未归档案件","icon": "icon-jinduchaxun" }},
                     {"path": "completed", "component": "views/caseManage/filingCondition/completed", "name": "CompletedCase", "meta":{ "title":"已归档案件" }}
                 ]
             }

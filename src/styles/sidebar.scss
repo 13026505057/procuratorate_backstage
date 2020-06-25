@@ -8,7 +8,12 @@ $content_Box: calc(100% - 55px);
     margin-left: $sideBarWidth;
     position: relative;
   }
-
+  .el-submenu__title, .el-menu-item{
+    i.template {
+      color: inherit;
+      margin-right: 10px;
+    }
+  }
   .sidebar-container {
     transition: width 0.28s;
     width: $sideBarWidth !important;
@@ -129,6 +134,13 @@ $content_Box: calc(100% - 55px);
     .el-menu--collapse {
       .el-submenu {
         &>.el-submenu__title {
+          >i.template{
+            height: 0;
+            width: 0;
+            visibility: hidden;
+            display: inline-block;
+            overflow: hidden;
+          }
           &>span {
             height: 0;
             width: 0;
@@ -184,6 +196,10 @@ $content_Box: calc(100% - 55px);
 
   .nest-menu .el-submenu>.el-submenu__title,
   .el-menu-item {
+    i.template {
+      color: inherit;
+      margin-right: 10px;
+    }
     &:hover {
       // you can use $subMenuHover
       background-color: $menuHover !important;

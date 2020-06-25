@@ -10,6 +10,7 @@
                     </span>
                     <div class="table-dataList" >
                         <el-table
+                            v-loading="tableLoading"
                             :data="tableData"
                             :header-cell-style="headerRowStyle"
                             border
@@ -32,15 +33,9 @@
                                     <span v-if="tableItem.tableId == 5">{{ row[tableItem.prop] | pigeonhole }}</span>
                                     <span v-else-if="tableItem.tableId == 7">{{row[tableItem.prop]==0?'未成卷':'已成卷'}}</span>
                                     <span v-else-if="tableItem.tableId == 10">
+                                        {{ row[tableItem.prop.split('-')[0]]-row[tableItem.prop.split('-')[1]] }}
                                     </span>
                                     <span v-else>{{row[tableItem.prop]}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                                label="待入库案卷数"
-                                align="center">
-                                <template slot-scope="props">
-                                    <span>{{props.row.total_quantity-props.row.in_quantity}}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column
@@ -66,13 +61,16 @@
                 </el-tab-pane>
             </el-tabs>
             <el-dialog
+                v-dialogDrag
                 title="案件进度"
                 :visible.sync="dialogVisible"
                 width="34%"
                 center>
                 <span>
                     <div class="step-flex" style="height: 400px;">
-                        <el-steps direction="vertical" :active="1"  style="height: 350px;">
+                        <el-steps direction="vertical" style="height: 350px;"
+                            :active="1" >
+                            <!-- :active="progressList.anguan_confirm_time==null?'1':(progressList.dangan_accept_time==null?'2':'')" -->
                             <el-step status="finish" title="" description="">
                                 <template slot="title">是否办结：已办结</template>
                                 <template slot="description">时间：{{progressList.overtime}}</template>
@@ -114,6 +112,7 @@
                 ],
                 selectOption:{},
                 activeName: "0",
+                activeName2:"",
                 tabItems:[],
                 tableData:[],
                 badgeList:[],
@@ -127,7 +126,7 @@
                     {label: "是否成卷", prop: "chengjuan", tableId:7},
                     {label: "总案卷数", prop: "total_quantity", tableId:8},
                     {label: "在库案卷数", prop: "in_quantity", tableId:9},
-                    // {label: "待入库案卷数", prop: "", tableId:10},
+                    {label: "待入库案卷数", prop: "total_quantity-in_quantity", tableId:10},
                     // total_quantity-in_quantity
 
                 ],
@@ -155,6 +154,7 @@
 
                 },
                 disabled1:false,
+                tableLoading:false,
 
             }
            
@@ -176,7 +176,6 @@
         },
         mounted(){
             this.getCaseType(this.seatchData);
-            console.log(this.seatchData)
         },
         methods: {
             receivedAddress(data){
@@ -186,7 +185,12 @@
             getCaseType(seatchData){
                 this.$api.getCaseType().then(async (res)=>{
                     this.tabItems = res.data.list;
-                    this.activeName = res.data.list[0].case_type_id;
+                    if(this.activeName2!=''){
+                        this.activeName = this.activeName2;
+                    }else{
+                        this.activeName = res.data.list[0].case_type_id;
+                    }
+                    // this.activeName = res.data.list[0].case_type_id;
                     this.getDataList();
                     let dataInfo = { ...seatchData }
                     const resultData = await this.$api.getCornerMarkType(dataInfo);
@@ -207,6 +211,7 @@
             // 默认数据列表
             async getDataList(){
                 // console.log({...this.seatchData})
+                this.tableLoading = true;
                 let dataInfo = { ...this.seatchData }
                 dataInfo ['pageNum'] = this.currentPage1;
                 dataInfo ['pageSize'] = this.pageSize;
@@ -214,12 +219,14 @@
                 
                 const resultData = await this.$api.getProgressCase(dataInfo);
                 if(resultData && resultData.code == '0') {
-                    this.tableData = resultData.data.list,
-                    this.total1 = resultData.data.total
+                    this.tableData = resultData.data.list;
+                    this.total1 = resultData.data.total;
+                    this.tableLoading = false;
+
                 }
             },
             comfirmSearch(data){
-                console.log(data)
+                // console.log(data)
                 this.$nextTick(()=>{ for(let key in data) { this.seatchData[key] = data[key] } })
                 this.getCaseType(this.seatchData);
             },
@@ -228,7 +235,8 @@
             },
             // 标签页
             handleClick(tab, event) {
-                console.log(tab, event);
+                // console.log(tab, event);
+                this.activeName2 = this.activeName;
                 this.getDataList(this.seatchData);
             },
             
@@ -239,20 +247,20 @@
             
             // 小弹窗
             examineClick(res){ 
-                console.log(res)
-                this.disabled1 = true;
+                // this.disabled1 = true;
                 this.dialogVisible = true;
                 this.progressList = res;
-                setTimeout(()=>{
-                    this.disabled1 = false;
-                },2000)
+                // setTimeout(()=>{
+                //     this.disabled1 = false;
+                // },200)
 
             },
             
         },
     }
 </script>
-<style lang="scss">
+
+<style lang="scss" scoped>
     $gradual-color: linear-gradient(to bottom right , #6db4ff, #47ccff);
     .progress-content{
         margin: 20px;
@@ -301,17 +309,7 @@
                 margin-top: 20px;
                 display: flex;
                 justify-content: center;
-                .page-change{
-                    height: 28px;
-                    line-height: 28px;
-                    font-size: 13px;
-                    margin: 2px 5px;
-                    padding: 0px 6px;
-                    background-image: $gradual-color;
-                    color: #ffffff;
-                    border-radius: 4px;
-                    cursor: pointer;
-                }
+                
             }
             .tab-pane-position {
                 position: relative;
@@ -319,9 +317,6 @@
             .tab-badge-num{
                 position: absolute;
                 top: -2px;
-            }
-            .customClass{
-                // background-color: #47ccff;
             }
             .step-flex{
                 display: flex;

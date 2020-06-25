@@ -10,6 +10,7 @@
                     </span>
                     <div class="table-dataList" >
                         <el-table
+                            v-loading="tableLoading"
                             ref="multipleTable"
                             :data="tableData"
                             :header-cell-style="headerRowStyle"
@@ -40,24 +41,12 @@
                                     </span>
                                     <span v-else-if="tableItem.tableId == 5">{{row[tableItem.prop]==1?'超期':'未超期'}}</span>
                                     <span v-else-if="tableItem.tableId == 7">{{ row[tableItem.prop] | pigeonhole }}</span>
+                                    <span v-else-if="tableItem.tableId == 11">
+                                        {{row[tableItem.prop.split('-')[0]]-row[tableItem.prop.split('-')[1]] }}
+                                    </span>
                                     <span v-else>{{row[tableItem.prop]}}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column
-                                label="待入库案卷数"
-                                align="center">
-                                <template slot-scope="props">
-                                    <span>{{props.row.total_quantity-props.row.in_quantity}}</span>
-                                </template>
-                            </el-table-column>
-                            <!-- <el-table-column
-                                width="190"
-                                align="center"
-                                label="操作">
-                                <template slot-scope="props">
-                                    <el-button @click="examineClick(props.row)" class="highlight-btn" size="small">查看进度</el-button>
-                                </template>
-                            </el-table-column> -->
                         </el-table>
                         <div class="check-all" style="margin-top: 10px">
                             <el-button :disabled="disabled1" :loading="disabled1" @click="toggleSelection(tableData)">全选</el-button>
@@ -114,7 +103,7 @@
                     {label: "承办人", prop: "case_take_user_name", tableId:8},
                     {label: "总案卷数", prop: "total_quantity", tableId:9},
                     {label: "在库案卷数", prop: "in_quantity", tableId:10},
-                    // {label: "待入库案卷数", prop: "", tableId:11},
+                    {label: "待入库案卷数", prop: "total_quantity-in_quantity", tableId:11},
                     // total_quantity-in_quantity
 
                 ],
@@ -140,6 +129,8 @@
                 multipleSelection:[],
                 disabled1:false,
                 disabled2:false,
+                tableLoading:false,
+
 
             }
            
@@ -196,14 +187,16 @@
             
             // 默认数据列表
             async getDataList(seatchData){
+                this.tableLoading = true;
                 let dataInfo = { ...seatchData }
                 dataInfo ['pageNum'] = this.currentPage1;
                 dataInfo ['pageSize'] = this.pageSize;
                 dataInfo ['case_type_id'] = this.activeName;
                 const resultData = await this.$api.getAwaitEvaluation(dataInfo);
                 if(resultData && resultData.code == '0') {
-                    this.tableData = resultData.data.list,
-                    this.total1 = resultData.data.total
+                    this.tableData = resultData.data.list;
+                    this.total1 = resultData.data.total;
+                    this.tableLoading = false;
                 }
             },
             comfirmSearch(data){
@@ -236,7 +229,6 @@
              // 确认已审查
             async confirmExamine(){
                 this.disabled2 = true;
-               
                 let case_id_arr = [] 
                 this.multipleSelection.map(item=>{
                     case_id_arr.push(item.case_id)
@@ -249,7 +241,6 @@
                     this.$message.success('操作成功')
                     this.activeName = this.activeName2;
                     this.getCaseType(this.seatchData)
-                    this.getDataList(this.seatchData)
                 }
                 setTimeout(()=>{
                     this.disabled2 = false;
@@ -272,12 +263,7 @@
                 console.log(`当前页: ${val}`);
                 this.getDataList(this.seatchData);
             },
-            
-            // 小弹窗
-            examineClick(res){ 
-                console.log(res)
-                this.dialogVisible = true;
-            },
+           
             
         },
     }

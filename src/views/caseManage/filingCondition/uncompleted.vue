@@ -10,6 +10,7 @@
                     </span>
                     <div class="table-dataList" >
                         <el-table
+                            v-loading="tableLoading"
                             :data="tableData"
                             :header-cell-style="headerRowStyle"
                             border
@@ -34,6 +35,7 @@
                                     </span>
                                     <span v-else-if="tableItem.tableId == 5">{{row[tableItem.prop]==1?'超期':'未超期'}}</span>
                                     <span v-else-if="tableItem.tableId == 7">{{ row[tableItem.prop] | pigeonhole }}</span>
+                                    <span v-else-if="tableItem.tableId == 11">{{ row[tableItem.prop.split('-')[0]]-row[tableItem.prop.split('-')[1]] }}</span>
                                     <span v-else>{{row[tableItem.prop]}}</span>
                                 </template>
                             </el-table-column>
@@ -67,6 +69,7 @@
                 <span>
                     <div class="table-dataList" >
                         <el-table
+                            v-loading="tableLoading"
                             :data="tableData1"
                             :header-cell-style="headerRowStyle"
                             border
@@ -85,10 +88,10 @@
                                 :key="tableItem.label"
                                 >
                                 <template slot-scope="{row}">
-                                    <span v-if="tableItem.tableId == 6">
+                                    <span v-if="tableItem.tableId == 6" :class="row[tableItem.prop] == 'in'?'':'colorRed'">
                                         {{row[tableItem.prop] == 'in'?'已入库':'待入库'}}
                                     </span>
-                                    <span v-else-if="tableItem.tableId == 7">
+                                    <span v-else-if="tableItem.tableId == 7" :class="row[tableItem.prop] == '0'?'colorRed':''">
                                         {{row[tableItem.prop] == '0'?'失效':'有效'}}
                                     </span>
                                     <span v-else>
@@ -137,6 +140,7 @@
                     ],
                 },
                 activeName: "0",
+                activeName2: "",
                 tabItems:[],
                 tableData:[],
                 badgeList:[],
@@ -144,13 +148,13 @@
                     {label: "统一受案号", prop: "case_bh", tableId:1},
                     {label: "案件名称", prop: "case_name", tableId:2},
                     {label: "案件类型", prop: "case_type_name", tableId:3},
-                    {label: "案件状态", prop: "stock_status", tableId:4},
+                    // {label: "案件状态", prop: "stock_status", tableId:4},
                     {label: "案件描述", prop: "case_desc", overflow: true, tableId:6},
                     {label: "是否归档", prop: "time_status", tableId:7},
                     {label: "承办人", prop: "case_take_user_name", tableId:8},
                     {label: "总案卷数", prop: "total_quantity", tableId:9},
                     {label: "在库案卷数", prop: "in_quantity", tableId:10},
-                    // {label: "待入库案卷数", prop: "", tableId:11},
+                    {label: "待入库案卷数", prop: "total_quantity-in_quantity", tableId:11},
                     {label: "评查是否超期", prop: "anguan_pingcha_chaoqi", tableId:5},
 
                 ],
@@ -191,10 +195,12 @@
                 disabled1:false,
                 disabled2:false,
                 disabled3:false,
+                tableLoading:false,
 
             }
            
         },
+        
         filters:{
             pigeonhole(status){
                 const statusList = {
@@ -221,7 +227,14 @@
             getCaseType(seatchData){
                 this.$api.getCaseType().then(async (res)=>{
                     this.tabItems = res.data.list;
-                    this.activeName = res.data.list[0].case_type_id;
+                    console.log(this.activeName)
+                    if (this.activeName2 != '') {
+                        this.activeName = this.activeName2
+                    }else{
+                        this.activeName = res.data.list[0].case_type_id;
+                    }
+                    console.log(this.activeName)
+
                     this.getDataList(seatchData);
                     let dataInfo = { ...seatchData }
                     const resultData = await this.$api.getCornerMarkType(dataInfo);
@@ -245,14 +258,16 @@
             },
             // 默认数据列表
             async getDataList(seatchData){
+                this.tableLoading = true;
                 let dataInfo = { ...seatchData }
                 dataInfo ['pageNum'] = this.currentPage1;
                 dataInfo ['pageSize'] = this.pageSize;
                 dataInfo ['case_type_id'] = this.activeName;
                 const resultData = await this.$api.getUndocumented(dataInfo);
                 if(resultData && resultData.code == '0') {
-                    this.tableData = resultData.data.list,
-                    this.total1 = resultData.data.total
+                    this.tableData = resultData.data.list;
+                    this.total1 = resultData.data.total;
+                    this.tableLoading = false;
                 }
             },
             // 查询
@@ -286,6 +301,7 @@
             // 标签页
             handleClick(tab, event) {
                 console.log(tab, event);
+                this.activeName2 = this.activeName;
                 this.getDataList(this.seatchData);
             },
             // 页面分页
@@ -394,6 +410,9 @@
             }
             .dialog-footer button{
                 margin: 0 60px;
+            }
+            .colorRed{
+                color: #ff0000;
             }
         }
     }

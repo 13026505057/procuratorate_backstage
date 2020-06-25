@@ -16,7 +16,7 @@ import router from './router'
 import './icons' // icon
 import './permission' // permission control
 import './utils/error-log' // error log
-
+import './utils/directives.js';
 import * as filters from './filters' // global filters
 
 //config the api Info

@@ -70,8 +70,8 @@
                 :visible.sync="dialogVisibleDetails"
                 width="58%"
                 center>
-                <span>
-                    <div class="table-dataList" >
+                <template>
+                    <div class="table-dataList">
                         <el-table
                             :data="tableData1"
                             :header-cell-style="headerRowStyle"
@@ -115,7 +115,7 @@
                         </el-table>
                     </div>
                     <DialogPagin ref="dialogTablePagin" :tableData="tableData1_temporary" @dialogTablePagin="dialogTablePagin"/>
-                </span>
+                </template>
                 <!-- <span slot="footer" class="dialog-footer">
                     <el-button type="primary" @click="dialogVisible = false">调 取</el-button>
                     <el-button type="primary" @click="dialogVisible = false">关 闭</el-button>

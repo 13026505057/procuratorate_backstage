@@ -69,10 +69,11 @@
                 <span>
                     <div class="table-dataList" >
                         <el-table
-                            v-loading="tableLoading"
+                            v-loading="tableLoading1"
                             :data="tableData1"
                             :header-cell-style="headerRowStyle"
                             border
+                            row-key="exhibit_id"
                             style="width: 100%"
                             @row-click="cellClick">
                             <el-table-column
@@ -104,8 +105,8 @@
                                 align="center"
                                 label="操作">
                                 <template slot-scope="{ row }">
-                                    <el-button @click="reprintClick(row.exhibit_id)" :disabled="disabled2" :loading="disabled2" class="highlight-btn" size="small">补打条码</el-button>
-                                    <el-button @click="cancellation(row.exhibit_id)" :disabled="disabled3" :loading="disabled3" class="highlight-btn" size="small">作废</el-button>
+                                    <el-button @click="reprintClick(row.exhibit_id)" :disabled="disabled2" :loading="row.exhibit_id == showModel.exhibit_id_print" class="highlight-btn" size="small">补打条码</el-button>
+                                    <el-button @click="cancellation(row.exhibit_id)" :disabled="disabled3" :loading="row.exhibit_id == showModel.exhibit_id_del" class="highlight-btn" size="small">作废</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -123,10 +124,14 @@
 <script>
  import Search from '@/components/Search'
  import DialogPagin from '@/components/DialogPagin'
+ import { mapGetters } from "vuex";
     import { setTimeout } from 'timers';
 
     export default {
         components: { Search,DialogPagin },
+        computed: {
+            ...mapGetters(['case_type_origin'])
+        },
         data()  {
             return  {
                 addSearch: [
@@ -139,6 +144,7 @@
                         {value: '0',label: '评查未超期'}
                     ],
                 },
+                showModel:{ exhibit_id: '' },
                 activeName: "0",
                 activeName2: "",
                 tabItems:[],
@@ -196,11 +202,10 @@
                 disabled2:false,
                 disabled3:false,
                 tableLoading:false,
+                tableLoading1:false,
 
             }
-           
         },
-        
         filters:{
             pigeonhole(status){
                 const statusList = {
@@ -217,6 +222,7 @@
             }
         },
         mounted(){
+            console.log(this.case_type_origin)
             this.getCaseType(this.seatchData);
         },
         methods: {
@@ -225,36 +231,47 @@
             },
             // 分类&&角标
             getCaseType(seatchData){
-                this.$api.getCaseType().then(async (res)=>{
-                    this.tabItems = res.data.list;
-                    console.log(this.activeName)
-                    if (this.activeName2 != '') {
-                        this.activeName = this.activeName2
-                    }else{
-                        this.activeName = res.data.list[0].case_type_id;
-                    }
-                    console.log(this.activeName)
-
+                this.getCaseTypeList()
+                this.getTableListInfo(this.case_type_origin,seatchData)
+            },
+            getCaseTypeList(){
+                this.tabItems = this.case_type_origin;
+                if (this.activeName2 != '') {
+                    this.activeName = this.activeName2
+                }else{
+                    this.activeName = this.case_type_origin[0].case_type_id;
+                }
+            },
+            getTableListInfo(res,seatchData){
+                return new Promise(async (resolve,reject)=>{
                     this.getDataList(seatchData);
-                    let dataInfo = { ...seatchData }
-                    const resultData = await this.$api.getCornerMarkType(dataInfo);
-                    this.badgeList = resultData.data;
-                    Object.keys(resultData.data).map(item=>{
-                        res.data.list.map((itemChild,index)=>{
-                            // console.log(item,"_"+itemChild.case_type_id)
-                            if("_"+itemChild.case_type_id == item) {
-                                itemChild.contNum = resultData.data[item]
-                                this.$set(this.tabItems[index],index,itemChild)
-                            }
-                        })
+                    this.getCornerMark(seatchData,res)
+                    resolve()
+                })
+            },
+            async getCornerMark(dataInfo,arr){
+                const resultData = await this.$api.getCornerMarkType(dataInfo);
+                this.badgeList = resultData.data;
+                Object.keys(resultData.data).map(item=>{
+                    arr.map((itemChild,index)=>{
+                        // console.log(item,"_"+itemChild.case_type_id)
+                        if("_"+itemChild.case_type_id == item) {
+                            itemChild.contNum = resultData.data[item]
+                            this.$set(this.tabItems[index],index,itemChild)
+                        }
                     })
                 })
-                
             },
             // DialogPagin
             dialogTablePagin(data){
                 console.log(data)
-                this.tableData1 = data
+                this.tableLoading1 = true;
+                this.tableData1 = data;
+                // setTimeout(() => {
+                    
+                // }, 1000);
+                this.tableLoading1 = false;
+
             },
             // 默认数据列表
             async getDataList(seatchData){
@@ -277,18 +294,26 @@
             },
             // 补打条码
             async reprintClick(exhibit_id){
+                this.showModel.exhibit_id_print = exhibit_id;
                 this.disabled2 = true;
-                setTimeout(()=>{ this.disabled2 = false; },2000)
                 const resultData = await this.$api.printAgain({exhibit_id});
-                if(resultData && resultData.code == '0') this.$message.success('已发送打印请求');
+                if(resultData && resultData.code == '0') {
+                    this.showModel.exhibit_id_print = ''
+                    this.disabled2 = false;
+                    this.$message.success('已发送打印请求');
+                }
                 this.getCaseType(this.seatchData)
             },
             // 作废
             async cancellation(exhibit_id){
+                this.showModel.exhibit_id_del = exhibit_id;
                 this.disabled3 = true;
-                setTimeout(()=>{ this.disabled3 = false; },2000)
                 const resultData = await this.$api.editCaseData({exhibit_id,exhibit_status:'0'});
-                if(resultData && resultData.code == '0') this.$message.success('操作成功')
+                if(resultData && resultData.code == '0') {
+                    this.exhibit_id_del.exhibit_id = '';
+                    this.disabled3 = false;
+                    this.$message.success('操作成功')
+                }
                 this.getCaseType(this.seatchData)
 
             },
@@ -312,16 +337,16 @@
             
             // 大弹窗
             examineClick(res){ 
-                console.log(res)
-                this.disabled1 = true;
+                // console.log(res)
+                // this.disabled1 = true;
                 this.dialogVisibleDetails = true;
                 this.tableData1_temporary = res.exhibits
                 this.$nextTick(() => {
                     this.$refs.dialogTablePagin.dialogTablePagin(1)
                 })
-                setTimeout(()=>{
-                    this.disabled1 = false;
-                },2000)
+                // setTimeout(()=>{
+                //     this.disabled1 = false;
+                // },2000)
             },
             
         },

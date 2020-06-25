@@ -15,6 +15,7 @@ const state = {
   exhibit_type: [],
   exhibit_time_bg: [],
   case_type: [],
+  case_type_origin: [],
   stock_status: []
 }
 
@@ -34,7 +35,8 @@ const mutations = {
     state.exhibit_time_bg = exhibit_time_bg
   },
   SET_CASE_TYPE(state,case_type){
-    state.case_type = case_type
+    state.case_type = case_type.case_type
+    state.case_type_origin = case_type.case_type_origin
   },
   SET_STOCK_STATUS(state,stock_status){
     state.stock_status = stock_status
@@ -90,7 +92,8 @@ const actions = {
           selectOption.push({ value: item.case_type_id, label: item.case_type_name })
         })
         selectOption.unshift({ value: '',label: '全部' })
-        commit('SET_CASE_TYPE', selectOption)
+        let dataInfo = { case_type: selectOption, case_type_origin: data.list }
+        commit('SET_CASE_TYPE', dataInfo)
         resolve(selectOption)
       }).catch(error => reject(error) )
     })

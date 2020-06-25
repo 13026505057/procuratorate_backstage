@@ -20,6 +20,7 @@ const getters = {
   exhibit_type: state => state.settings.exhibit_type,
   exhibit_time_bg: state => state.settings.exhibit_time_bg,
   case_type: state => state.settings.case_type,
+  case_type_origin: state => state.settings.case_type_origin,
   stock_status: state => state.settings.stock_status,
 }
 export default getters

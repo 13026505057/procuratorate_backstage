@@ -10,11 +10,11 @@ Vue.directive('dialogDrag', {
  
         // 获取原有属性 ie dom元素.currentStyle 火狐谷歌 window.getComputedStyle(dom元素, null);
         const sty = (function() {
-                if (window.document.currentStyle) {
-                        return (dom, attr) => dom.currentStyle[attr];
-                } else{
-                        return (dom, attr) => getComputedStyle(dom, false)[attr];
-                }
+            if (window.document.currentStyle) {
+                return (dom, attr) => dom.currentStyle[attr];
+            } else{
+                return (dom, attr) => getComputedStyle(dom, false)[attr];
+            }
         })()       
         
         dialogHeaderEl.onmousedown = (e) => {
@@ -23,16 +23,16 @@ Vue.directive('dialogDrag', {
             const disY = e.clientY - dialogHeaderEl.offsetTop;
 
             const screenWidth = document.body.clientWidth; // body当前宽度
-                const screenHeight = document.documentElement.clientHeight; // 可见区域高度(应为body高度，可某些环境下无法获取) 
-                
-                const dragDomWidth = dragDom.offsetWidth; // 对话框宽度
-                const dragDomheight = dragDom.offsetHeight; // 对话框高度
-                
-                const minDragDomLeft = dragDom.offsetLeft;
-                const maxDragDomLeft = screenWidth - dragDom.offsetLeft - dragDomWidth;
-                
-                const minDragDomTop = dragDom.offsetTop;
-                const maxDragDomTop = screenHeight - dragDom.offsetTop - dragDomheight;
+            const screenHeight = document.documentElement.clientHeight; // 可见区域高度(应为body高度，可某些环境下无法获取) 
+            
+            const dragDomWidth = dragDom.offsetWidth; // 对话框宽度
+            const dragDomheight = dragDom.offsetHeight; // 对话框高度
+            
+            const minDragDomLeft = dragDom.offsetLeft;
+            const maxDragDomLeft = screenWidth - dragDom.offsetLeft - dragDomWidth;
+            
+            const minDragDomTop = dragDom.offsetTop;
+            const maxDragDomTop = screenHeight - dragDom.offsetTop - dragDomheight;
  
             
             // 获取到的值带px 正则匹配替换
@@ -50,24 +50,23 @@ Vue.directive('dialogDrag', {
             
             document.onmousemove = function (e) {
                 // 通过事件委托，计算移动的距离 
-                                let left = e.clientX - disX;
-                                let top = e.clientY - disY;
-                                
-                                // 边界处理
-                                if (-(left) > minDragDomLeft) {
-                                        left = -(minDragDomLeft);
-                                } else if (left > maxDragDomLeft) {
-                                        left = maxDragDomLeft;
-                                }
-                                
-                                if (-(top) > minDragDomTop) {
-                                        top = -(minDragDomTop);
-                                } else if (top > maxDragDomTop) {
-                                        top = maxDragDomTop;
-                                }
- 
+                let left = e.clientX - disX;
+                let top = e.clientY - disY;
+                
+                // 边界处理
+                if (-(left) > minDragDomLeft) {
+                    left = -(minDragDomLeft);
+                } else if (left > maxDragDomLeft) {
+                    left = maxDragDomLeft;
+                }
+                
+                if (-(top) > minDragDomTop) {
+                    top = -(minDragDomTop);
+                } else if (top > maxDragDomTop) {
+                    top = maxDragDomTop;
+                }
                 // 移动当前元素  
-                                dragDom.style.cssText += `;left:${left + styL}px;top:${top + styT}px;`;
+                dragDom.style.cssText += `;left:${left + styL}px;top:${top + styT}px;`;
             };
  
             document.onmouseup = function (e) {

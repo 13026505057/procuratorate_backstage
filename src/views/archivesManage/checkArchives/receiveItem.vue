@@ -1,6 +1,7 @@
 <template>
     <div class="receiveItemPage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"
+            :printReceiptBtn="true" @printReceiptFun="openPrintReceiptFun"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
@@ -9,9 +10,8 @@
                         <el-badge :value="item.contNum" v-if="item.contNum == '0'?false:true" class="item tab-badge-num"></el-badge>
                     </span>
                     <div class="table-dataList" >
-                        <el-table :data="showModel.tableData" border style="width: 100%" @selection-change="handleSelectionChange">
+                        <el-table :data="showModel.tableData" border style="width: 100%" v-loading="loadingTable">
                             <el-table-column align="center" type="index"></el-table-column>
-                            <el-table-column type="selection" width="55"></el-table-column>
                             <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
                                 v-for="item in columns" :key="item.itemId" align="center">
                                 <template slot-scope="{row}">
@@ -88,6 +88,40 @@
                 <el-button type="primary" @click="confirmBtn">确 定</el-button>
             </span>
         </el-dialog>
+        <!-- 批量打印回执单 -->
+        <el-dialog title="批量打印回执单" :visible.sync="showModel.dialogPrintVisible" @close="resetPrintPagination" width="90%">
+            <el-table ref="multipleTable" :data="showModel.print_tableData" align="center" v-loading="loadingTable_print" @selection-change="handleSelectionChange">
+                <el-table-column type="index" label="#"></el-table-column>
+                <el-table-column type="selection" width="55"></el-table-column>
+                <el-table-column :label="item.dataIndex"
+                    v-for="item in showModel.print_columns" :key="item.itemId" align="center">
+                    <template slot-scope="{row}">
+                        <span v-if="item.itemId == 6" :style="{'color':row[item.title]=='in'?'':'red'}">{{ row[item.title]=='in'?'已入库':'待入库' }}</span>
+                        <span v-else-if="item.itemId == 7" :style="{'color':row[item.title]=='0'?'red':''}">{{ row[item.title]=='0'?'失效':'有效' }}</span>
+                        <span v-else>{{ row[item.title] }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" label="操作" width="300">
+                    <template slot-scope="{row}">
+                        <el-button @click="printQrCodeAgain(row.exhibit_id)" class="highlight-btn" type="operation" size="small">补打条码</el-button>
+                        <el-button @click="printReceipt(row.exhibit_id)" class="highlight-btn" type="operation" size="small">打印回执单</el-button>
+                        <el-button @click="deleteCancel(row.exhibit_id)" class="highlight-btn" type="operation" size="small">作废</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div style="margin-top: 20px">
+                <el-button @click="toggleSelection(showModel.print_tableData)">全选</el-button>
+                <el-button @click="toggleSelection()">取消全选</el-button>
+                <el-button @click="printSelectAll">批量打印回执单</el-button>
+            </div>
+            <!-- 分页 -->
+            <el-pagination small background
+                style="text-align: center;margin-top: 20px;padding-bottom:20px;"
+                @current-change="openPrintReceiptFun" :current-page.sync="showModel.pagination.pageNum"
+                :page-size="showModel.pagination.pageSize" layout="prev, pager, next, jumper"
+                :total="showModel.pagination.total">
+            </el-pagination>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -125,6 +159,8 @@
                     case_take_user_name: '',
                     case_type_id: '',
                 },
+                loadingTable: false,
+                loadingTable_print: false,
                 addSearch: [
                     { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
                 ],
@@ -151,6 +187,23 @@
                     dialogReceivedVisible: false,
                     selectOption_type: [],
                     selectOption_time: [],
+                    // 批量打印回执单
+                    dialogPrintVisible: false,
+                    pagination: {
+                        pageNum: 1,
+                        pageSize: 10,
+                    },
+                    print_tableData: [],
+                    print_columns: [
+                        { title: 'out_exhibit_id', dataIndex: '条形码号', itemId: 1 },
+                        { title: 'dh', dataIndex: '档号', itemId: 3 },
+                        { title: 'jh', dataIndex: '卷号', itemId: 4 },
+                        { title: 'case_name', dataIndex: '卷宗名称', itemId: 5 },
+                        { title: 'stock_status', dataIndex: '案卷状态', itemId: 6 },
+                        { title: 'exhibit_status', dataIndex: '是否有效', itemId: 7 },
+                        { title: 'cell_name', dataIndex: '存储位置', itemId: 8 },
+                    ],
+                    print_exhibit_ids: ''
                 },
                 // table表头
                 columns: [
@@ -203,13 +256,48 @@
             dialogTablePagin(data){
                 this.showModel.gridData = data
             },
+            toggleSelection(rows) {
+                if (rows) {
+                    rows.forEach(row => {
+                    this.$refs.multipleTable.toggleRowSelection(row);
+                });
+                } else {
+                    this.$refs.multipleTable.clearSelection();
+                }
+            },
+            resetPrintPagination(){
+                this.showModel.pagination.pageNum = 1;
+                this.showModel.pagination.pageSize = 10;
+            },
+            openPrintReceiptFun(){
+                this.showModel.dialogPrintVisible = true;
+                this.printReceiptFun(this.showModel.pagination)
+            },
+            async printReceiptFun(dataInfo){
+                console.log(dataInfo)
+                this.loadingTable_print = true;
+                let resultData = await this.$api.getTodayByPage(dataInfo)
+                if(resultData && resultData.code == '0'){
+                    const pagination = { ...this.showModel.pagination };
+                    this.showModel.print_tableData = resultData.data.list;
+                    pagination.total = resultData.data.total;
+                    this.showModel.pagination = pagination;
+                }
+                this.loadingTable_print = false;
+            },
             handleClickTab(e){
                 this.pagination.case_type_id = e.paneName
                 this.getTableList(this.pagination)
             },
             // 选中
             handleSelectionChange(val){
-                console.log(val)
+                this.showModel.print_exhibit_ids = val
+            },
+            async printSelectAll(){
+                let print_ids = [];
+                this.showModel.print_exhibit_ids.map( item=> print_ids.push(item.exhibit_id) )
+                let resultData = await this.$api.printTodayExhibits({exhibit_ids: print_ids.join() })
+                if(resultData && resultData.code == '0') this.$message.success('已发送打印请求')
             },
             getTypeList(){
                 let dataArr = [
@@ -242,11 +330,10 @@
             },
             // 获取案件列表
             async getTableList(dataInfo){
-                this.loading = true;
+                this.loadingTable = true;
                 this.showModel.dialogTableVisible = false;
                 this.showModel.dialogReceivedVisible = false;
-                let getData = { ...dataInfo }
-                const resultData = await this.$api.getConfirmedByPage(getData);
+                const resultData = await this.$api.getConfirmedByPage(dataInfo);
                 const pagination = { ...this.pagination };
                 let resultData_table = [];
                 resultData.data.list.map(item=>{
@@ -255,10 +342,11 @@
                 this.showModel.tableData = resultData_table;
                 pagination.total = resultData.data.total;
                 this.pagination = pagination;
+                this.loadingTable = false;
             },
             // 确认搜索
             comfirmSearch(data){
-                this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] }  })
+                this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] } })
                 this.getCaseType()
             },
             showDialogPanel(dataInfo){

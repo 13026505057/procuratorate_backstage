@@ -5,7 +5,7 @@
             style="text-align: center;margin-top: 20px;padding-bottom:20px;"
             @current-change="dialogTablePagin" :current-page.sync="pagination.pageNum"
             :page-size="pagination.pageSize" layout="prev, pager, next, jumper"
-            :total="tableData.length">
+            :total="tableData?tableData.length:0">
         </el-pagination>
     </div>
 </template>
@@ -25,7 +25,9 @@ export default {
     },
     methods:{
         returnTable(arr,page){
-            return arr.slice((page-1)*this.pagination.pageSize,page*this.pagination.pageSize)
+            if(arr && arr.length > 0)
+                return arr.slice((page-1)*this.pagination.pageSize,page*this.pagination.pageSize)
+                else return []
         },
         dialogTablePagin(val){
             const showTable = this.returnTable(this.tableData,val)

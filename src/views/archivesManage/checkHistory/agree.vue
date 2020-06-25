@@ -9,7 +9,7 @@
                         <el-badge :value="item.contNum" v-if="item.contNum == '0'?false:true" class="item tab-badge-num"></el-badge>
                     </span>
                     <div class="table-dataList" >
-                        <el-table :data="showModel.tableData" border style="width: 100%">
+                        <el-table :data="showModel.tableData" border style="width: 100%" v-loading="loadingTable">
                             <el-table-column align="center" type="index"></el-table-column>
                             <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
                                 v-for="item in columns" :key="item.itemId" align="center">
@@ -85,11 +85,13 @@
                     pageNum: 1,
                     pageSize: 10,
                     case_name: '',
+                    case_zm: '',
                     case_bh: '',
                     timeYear: '',
                     case_take_user_name: '',
                     case_type_id: '',
                 },
+                loadingTable: false,
                 addSearch: [
                     { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
                 ],
@@ -168,10 +170,9 @@
             },
             // 获取案件列表
             async getTableList(dataInfo){
-                this.loading = true;
+                this.loadingTable = true;
                 this.showModel.dialogTableVisible = false;
-                let getData = { ...dataInfo }
-                const resultData = await this.$api.getDangAnConfirmByPage(getData);
+                const resultData = await this.$api.getDangAnConfirmByPage(dataInfo);
                 const pagination = { ...this.pagination };
                 let resultData_table = [];
                 resultData.data.list.map(item=>{
@@ -180,6 +181,7 @@
                 this.showModel.tableData = resultData_table;
                 pagination.total = resultData.data.total;
                 this.pagination = pagination;
+                this.loadingTable = false;
             },
             // 确认搜索
             comfirmSearch(data){

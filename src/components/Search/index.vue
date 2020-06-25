@@ -36,6 +36,7 @@
             </template>
         </div>
         <el-button type="search" @click="comfirmSearch">查询</el-button>
+        <el-button type="search" @click="printReceiptFun" v-if="printReceiptBtn">批量打印回执单</el-button>
     </div>
 </template>
 
@@ -46,6 +47,10 @@ export default {
         resetData: [Boolean],
         addSearch: [Array],
         selectOption: [Object],
+        printReceiptBtn: {
+            type: Boolean,
+            default: false
+        }
     },
     computed: {
         ...mapGetters(['org_list','address_id'])
@@ -56,7 +61,7 @@ export default {
             searchList: [
                 { dom: 'case_bh', value: '', placeholder: '统一受案号', itemId: 0, name: 'input' },
                 { dom: 'case_name', value: '', placeholder: '请输入案卷名称', itemId: 1, name: 'input' },
-                { dom: 'case_name', value: '', placeholder: '请输入罪名', itemId: 2, name: 'input' },
+                { dom: 'case_zm', value: '', placeholder: '请输入罪名', itemId: 2, name: 'input' },
                 { dom: 'timeYear', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
             ],
             org_dataList: [{level:'area'}]
@@ -77,12 +82,12 @@ export default {
             let dataInfo = {}
             this.searchList.map(item=>{
                 dataInfo[item.dom] = item.value
-                if(this.selectOrgId){
+                if(this.selectOrgId && this.selectOrgId.length > 0){
                     this.$nextTick(()=>{
                         const { data } = this.$refs.treeOrg.getCheckedNodes()[0];
                         ['province_id','city_id','area_id'].map(keys=> dataInfo[keys] = data[keys] )
                     })
-                }
+                } else this.$nextTick(()=>{ ['province_id','city_id','area_id'].map(keys=> dataInfo[keys] = this.address_id[keys] ) })
                 if(item.dom == 'timeData') {
                     if(dataInfo.timeData && dataInfo.timeData.length>0) {
                         dataInfo.begin_time = dataInfo.timeData[0]
@@ -92,6 +97,9 @@ export default {
                 delete dataInfo.timeData
             })
             return dataInfo
+        },
+        printReceiptFun(){
+            this.$emit('printReceiptFun')
         }
     }
 }

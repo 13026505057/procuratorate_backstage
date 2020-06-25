@@ -65,7 +65,7 @@ export default {
                 { dom: 'exhibit_name', value: '', placeholder: '请输入案件名', itemId: 2, name: 'input' },
                 { dom: 'nd', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
                 { dom: 'case_type_id', value: '', placeholder: '请选择案件类型', itemId: 4, name: 'select' },
-                { dom: 'stock_status', value: '', placeholder: '请选择案件状态', itemId: 5, name: 'select' },
+                { dom: 'stock_status', value: null, placeholder: '请选择案件状态', itemId: 5, name: 'select' },
             ],
             selectOption: {
                 case_type_id: [],

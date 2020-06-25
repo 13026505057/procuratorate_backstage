@@ -182,8 +182,7 @@
             async getTableList(dataInfo){
                 this.loading = true;
                 this.showModel.dialogTableVisible = false;
-                let getData = { ...dataInfo }
-                const resultData = await this.$api.getInByPage(getData);
+                const resultData = await this.$api.getInByPage(dataInfo);
                 const pagination = { ...this.pagination };
                 let resultData_table = [];
                 resultData.data.list.map(item=>{

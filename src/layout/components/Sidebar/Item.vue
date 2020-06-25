@@ -18,7 +18,8 @@ export default {
 
     if (icon) {
       // vnodes.push(<svg-icon icon-class={icon}/>)
-      vnodes.push(<i class={icon+' template'}/>)
+      // vnodes.push(<i class={icon+' template'}/>)
+      vnodes.push(<i class={'icon-jinduchaxun template'}/>)
     }
 
     if (title) {

@@ -11,7 +11,7 @@ export default {
 </script>
 <style>
   /* 线上导入fontIcon */
-  @import url('//at.alicdn.com/t/font_1892348_ebj6yb84gz8.css');
+  @import url('//at.alicdn.com/t/font_1892348_tvt2kz17o3.css');
   .icon {
     width: 1em; height: 1em;
     vertical-align: -0.15em;

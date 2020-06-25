@@ -18,6 +18,7 @@ import WaitAssessment from '@/views/caseManage/waitAssessment'
 import Progress from '@/views/caseManage/progress'
 
 // 档案Routes
+import ShallCompletedAll from '@/views/archivesManage/shallCompletedAll'
 import ShallCompleted from '@/views/archivesManage/shallCompleted/index'
 import UncompletedArchives from '@/views/archivesManage/shallCompleted/uncompleted'
 import CompletedArchives from '@/views/archivesManage/shallCompleted/completed'
@@ -84,6 +85,7 @@ let routesNav = {
     Progress: Progress,
     
     // 档案Routes
+    ShallCompletedAll: ShallCompletedAll,
     ShallCompleted: ShallCompleted,
     UncompletedArchives: UncompletedArchives,
     CompletedArchives: CompletedArchives,

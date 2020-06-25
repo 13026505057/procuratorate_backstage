@@ -53,6 +53,14 @@ const exhibit = {
     attachExhibitToCase(data) {
         return request({ url: '/exhibit/exhibit/attachExhibitToCase', method: 'post', data })
     },
+    // 获取批量打印列表
+    getTodayByPage(data) {
+        return request({ url: '/exhibit/exhibit/getTodayByPage', method: 'post', data })
+    },
+    // 批量打印回执单
+    printTodayExhibits(data) {
+        return request({ url: '/exhibit/exhibit/printTodayExhibits', method: 'post', data })
+    },
     //查询存储设备信息
     getStock(data){
         return request({ url: '/shale/shale/getByPage', method: 'post', data })

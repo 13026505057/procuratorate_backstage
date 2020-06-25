@@ -3,7 +3,7 @@
     <HistorySearch @comfirmSearch="comfirmSearch"/>
 
     <div class="table-dataList" >
-        <el-table :data="showModel.tableData" border style="width: 100%">
+        <el-table :data="showModel.tableData" border style="width: 100%" v-loading="loadingTable">
             <el-table-column align="center" type="index"></el-table-column>
             <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
                 v-for="item in columns" :key="item.itemId" align="center">
@@ -13,7 +13,7 @@
                     <span v-else>{{ row[item.title] }}</span>
                 </template>
             </el-table-column>
-            <el-table-column align="center" label="操作" width="250">
+            <el-table-column align="center" label="操作">
                 <template slot-scope="{row}">
                     <el-button @click="deleteItem(row.exhibit_id)" class="highlight-btn" size="small" type="danger">作废</el-button>
                 </template>
@@ -60,6 +60,7 @@ export default {
             case_type_id: '',
             stock_status: ''
         },
+        loadingTable: false,
         showModel: {
             tableData:[],   // 数据信息
         },
@@ -86,7 +87,7 @@ export default {
     },
     // 获取案件列表
     async getTableList(){
-        this.loading = true;
+        this.loadingTable = true;
         let dataInfo = { ...this.pagination }
         dataInfo.exhibit_status = '1';
         let resultData = await this.$api.historyExhibitList(dataInfo)
@@ -95,6 +96,7 @@ export default {
         this.showModel.tableData = resultData.data.list;
         pagination.total = resultData.data.total;
         this.pagination = pagination;
+        this.loadingTable = false;
     },
     // 分页
     handleCurrentChange(val) {
@@ -104,7 +106,10 @@ export default {
     // 作废
     async deleteItem(exhibit_id){
         let resultData = await this.$api.editCaseData({exhibit_id,exhibit_status:'0'})
-        if(resultData && resultData.code=='0') this.$message.success('操作成功')
+        if(resultData && resultData.code=='0') {
+            this.getTableList();
+            this.$message.success('操作成功')
+        }
     }
   }
 }

@@ -81,7 +81,7 @@ export default {
         selectOption: [Object],
     },
     computed: {
-        ...mapGetters(['org_list','exhibit_type','exhibit_time_bg','case_type'])
+        ...mapGetters(['address_id','org_list','exhibit_type','exhibit_time_bg','case_type'])
     },
     data(){
         return{
@@ -130,6 +130,7 @@ export default {
     },
     mounted(){
         this.getTypeList();
+        this.$emit('receivedAddress',this.address_id)
         if(this.resetData) this.searchList = this.addSearch
             else if(this.addSearch && this.addSearch.length>0) this.searchList.push(...this.addSearch)
     },
@@ -138,12 +139,12 @@ export default {
             let dataInfo = {}
             this.searchList.map(item=>{
                 dataInfo[item.dom] = item.value
-                if(this.selectOrgId){
+                if(this.selectOrgId && this.selectOrgId.length > 0){
                     this.$nextTick(()=>{
                         const { data } = this.$refs.treeOrg.getCheckedNodes()[0];
                         ['province_id','city_id','area_id'].map(keys=> dataInfo[keys] = data[keys] )
                     })
-                }
+                } else this.$nextTick(()=>{ ['province_id','city_id','area_id'].map(keys=> dataInfo[keys] = this.address_id[keys] ) })
                 if(item.dom == 'timeData') {
                     if(dataInfo.timeData && dataInfo.timeData.length>0) {
                         dataInfo.begin_time = dataInfo.timeData[0]

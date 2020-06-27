@@ -137,7 +137,7 @@
                     title:"是否办结：已办结",
                     description: "时间：overtime"
                 }],
-                 headStyle:{
+                headStyle:{
                     backgroundColor: '#eaf5ff',
                     borderTop: '1px solid #97cfff',
                     borderBottom: '1px solid #97cfff',

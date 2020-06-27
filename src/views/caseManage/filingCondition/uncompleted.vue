@@ -276,11 +276,10 @@
             // 默认数据列表
             async getDataList(seatchData){
                 this.tableLoading = true;
-                let dataInfo = { ...seatchData }
-                dataInfo ['pageNum'] = this.currentPage1;
-                dataInfo ['pageSize'] = this.pageSize;
-                dataInfo ['case_type_id'] = this.activeName;
-                const resultData = await this.$api.getUndocumented(dataInfo);
+                seatchData ['pageNum'] = this.currentPage1;
+                seatchData ['pageSize'] = this.pageSize;
+                seatchData ['case_type_id'] = this.activeName;
+                const resultData = await this.$api.getUndocumented(seatchData);
                 if(resultData && resultData.code == '0') {
                     this.tableData = resultData.data.list;
                     this.total1 = resultData.data.total;

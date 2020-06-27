@@ -259,7 +259,7 @@
             toggleSelection(rows) {
                 if (rows) {
                     rows.forEach(row => {
-                    this.$refs.multipleTable.toggleRowSelection(row);
+                    this.$refs.multipleTable.toggleAllSelection();
                 });
                 } else {
                     this.$refs.multipleTable.clearSelection();

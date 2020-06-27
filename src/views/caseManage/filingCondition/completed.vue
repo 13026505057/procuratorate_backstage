@@ -224,8 +224,7 @@
                     this.tabItems = res.data.list;
                     this.activeName = res.data.list[0].case_type_id;
                     this.getDataList(seatchData);
-                    let dataInfo = { ...seatchData }
-                    const resultData = await this.$api.getCornerMarkType(dataInfo);
+                    const resultData = await this.$api.getCornerMarkType(seatchData);
                     this.badgeList = resultData.data;
                     Object.keys(resultData.data).map(item=>{
                         res.data.list.map((itemChild,index)=>{

@@ -1,6 +1,6 @@
 <template>
   <div class="editRoutesPage">
-    <el-table :data="rolesList" style="width: 100%;margin-top:30px;" border>
+    <el-table :data="rolesList" style="width: 100%;margin-top:30px;" border :header-cell-style="headerRowStyle">
         <el-table-column align="center" type="index" label="#"></el-table-column>
       <el-table-column align="center" label="权限组名称" prop="group_name"></el-table-column>
       <el-table-column align="center" label="操作">
@@ -38,23 +38,30 @@ import { getToken } from '@/utils/auth'
 import { filterAsyncRoutes_respones,checkedNullInfo_respones } from '@/store/modules/permission'
 
 export default {
-  data() {
-    return {
-      role: {
-        vue_role_id: '',
-        group_name: '',
-        routes: []
-      },
-      routes: [],
-      rolesList: [],
-      dialogVisible: false,
-      checkStrictly: false,
-      defaultProps: {
-        children: 'children',
-        label: "name"
-      }
-    }
-  },
+    data() {
+        return {
+        role: {
+            vue_role_id: '',
+            group_name: '',
+            routes: []
+        },
+        routes: [],
+        rolesList: [],
+        dialogVisible: false,
+        checkStrictly: false,
+        defaultProps: {
+            children: 'children',
+            label: "name"
+        },
+        headStyle:{
+            backgroundColor: '#eaf5ff',
+            borderTop: '1px solid #97cfff',
+            borderBottom: '1px solid #97cfff',
+            fontSize: '18px',
+            color: '#2c2c2c'
+        },
+        }
+    },
   computed: {
     ...mapGetters(['base_url']),
     routesData() {
@@ -148,7 +155,10 @@ export default {
           this.dialogVisible = false;
           this.$message.success('操作成功')
         }
-    }
+    },
+    headerRowStyle({row, rowIndex}){ 
+        return this.headStyle
+    },
   }
 }
 </script>

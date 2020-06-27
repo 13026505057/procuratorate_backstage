@@ -49,8 +49,8 @@
                             </el-table-column>
                         </el-table>
                         <div class="check-all" style="margin-top: 10px">
-                            <el-button :disabled="disabled1" :loading="disabled1" @click="toggleSelection(tableData)">全选</el-button>
-                            <el-button :disabled="disabled1" :loading="disabled1" @click="toggleSelection()">取消选择</el-button>
+                            <el-button :disabled="disabled1" :loading="disabled1" @click="toggleSelection(tableData,true)">全选</el-button>
+                            <el-button :disabled="disabled1" :loading="disabled1" @click="toggleSelection(false)">取消选择</el-button>
                             <el-button :disabled="disabled2" :loading="disabled2" @click="confirmExamine()">确认已审查</el-button>
                         </div>
                     </div>
@@ -203,14 +203,14 @@
                 this.$nextTick(()=>{ for(let key in data) { this.seatchData[key] = data[key] } })
                 this.getCaseType(this.seatchData);
             },
-            toggleSelection(rows) {
-                console.log(rows)
+            toggleSelection(rows,status) {
+                console.log(rows,status)
                 this.disabled1 = true;
-                if (rows) {
+                if (status) {
                     rows.forEach(row => {
                         // console.log(this.$refs.multipleTable)
                         this.$refs.multipleTable.map(item=>{
-                            item.toggleRowSelection(row);
+                            item.toggleAllSelection();
                         })
                     });
                 } else {

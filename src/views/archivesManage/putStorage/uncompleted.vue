@@ -1,17 +1,17 @@
 <template>
     <div class="uncompletedPutPage">
         <div class="scan-table">
-            <span style="margin-left:20px;">入库操作：</span>
+            <span class="head-text">入库操作：</span>
             <el-radio-group v-model="exhibit_type" class="scan-select">
                 <el-radio v-for="exhibitItem in exhibitType" :key="exhibitItem.exhibit_type_id" :label="exhibitItem.exhibit_type_code">{{exhibitItem.exhibit_type_name}}</el-radio>
             </el-radio-group>
             <el-input class="scan-input" v-model="stockNum" ref="stockNumRef" @change="stockNumChange" placeholder="扫描货架码"></el-input>
             <el-input class="scan-input" v-model="exhibitNum" ref="exhibitNumRef" @change="exhibitNumChange" placeholder="扫描案卷码"></el-input>
-            <span style="margin-left:10px;">先扫描货架码，光标自动移动到案卷码位置后在扫描案卷码</span>
+            <span class="head-text">先扫描货架码，光标自动移动到案卷码位置后在扫描案卷码</span>
         </div>
         <Search style="margin-top:10px;" :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
         <div class="head-tab">
-            <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
+            <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab" v-loading="tableLoading">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
                     <span slot="label">
                         {{item.case_type_name}}
@@ -25,11 +25,6 @@
                                 <template slot-scope="{row}">
                                     <span v-if="item.itemId == 4">{{ row[item.title] | mapStatus }}</span>
                                     <span v-else>{{ row[item.title] }}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column align="center" label="操作">
-                                <template slot-scope="{row}">
-                                    <el-button @click="showDialogPanel(row.exhibits)" class="highlight-btn" size="small">已有案卷</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -53,6 +48,21 @@
     import DialogPagin from '@/components/DialogPagin'
     export default {
         components: { Search,DialogPagin },
+        filters:{
+            mapStatus(status){
+                const statusList = {
+                    in:"已归档",
+                    in_jj_out:"已归档（交卷超期）",
+                    in_rk_out:"已归档（入库超期）",
+                    in_all_out:"已归档（双超期）",
+                    none:"未归档",
+                    none_jj_out:"未归档（交卷超期）",
+                    none_rk_out:"未归档（入库超期）",
+                    none_all_out:"未归档（双超期）",
+                }
+                return statusList[status]
+            }
+        },
         data()  {
             return  {
                 pagination: {
@@ -64,6 +74,7 @@
                     end_time: '',
                     stock_log_type: 'init',
                 },
+                tableLoading:false,
                 exhibit_type:'SS',
                 stockNum:'',
                 exhibitNum:'',
@@ -203,7 +214,8 @@
             getCaseType(){
                 this.$api.getCaseType().then(async (res)=>{
                     this.showModel.tableList = res.data.list;
-                    this.pagination.case_type_id = this.showModel.activeNameTab = res.data.list[0].case_type_id
+                    if(this.showModel.activeNameTab !== '0') this.pagination.case_type_id = this.showModel.activeNameTab
+                        else this.pagination.case_type_id = this.showModel.activeNameTab = res.data.list[0].case_type_id
                     // 角标
                     let dataInfo = {...this.pagination};
                     // 每个页面字段不同(cout_for)
@@ -224,10 +236,9 @@
             },
             // 获取案件列表
             async getTableList(dataInfo){
-                this.loading = true;
+                this.tableLoading = true;
                 this.showModel.dialogTableVisible = false;
-                let getData = { ...dataInfo }
-                const resultData = await this.$api.getDangAnConfirmByPage(getData);
+                const resultData = await this.$api.getDangAnConfirmByPage(dataInfo);
                 const pagination = { ...this.pagination };
                 let resultData_table = [];
                 resultData.data.list.map(item=>{
@@ -236,37 +247,12 @@
                 this.showModel.tableData = resultData_table;
                 pagination.total = resultData.data.total;
                 this.pagination = pagination;
+                this.tableLoading = false;
             },
             // 确认搜索
             comfirmSearch(data){
                 this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] }  })
                 this.getCaseType()
-            },
-            showDialogPanel(dataInfo){
-                this.showModel.dialogTableVisible = true;
-                this.showModel.gridData_temporary = dataInfo
-                this.$nextTick(() => {
-                    this.$refs.dialogTablePagin.dialogTablePagin(1)
-                })
-                
-            },
-            // 补打条形码
-            async printQrCodeAgain(exhibit_id){
-                let resultData = await this.$api.printAgain({exhibit_id})
-                if(resultData && resultData.code == '0') this.$message.success('已发送打印请求')
-            },
-            // 打印回执单
-            async printReceipt(exhibit_id){
-                let resultData = await this.$api.printAcceptReturn({exhibit_id})
-                if(resultData && resultData.code == '0') this.$message.success('已发送打印请求')
-            },
-            // 作废
-            async deleteCancel(exhibit_id){
-                let resultData = await this.$api.editCaseData({exhibit_id,exhibit_status: 0})
-                if(resultData && resultData.code == '0') {
-                    this.$message.success('操作成功')
-                    this.getCaseType()
-                }
             },
         },
     }
@@ -283,13 +269,20 @@
             background-color: #eaf5ff;
             display: flex;
             .scan-select{
-                width: 230px;
-                margin: 23px 30px;
+                display: flex;
+                align-items: center;
+                margin-top: 2px;
             }
             .scan-input{
                 width: 250px;
                 margin-left: 20px;
-                
+            }
+            .head-text{
+                margin-left: 10px;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                font-size: 14px;
             }
         }
         .head-tab{

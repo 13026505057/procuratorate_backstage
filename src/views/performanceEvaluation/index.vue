@@ -175,27 +175,9 @@
                     case_name:'',
                     case_bh:'', //统一受案号
                     case_take_user_name:'',
-
                 },
                 isLoading:false,
                 disabled1:false,
-
-            }
-           
-        },
-        filters:{
-            pigeonhole(status){
-                const statusList = {
-                    in:"已归档",
-                    in_jj_out:"已归档（交卷超期）",
-                    in_rk_out:"已归档（入库超期）",
-                    in_all_out:"已归档（双超期）",
-                    none:"未归档",
-                    none_jj_out:"未归档（交卷超期）",
-                    none_rk_out:"未归档（入库超期）",
-                    none_all_out:"未归档（双超期）",
-                }
-                return statusList[status]
             }
         },
         mounted(){
@@ -209,10 +191,9 @@
             getCaseType(seatchData){
                 this.$api.getCaseType().then(async (res)=>{
                     this.tabItems = res.data.list;
-                    this.activeName = res.data.list[0].case_type_id;
+                    if(this.activeName == '0') this.activeName = res.data.list[0].case_type_id;
                     this.getDataList();
-                    let dataInfo = { ...seatchData }
-                    const resultData = await this.$api.getCornerMarkType(dataInfo);
+                    const resultData = await this.$api.getCornerMarkType(seatchData);
                     this.badgeList = resultData.data;
                     Object.keys(resultData.data).map(item=>{
                         res.data.list.map((itemChild,index)=>{
@@ -224,9 +205,7 @@
                         })
                     })
                 })
-                
             },
-            
             // 默认数据列表
             async getDataList(){
                 console.log({...this.seatchData})

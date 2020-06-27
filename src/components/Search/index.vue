@@ -37,6 +37,7 @@
         </div>
         <el-button type="search" @click="comfirmSearch">查询</el-button>
         <el-button type="search" @click="printReceiptFun" v-if="printReceiptBtn">批量打印回执单</el-button>
+        <el-button v-for="item in setDynamicBtn" type="search" @click="setDynamicBtnFun(item.fun)" :key="item.title">{{ item.title }}</el-button>
     </div>
 </template>
 
@@ -50,7 +51,8 @@ export default {
         printReceiptBtn: {
             type: Boolean,
             default: false
-        }
+        },
+        setDynamicBtn: [Array],
     },
     computed: {
         ...mapGetters(['org_list','address_id'])
@@ -74,6 +76,9 @@ export default {
         
     },
     methods: {
+        setDynamicBtnFun(fun){
+            this.$emit('setDynamicBtnFun',fun)
+        }, 
         comfirmSearch(){
             let dataInfo = this.resultDataInfo()
             this.$emit('comfirmSearch',dataInfo)

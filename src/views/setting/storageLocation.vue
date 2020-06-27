@@ -219,13 +219,10 @@
                 this.type = type;
                 this.position_id = row_position_id.position_id;
                 if(type == "add"){
-                    this.dialogTitle = "新增职位";
+                    this.dialogTitle = "新增设备";
                     this.stockForm = {
                         position_name :'',
                     }
-                }else{
-                    this.dialogTitle = "修改职位"
-                    this.stockForm.position_name = row_position_id.position_name;
                 }
             },
             //点击打印条码

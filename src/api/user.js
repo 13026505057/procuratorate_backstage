@@ -9,6 +9,10 @@ const user = {
   getInfo(data){
     return request({ url: '/user/getInfo', method: 'post', data })
   },
+  // 获取用户列表
+  getByPage(data){
+    return request({ url: '/user/getByPage', method: 'post', data })
+  },
   // 异地登录
   commonIsLogin(data){
     return request({ url: '/commonIsLogin', method: 'post', data })

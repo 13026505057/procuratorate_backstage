@@ -1,5 +1,5 @@
 <template>
-  <div class="homePage">
+  <div class="historyCasePage">
     <HistorySearch @comfirmSearch="comfirmSearch"/>
 
     <div class="table-dataList" >
@@ -81,7 +81,6 @@ export default {
   },
   methods: {
     comfirmSearch(data){
-        console.log(data)
         for(let key in data){ this.pagination[key] = data[key] }
         this.getTableList()
     },
@@ -110,13 +109,17 @@ export default {
             this.getTableList();
             this.$message.success('操作成功')
         }
-    }
+    },
+    
   }
 }
 </script>
 
 <style lang="scss">
-  .homePage{
+  .historyCasePage{
     padding: 20px;
+    .upload-demo{
+        text-align: center;
+    }
   }
 </style>

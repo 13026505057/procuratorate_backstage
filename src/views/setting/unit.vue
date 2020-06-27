@@ -204,6 +204,7 @@
                         type: 'success'
                     });
                 }
+                if(((this.total1-1)%(this.pageSize))==0) this.currentPage1-=1 
                 this.getDataList();
             },
         }

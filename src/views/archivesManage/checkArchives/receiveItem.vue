@@ -310,7 +310,8 @@
             getCaseType(){
                 this.$api.getCaseType().then(async (res)=>{
                     this.showModel.tableList = res.data.list;
-                    this.pagination.case_type_id = this.showModel.activeNameTab = res.data.list[0].case_type_id
+                    if(this.showModel.activeNameTab !== '0') this.pagination.case_type_id = this.showModel.activeNameTab
+                        else this.pagination.case_type_id = this.showModel.activeNameTab = res.data.list[0].case_type_id
                     // 角标
                     let dataInfo = {...this.pagination};
                     // 每个页面字段不同(cout_for)

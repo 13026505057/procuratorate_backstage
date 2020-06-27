@@ -145,9 +145,7 @@
                 this.position_id = row_position_id.position_id;
                 if(type == "add"){
                     this.dialogTitle = "新增职位";
-                    this.unit_form = {
-                        position_name :'',
-                    }
+                    this.unit_form.position_name = ''
                 }else{
                     this.dialogTitle = "修改职位"
                     this.unit_form.position_name = row_position_id.position_name;
@@ -200,6 +198,7 @@
                         type: 'success'
                     });
                 }
+                if(((this.total1-1)%(this.pageSize))==0) this.currentPage1-=1 
                 this.getDataList();
             },
         }

@@ -2,8 +2,8 @@
     <div class="unit-content">
         <!-- <div class="search-box"> -->
         <div class="head-search">
-            <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
-            <el-button @click="addUnitClick('add','')">新增人员</el-button>
+            <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" 
+                @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
         </div>
             
         <!-- </div> -->
@@ -120,24 +120,44 @@
                 </span>
             </el-dialog>
         </div>
+        <!-- 批量导入 -->
+        <el-dialog v-dialogDrag title="人员批量导入" :visible.sync="showModel.importUserModel">
+            <el-upload ref="uploadExcel" class="upload-demo" drag multiple :headers="showModel.headersUpload"
+                :action="base_url + '/cases/cases/addByExcel'" :on-success="uploadSuccess"
+                accept=".xls">
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            </el-upload>
+        </el-dialog>
     </div>
 </template>
 <script>
     import Search from '@/components/Search'
     import md5 from 'js-md5';
     import { mapGetters } from 'vuex'
-    
+    import { getToken } from '@/utils/auth'
     export default {
         components: { Search },
+        computed: {
+            ...mapGetters(['base_url'])
+        },
         data()  {
             return  {
                 addSearch: [
                     { dom: 'dept_id', value: '',placeholder: '请选择部门', itemId: 1, name: 'select' },
                     { dom: 'user_true_name', value: '',placeholder: '请输入姓名', itemId: 2, name: 'select' },
-                ],
+                ], 
                 selectOption:{
                     dept_id: [],
-                    user_true_name: []
+                    user_true_name: [],
+                },
+                setDynamicBtn: [
+                    { title: '批量导入', fun: 'importUserData' },
+                    { title: '单人新增', fun: 'addSingleUser' },
+                ],
+                showModel: {
+                    importUserModel: false,
+                    headersUpload: { 'kf-token': getToken() }
                 },
                 tableItems:[
                     { label: "账号",  prop: "username" },
@@ -196,14 +216,27 @@
             this.getRoutesGroupsList();
         },
         methods: {
-           
+            setDynamicBtnFun(data){
+                if(data=='addSingleUser') this.addUnitClick('add','')
+                    else if(data == 'importUserData') this.openImportUser()
+            },
+            openImportUser(){
+                this.showModel.importUserModel = true;
+            },
+            uploadSuccess(response){
+                if(response.code == '0') {
+                    this.showModel.importUserModel = false;
+                    this.$message.success('上传成功')
+                } else {
+                    this.$message.warning(response.msg)
+                    this.$refs.uploadExcel.clearFiles()
+                }
+            },
             receivedAddress(data){
-                console.log(data)
                 Object.keys(data).map(item=> this.seatchData[item] = data[item] )
             },
             comfirmSearch(data){
                 this.$nextTick(()=>{ for(let key in data) { this.seatchData[key] = data[key] } this.getDataList();})
-                
             },
             async getDataList(){
                 const dataInfo = {pageNum:this.currentPage1,pageSize:this.pageSize,
@@ -218,17 +251,23 @@
             async getDeptList(){
                 const dataInfo = {pageNum:1,pageSize:1000}
                 const resultData = await this.$api.getDepartmentList(dataInfo);
+                let resultData_user = await this.$api.getByPage(dataInfo);
                 if(resultData&&resultData.code == 0){
                     this.deptOptions = resultData.data.list;
-                    var arr = [];
-                    resultData.data.list.map(item=>{
-                        arr.push({
-                            label:item.dept_name,
-                            value:item.dept_id
-                        })
-                    })
-                    this.selectOption.dept_id = arr
+                    let dept = { label: 'dept_name', value: 'dept_id' }
+                    this.selectOption.dept_id = this.refeshArr(resultData.data.list,dept)
                 }
+                if(resultData_user&&resultData_user.code == 0){
+                    let user = { label: 'user_true_name', value: 'user_id' }
+                    this.selectOption.user_true_name = this.refeshArr(resultData_user.data.list,user)
+                }
+            },
+            refeshArr(arr,dataInfo){
+                let arrOption = [];
+                arr.map(item=>{
+                    arrOption.push({ label:item[dataInfo.label], value:item[dataInfo.value] })
+                })
+                return arrOption
             },
             // 查职位
             async getPositionList(){
@@ -272,7 +311,7 @@
                 this.type = type;
                 this.user_id = row_user_id.user_id;
                 this.unit_form.username = '';
-                this.unit_form.password = 'admin';
+                this.unit_form.password = '';
                 this.unit_form.user_true_name = '';
                 this.unit_form.vue_role_ids = '';
                 this.unit_form.role_ids = [];
@@ -283,7 +322,7 @@
                 }else{
                     this.dialogTitle = "修改人员"
                     this.unit_form.username = row_user_id.username;
-                    this.unit_form.password = 'admin';
+                    this.unit_form.password = '';
                     this.unit_form.user_true_name = row_user_id.user_true_name;
                     if(row_user_id.userVueRoleList.length>0) this.unit_form.vue_role_ids = row_user_id.userVueRoleList[0].vue_role_id
                     
@@ -317,8 +356,8 @@
                 this.unit_form.position_ids = this.unit_form.position_ids.join(',');
                 this.unit_form.role_ids = this.unit_form.role_ids.join(',');
                 const dataInfo = { ...this.unit_form };
-                dataInfo.password = md5.hex(this.unit_form.password)
                 if(this.type == "add"){
+                    dataInfo.password = md5.hex(this.unit_form.password)
                     const resultData = await this.$api.addPersonnel(dataInfo);
                     if(resultData&&resultData.code == 0){
                         this.$message({
@@ -328,6 +367,7 @@
                         this.dialogVisible = false;
                     }
                 }else{
+                    if(dataInfo.password) dataInfo.password = md5.hex(dataInfo.password);
                     dataInfo['user_id'] = this.user_id;
                     const resultData = await this.$api.updatePersonnel(dataInfo);
                     if(resultData&&resultData.code == 0){
@@ -378,6 +418,9 @@
                 right: 10px;
                 top: 15px;
             }
+        }
+        .upload-demo{
+            text-align: center;
         }
         .table-list{
             .table-dataList{

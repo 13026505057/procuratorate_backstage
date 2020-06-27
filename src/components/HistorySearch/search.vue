@@ -41,7 +41,7 @@
         <!-- 案件导入 -->
         <el-dialog v-dialogDrag title="历史案件导入" :visible.sync="showModel.importCaseModel">
             <el-upload class="upload-demo" drag multiple :headers="showModel.headersUpload"
-                :action="base_url + '/cases/cases/addByExcel'" :on-success="uploadSuccess">
+                :action="base_url + '/cases/cases/addByExcel'" :on-success="uploadSuccess" accept=".xls">
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
             </el-upload>
@@ -93,9 +93,14 @@ export default {
         importCaseBtn(){
             this.showModel.importCaseModel = true;
         },
-        uploadSuccess(){
-            this.showModel.importCaseModel = false;
-            this.$message.success('上传成功')
+        uploadSuccess(response){
+            if(response.code == '0') {
+                this.showModel.importUserModel = false;
+                this.$message.success('上传成功')
+            } else {
+                this.$message.warning(response.msg)
+                this.$refs.uploadExcel.clearFiles()
+            }
         },
         // 导出
         exportCaseBtn(){

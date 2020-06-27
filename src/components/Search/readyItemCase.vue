@@ -39,7 +39,7 @@
         <el-button type="search" @click="addCaseItem">新增案件</el-button>
 
         <!-- 新增案件 -->
-        <el-dialog v-dialogDrag title="新增案件" :visible.sync="showModel.dialogReceivedVisible">
+        <el-dialog v-dialogDrag title="新增案件" :visible.sync="showModel.dialogReceivedVisible" @close="resetSubmitInfo">
             <div class="addCaseBox_container">
                 <div class="addCaseBox_item">
                     <div v-for="(item,index) in eachDataInfoList.slice(0,6)" :key="index" class="item">
@@ -160,7 +160,9 @@ export default {
         },
         async confirmAddCase(){
             let resultData = await this.$api.yrExhibitAdd(this.submitDataInfo)
+            console.log('dsafaafsddfds')
             if(resultData && resultData.code =='0') {
+                this.resetSubmitInfo();
                 this.showModel.dialogReceivedVisible = false;
                 this.$message.success('操作成功')
             }
@@ -172,7 +174,13 @@ export default {
                 { showModel: 'case_type_id', store: 'case_type' },
             ]
             dataArr.map(item=> this.showModel[item.showModel] = this[item.store] )
-        }
+        },
+        //重置表单
+        resetSubmitInfo(){
+            for( let key in this.submitDataInfo){ this.submitDataInfo[key] = '' }
+            this.showModel.dialogReceivedVisible = false;
+            console.log(this.submitDataInfo)
+        },
     }
 }
 </script>

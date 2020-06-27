@@ -2,7 +2,7 @@
     <div class="giveBackPage">
         <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
         <div class="table-dataList" >
-            <el-table :data="showModel.tableData" border style="width: 100%">
+            <el-table :data="showModel.tableData" border style="width: 100%" v-loading="tableLoading">
                 <el-table-column align="center" type="index"></el-table-column>
                 <el-table-column :label="item.dataIndex"
                     v-for="item in columns" :key="item.itemId" align="center">
@@ -41,6 +41,7 @@
                     timeYear: '',
                     user_id: ''
                 },
+                tableLoading: false,
                 addSearch: [
                     { dom: 'case_bh', value: '',placeholder: '请输入统一涉案号', itemId: 1, name: 'input' },
                     { dom: 'case_name', value: '',placeholder: '请输入案件名', itemId: 2, name: 'input' },
@@ -86,6 +87,7 @@
             },
             // 获取案件列表
             async getTableList(dataInfo){
+                this.tableLoading = true;
                 dataInfo.user_id = this.user_id
                 const resultData = await this.$api.caseRefuseHistoryGetByPage(dataInfo);
                 const pagination = { ...this.pagination };
@@ -93,6 +95,7 @@
                 this.showModel.tableData = resultData.data.list;
                 pagination.total = resultData.data.total;
                 this.pagination = pagination;
+                this.tableLoading = false;
             },
             // 确认搜索
             comfirmSearch(data){

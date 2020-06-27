@@ -247,6 +247,7 @@
                 this.submitDataInfo.exhibit_type = this.showModel.selectOption_type[0].value;
                 this.submitDataInfo.bgqx = this.showModel.selectOption_time[0].value;
             },
+            
             // 确认提交
             async confirmBtn(){
                 ['print_code','print_accept'].map(item=> this.submitDataInfo[item] = Number(this.submitDataInfo[item]))

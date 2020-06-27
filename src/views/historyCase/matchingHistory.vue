@@ -3,7 +3,7 @@
         <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
         <div class="head-tab">
             <div class="table-dataList" >
-                <el-table :data="showModel.tableData" border style="width: 100%">
+                <el-table :data="showModel.tableData" border style="width: 100%" v-loading="tableLoading">
                     <el-table-column align="center" type="index"></el-table-column>
                     <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
                         v-for="item in columns" :key="item.itemId" align="center">
@@ -43,6 +43,7 @@
                     nd: '',
                     exhibit_type: '',
                 },
+                tableLoading: false,
                 addSearch: [
                     { dom: 'dh', value: '',placeholder: '请输入统一涉案号', itemId: 5, name: 'input' },
                     { dom: 'exhibit_name', value: '',placeholder: '请输入案卷名', itemId: 6, name: 'input' },
@@ -83,27 +84,20 @@
             },
             // 获取案件列表
             async getTableList(dataInfo){
-                this.loading = true;
+                this.tableLoading = true;
                 this.showModel.dialogTableVisible = false;
                 this.showModel.dialogReceivedVisible = false;
-                let getData = { ...dataInfo }
-                const resultData = await this.$api.getExhibitLogsByPage(getData);
+                const resultData = await this.$api.getExhibitLogsByPage(dataInfo);
                 const pagination = { ...this.pagination };
                 this.showModel.tableData = resultData.data.list;
                 pagination.total = resultData.data.total;
                 this.pagination = pagination;
+                this.tableLoading = false;
             },
             // 确认搜索
             comfirmSearch(data){
                 this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] }  })
-                this.getCaseType()
-            },
-            showDialogPanel(dataInfo){
-                this.showModel.dialogTableVisible = true;
-                this.showModel.gridData_temporary = dataInfo
-                this.$nextTick(() => {
-                    this.$refs.dialogTablePagin.dialogTablePagin(1)
-                })
+                this.getTableList(this.pagination)
             },
         },
     }

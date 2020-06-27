@@ -9,7 +9,7 @@
                         <el-badge :value="item.contNum" v-if="item.contNum == '0'?false:true" class="item tab-badge-num"></el-badge>
                     </span>
                     <div class="table-dataList" >
-                        <el-table :data="showModel.tableData" border style="width: 100%">
+                        <el-table :data="showModel.tableData" border style="width: 100%" v-loading="tableLoading">
                             <el-table-column align="center" type="index"></el-table-column>
                             <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
                                 v-for="item in columns" :key="item.itemId" align="center">
@@ -90,6 +90,7 @@
                     case_take_user_name: '',
                     case_type_id: '',
                 },
+                tableLoading: false,
                 addSearch: [
                     { dom: 'case_bh', value: '', placeholder: '统一受案号', itemId: 0, name: 'input' },
                     { dom: 'case_name', value: '', placeholder: '请输入案卷名称', itemId: 1, name: 'input' },
@@ -158,7 +159,8 @@
             getCaseType(){
                 this.$api.getCaseType().then(async (res)=>{
                     this.showModel.tableList = res.data.list;
-                    this.pagination.case_type_id = this.showModel.activeNameTab = res.data.list[0].case_type_id
+                    if(this.showModel.activeNameTab !== '0') this.pagination.case_type_id = this.showModel.activeNameTab
+                        else this.pagination.case_type_id = this.showModel.activeNameTab = res.data.list[0].case_type_id
                     // 角标
                     let dataInfo = {...this.pagination};
                     // 每个页面字段不同(cout_for)
@@ -179,10 +181,9 @@
             },
             // 获取案件列表
             async getTableList(dataInfo){
-                this.loading = true;
+                this.tableLoading = true;
                 this.showModel.dialogTableVisible = false;
-                let getData = { ...dataInfo }
-                const resultData = await this.$api.getAllByPage(getData);
+                const resultData = await this.$api.getAllByPage(dataInfo);
                 const pagination = { ...this.pagination };
                 let resultData_table = [];
                 resultData.data.list.map(item=>{
@@ -191,6 +192,7 @@
                 this.showModel.tableData = resultData_table;
                 pagination.total = resultData.data.total;
                 this.pagination = pagination;
+                this.tableLoading = false;
             },
             // 确认搜索
             comfirmSearch(data){

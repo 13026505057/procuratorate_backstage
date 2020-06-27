@@ -222,7 +222,7 @@
             getCaseType(seatchData){
                 this.$api.getCaseType().then(async (res)=>{
                     this.tabItems = res.data.list;
-                    this.activeName = res.data.list[0].case_type_id;
+                    if(this.activeName == '0') this.activeName = res.data.list[0].case_type_id;
                     this.getDataList(seatchData);
                     let dataInfo = { ...seatchData }
                     const resultData = await this.$api.getCornerMarkType(dataInfo);

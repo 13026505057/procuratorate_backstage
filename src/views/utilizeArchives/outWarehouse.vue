@@ -1,13 +1,9 @@
 <template>
     <div class="progress-content">
         <div class="scan-table">
-            <span style="margin-left:20px;">出库操作：</span>
-            <!-- <el-radio-group v-model="radio" class="scan-select">
-                <el-radio v-for="exhibitItem in exhibitType" :key="exhibitItem.exhibit_type_id" :label="exhibitItem.exhibit_type_id">{{exhibitItem.exhibit_type_name}}</el-radio>
-            </el-radio-group> -->
-            <!-- <el-input class="scan-input" v-model="stockNum" ref="stockNumRef" @change="stockNumChange" placeholder="扫描货架码"></el-input> -->
+            <span class="head-text">出库操作：</span>
             <el-input class="scan-input" v-model="exhibitNum" ref="exhibitNumRef" @change="exhibitNumChange" placeholder="扫描案卷码"></el-input>
-            <span style="margin-left:20px;">扫描案卷码，出现提示后在进行下一次案卷码扫描</span>
+            <span class="head-text">扫描案卷码，出现提示后在进行下一次案卷码扫描</span>
         </div>
         <Search class="searchInfo" :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
         <div class="head-tab">
@@ -402,7 +398,13 @@
             .scan-input{
                 width: 250px;
                 margin-left: 20px;
-                
+            }
+            .head-text{
+                margin-left: 10px;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                font-size: 14px;
             }
         }
         .searchInfo{

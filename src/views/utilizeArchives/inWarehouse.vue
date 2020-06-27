@@ -1,13 +1,13 @@
 <template>
-    <div class="progress-content">
+    <div class="inWarehousePage">
         <div class="scan-table">
-            <span style="margin-left:20px;">入库操作：</span>
+            <span class="head-text">入库操作：</span>
             <el-radio-group v-model="exhibit_type" class="scan-select">
                 <el-radio v-for="exhibitItem in exhibitType" :key="exhibitItem.exhibit_type_id" :label="exhibitItem.exhibit_type_code">{{exhibitItem.exhibit_type_name}}</el-radio>
             </el-radio-group>
             <el-input class="scan-input" v-model="stockNum" ref="stockNumRef" @change="stockNumChange" placeholder="扫描货架码"></el-input>
             <el-input class="scan-input" v-model="exhibitNum" ref="exhibitNumRef" @change="exhibitNumChange" placeholder="扫描案卷码"></el-input>
-            <span style="margin-left:10px;">先扫描货架码，光标自动移动到案卷码位置后在扫描案卷码</span>
+            <span class="head-text">先扫描货架码，光标自动移动到案卷码位置后在扫描案卷码</span>
         </div>
         <Search class="searchInfo" :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
         <div class="head-tab">
@@ -185,6 +185,7 @@
                 addSearch: [
                     { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
                 ],
+                exhibitType:[],
                 selectOption:{},
                 activeName: "0",
                 tabItems:[],
@@ -418,7 +419,7 @@
 </script>
 <style lang="scss">
     $gradual-color: linear-gradient(to bottom right , #6db4ff, #47ccff);
-    .progress-content{
+    .inWarehousePage{
         // margin: 20px;
         .scan-table{
             // margin-top: -0px;
@@ -429,13 +430,20 @@
             background-color: #eaf5ff;
             display: flex;
             .scan-select{
-                width: 230px;
-                margin: 23px 30px;
+                display: flex;
+                align-items: center;
+                margin-top: 2px;
             }
             .scan-input{
                 width: 250px;
                 margin-left: 20px;
-                
+            }
+            .head-text{
+                margin-left: 10px;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                font-size: 14px;
             }
         }
         .searchInfo{

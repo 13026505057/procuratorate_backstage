@@ -1,7 +1,6 @@
 <template>
   <div class="historyCasePage">
     <HistorySearch @comfirmSearch="comfirmSearch"/>
-
     <div class="table-dataList" >
         <el-table :data="showModel.tableData" border style="width: 100%" v-loading="loadingTable">
             <el-table-column align="center" type="index"></el-table-column>
@@ -118,6 +117,9 @@ export default {
 <style lang="scss">
   .historyCasePage{
     padding: 20px;
+    .table-dataList{
+        margin-top: 20px;
+    }
     .upload-demo{
         text-align: center;
     }

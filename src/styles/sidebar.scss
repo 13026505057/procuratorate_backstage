@@ -150,6 +150,15 @@ $content_Box: calc(100% - 55px);
           }
         }
       }
+      .el-tooltip {
+        >i.template{
+          height: 0;
+          width: 0;
+          visibility: hidden;
+          display: inline-block;
+          overflow: hidden;
+        }
+      }
     }
   }
 

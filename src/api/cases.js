@@ -105,6 +105,10 @@ const cases = {
     yrExhibitAdd(data){
         return request({ url: '/yrExhibitAdd', method: 'post', data })
     },
+    // 获取个人受理案件列表
+    casesShouliGetByPage(data){
+        return request({ url: '/casesShouliGetByPage', method: 'post', data })
+    },
     //档案绩效评价
     //基层院查询归档率
     // caseJauge(data){

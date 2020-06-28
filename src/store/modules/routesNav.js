@@ -57,6 +57,7 @@ import UnTransfer from '@/views/byPersonal/archivesSituation/unTransfer'
 import GiveBack from '@/views/byPersonal/archivesSituation/giveBack'
 import NotInWarehouse from '@/views/byPersonal/archivesSituation/notInWarehouse'
 import InWarehouseArchives from '@/views/byPersonal/archivesSituation/inWarehouse'
+import PersonalAcceptance from '@/views/byPersonal/personalAcceptance/index'
 
 // 历史案卷
 import HistoryCaseItem from '@/views/historyCase/historyCase'
@@ -125,6 +126,7 @@ let routesNav = {
     GiveBack: GiveBack,
     NotInWarehouse: NotInWarehouse,
     InWarehouseArchives: InWarehouseArchives,
+    PersonalAcceptance: PersonalAcceptance,
 
     // 历史案卷
     HistoryCaseItem: HistoryCaseItem,

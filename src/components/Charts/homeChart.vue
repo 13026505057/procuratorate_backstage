@@ -53,7 +53,8 @@ export default {
                         data: [],
                         axisPointer: {
                             type: 'shadow'
-                        }
+                        },
+                        axisLabel: { interval: 0 }
                     }
                 ],
                 yAxis: [
@@ -61,10 +62,10 @@ export default {
                         type: 'value',
                         name: '案件数',
                         min: 0,
-                        max: 100,
+                        max: 100
                     },
                 ],
-                series: []
+                series: [],
             })
         },
         resetChartData(){

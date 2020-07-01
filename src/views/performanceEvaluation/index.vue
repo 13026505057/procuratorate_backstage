@@ -18,7 +18,6 @@
                     </el-table-column>
                     <el-table-column
                         align="center"
-                        :show-overflow-tooltip="item.overflow"
                         v-for="tableItem in tableItems"
                         :prop="tableItem.prop"
                         :label="tableItem.label"
@@ -57,41 +56,6 @@
                     :total="total1">
                 </el-pagination>
             </div>
-               
-            
-            <el-dialog v-dialogDrag
-                title="案件进度"
-                :visible.sync="dialogVisible"
-                width="34%"
-                center>
-                <span>
-                    <div class="step-flex" style="height: 400px;">
-                        <el-steps direction="vertical" :active="1"  style="height: 350px;">
-                            <el-step status="finish" title="" description="">
-                                <template slot="title">是否办结：已办结</template>
-                                <template slot="description">时间：{{progressList.overtime}}</template>
-                            </el-step>
-                            <el-step :status="progressList.anguan_confirm_time==null?'wait':'finish'" title="" description="">
-                                <template slot="title">案件审查：{{progressList.anguan_confirm_time==null?"未审查":"已审查"}}</template>
-                                <template v-if="progressList.anguan_confirm_time==null?false:true"  slot="description">时间：{{progressList.anguan_confirm_time}}</template>
-                            </el-step>
-                            <el-step :status="progressList.dangan_accept_time==null?'wait':'finish'" title="" description="">
-                                <template slot="title">档案接收：{{progressList.dangan_accept_time==null?"未接收":"已接收"}}</template>
-                                <template v-if="progressList.dangan_accept_time==null?false:true"  slot="description">时间：{{progressList.dangan_accept_time}}</template>
-                            </el-step>
-                            <el-step :status="progressList.stock_status=='none'?'wait':'finish'" title="" description="">
-                                <template slot="title">是否上架：{{progressList.stock_status=="none"?"未上架":"已上架"}}</template>
-                                <template v-if="progressList.stock_status=='none'?false:true"  slot="description">时间：{{progressList.gdrq}}</template>
-                            </el-step>
-                        </el-steps>
-                    </div>
-                </span>
-                <span slot="footer" class="dialog-footer">
-                    <!-- <el-button type="primary" @click="dialogVisible = false">调 取</el-button> -->
-                    <el-button type="primary" @click="dialogVisible = false">关 闭</el-button>
-                </span>
-            </el-dialog>
-           
         </div>
     </div>
 </template>
@@ -154,7 +118,6 @@
                     // total_quantity-in_quantity
 
                 ],
-                dialogVisible:false,
                 currentPage1:1,
                 pageSize:10,
                 total1:0,
@@ -162,7 +125,7 @@
                     title:"是否办结：已办结",
                     description: "时间：overtime"
                 }],
-                 headStyle:{
+                headStyle:{
                     backgroundColor: '#eaf5ff',
                     borderTop: '1px solid #97cfff',
                     borderBottom: '1px solid #97cfff',

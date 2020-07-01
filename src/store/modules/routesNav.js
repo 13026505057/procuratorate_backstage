@@ -16,6 +16,7 @@ import CompletedCase from '@/views/caseManage/filingCondition/completed'
 import UncompletedCase from '@/views/caseManage/filingCondition/uncompleted'
 import WaitAssessment from '@/views/caseManage/waitAssessment'
 import Progress from '@/views/caseManage/progress'
+import ShallCompletedAllCase from '@/views/caseManage/shallCompletedAll'
 
 // 档案Routes
 import ShallCompletedAll from '@/views/archivesManage/shallCompletedAll'
@@ -24,7 +25,7 @@ import UncompletedArchives from '@/views/archivesManage/shallCompleted/uncomplet
 import CompletedArchives from '@/views/archivesManage/shallCompleted/completed'
 import CheckArchives from '@/views/archivesManage/checkArchives/index'
 import ReceiveItem from '@/views/archivesManage/checkArchives/receiveItem'
-import CheckItem from '@/views/archivesManage/checkArchives/checkItem'
+import CheckItem from '@/views/archivesManage/checkItem'
 import ReadyItem from '@/views/archivesManage/checkArchives/readyItem'
 import CheckHistory from '@/views/archivesManage/checkHistory/index'
 import Agree from '@/views/archivesManage/checkHistory/agree'
@@ -58,6 +59,7 @@ import GiveBack from '@/views/byPersonal/archivesSituation/giveBack'
 import NotInWarehouse from '@/views/byPersonal/archivesSituation/notInWarehouse'
 import InWarehouseArchives from '@/views/byPersonal/archivesSituation/inWarehouse'
 import PersonalAcceptance from '@/views/byPersonal/personalAcceptance/index'
+import UploadAcceptance from '@/views/byPersonal/uploadAcceptance/index'
 
 // 历史案卷
 import HistoryCaseItem from '@/views/historyCase/historyCase'
@@ -84,6 +86,7 @@ let routesNav = {
     UncompletedCase: UncompletedCase,
     WaitAssessment: WaitAssessment,
     Progress: Progress,
+    ShallCompletedAllCase: ShallCompletedAllCase,
     
     // 档案Routes
     ShallCompletedAll: ShallCompletedAll,
@@ -127,6 +130,7 @@ let routesNav = {
     NotInWarehouse: NotInWarehouse,
     InWarehouseArchives: InWarehouseArchives,
     PersonalAcceptance: PersonalAcceptance,
+    UploadAcceptance: UploadAcceptance,
 
     // 历史案卷
     HistoryCaseItem: HistoryCaseItem,

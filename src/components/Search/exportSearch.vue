@@ -3,26 +3,26 @@
         <div class="searchItem" v-for="item in searchList" :key="item.itemId">
             <template v-if="item.name == 'input'">
                 <el-input v-model="item.value" :placeholder="item.placeholder" 
-                    class="item"></el-input>
+                    class="item" clearable></el-input>
             </template>
             <template v-else-if="item.name == 'dataPicker'">
-                <el-date-picker v-model="item.value" :placeholder="item.placeholder" 
+                <el-date-picker v-model="item.value" :placeholder="item.placeholder" clearable
                     type="year" class="item" value-format="yyyy"></el-date-picker>
             </template>
             <template v-else-if="item.name == 'select'">
-                <el-select v-model="item.value" :placeholder="item.placeholder">
+                <el-select v-model="item.value" :placeholder="item.placeholder" clearable>
                     <el-option v-for="itemChild in selectOption[item.dom]"
                         :key="itemChild.value" :label="itemChild.label" :value="itemChild.value">
                     </el-option>
                 </el-select>
             </template>
             <template v-else-if="item.name == 'daterange'">
-                <el-date-picker v-model="item.value" type="daterange" range-separator="至"
+                <el-date-picker v-model="item.value" type="daterange" range-separator="至" clearable
                     start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd">
                 </el-date-picker>
             </template>
             <template v-else-if="item.name == 'selectTimeStatus'">
-                <el-select v-model="item.value" :placeholder="item.placeholder">
+                <el-select v-model="item.value" :placeholder="item.placeholder" clearable>
                     <el-option v-for="itemChild in selectOption[item.dom]"
                         :key="itemChild.case_time_status" :label="itemChild.case_time_status_name" :value="itemChild.case_time_status">
                     </el-option>

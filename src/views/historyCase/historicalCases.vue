@@ -1,6 +1,8 @@
 <template>
     <div class="historicalCasesPage">
-        <DynamicSearch  @comfirmSearch="comfirmSearch"/>
+        <!-- <DynamicSearch  @comfirmSearch="comfirmSearch"/> -->
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch"
+            :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
         <div class="head-tab">
             <div class="table-dataList" >
                 <el-table :data="showModel.tableData" border style="width: 100%" v-loading="loadingTable">
@@ -79,16 +81,47 @@
                 <el-button type="primary" @click="confirmBtn">确 定</el-button>
             </span>
         </el-dialog>
+        <!-- 新增案件 -->
+        <el-dialog v-dialogDrag title="新增案件" :visible.sync="showModel.dialogAddCaseVisible" @close="resetSubmitInfo">
+            <div class="addCaseBox_container">
+                <div class="addCaseBox_item">
+                    <div v-for="(item,index) in eachDataInfoList_case.slice(0,6)" :key="index" class="item">
+                        <span> {{ item.captionTitle }}：</span>
+                        <el-input v-model="submitDataInfo_case[item.dom]" v-if="item.type=='input'"
+                            :placeholder="item.placeholder" style="width: auto"></el-input>
+                        <el-select v-model="submitDataInfo_case[item.dom]" :placeholder="item.placeholder" v-else-if="item.type == 'select'">
+                            <el-option v-for="itemChild in showModel[item.dom]" :key="itemChild.value" 
+                                :label="itemChild.label" :value="itemChild.value"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="addCaseBox_item">
+                    <div v-for="(item,index) in eachDataInfoList_case.slice(6,11)" :key="index" class="item">
+                        <span> {{ item.captionTitle }}：</span>
+                        <el-input v-model="submitDataInfo_case[item.dom]" v-if="item.type=='input'"
+                            :placeholder="item.placeholder" style="width: auto"></el-input>
+                        <el-select v-model="submitDataInfo_case[item.dom]" :placeholder="item.placeholder" v-else-if="item.type == 'select'">
+                            <el-option v-for="itemChild in showModel[item.dom]" :key="itemChild.value" 
+                                :label="itemChild.label" :value="itemChild.value"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="showModel.dialogAddCaseVisible = false">取 消</el-button>
+                <el-button type="primary" @click="confirmAddCase">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
-    import DynamicSearch from '@/components/Search/dynamicSearch'
+    import Search from '@/components/Search'
     import DialogPagin from '@/components/DialogPagin'
     import { mapGetters } from 'vuex'
     export default {
-        components: { DynamicSearch,DialogPagin },
+        components: { Search,DialogPagin },
         computed :{
-            ...mapGetters(['exhibit_type','exhibit_time_bg'])
+            ...mapGetters(['exhibit_type','exhibit_time_bg','case_type'])
         },
         filters: {
             mapStatus(status){
@@ -118,9 +151,7 @@
                     case_type_id: '',
                 },
                 loadingTable: false,
-                addSearch: [
-                    { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
-                ],
+                addSearch: [],
                 selectOption: {},
                 showModel: {
                     activeNameTab: "0",
@@ -144,6 +175,11 @@
                     dialogReceivedVisible: false,
                     selectOption_type: [],
                     selectOption_time: [],
+                    // 新增案件
+                    dialogAddCaseVisible: false,
+                    exhibit_type: [],
+                    bgqx: [],
+                    case_type_id: []
                 },
                 // table表头
                 columns: [
@@ -176,9 +212,38 @@
                     { captionTitle: '卷宗类型(必填)', placeholder: '', dom: 'exhibit_type', itemId: 4 },
                     { captionTitle: '选择年度(必填)', placeholder: '请输入年度 如 2018', dom: 'nd', itemId: 5 },
                     { captionTitle: '选择期限(必填)', placeholder: '', dom: 'bgqx', itemId: 6 },
-                ]
+                ],
+                submitDataInfo_case: {
+                    exhibit_name: '',
+                    tysah: '',
+                    jh: '',
+                    cbr: '',
+                    bgqx: '',
+                    exhibit_type: '',
+                    nd: '',
+                    dh: '',
+                    ay: '',
+                    bgr: '',
+                    case_type_id: ''
+                },
+                eachDataInfoList_case: [
+                    { captionTitle: '案件名称', placeholder: '请输入案件名称', dom: 'exhibit_name', itemId: 1, type: 'input' },
+                    { captionTitle: '统一受案号', placeholder: '请输入统一受案号', dom: 'tysah', itemId: 2, type: 'input' },
+                    { captionTitle: '卷号', placeholder: '请输入卷号', dom: 'jh', itemId: 3, type: 'input' },
+                    { captionTitle: '承办人', placeholder: '请输入承办人', dom: 'cbr', itemId: 4, type: 'input' },
+                    { captionTitle: '期限', placeholder: '请选择期限', dom: 'bgqx', itemId: 5, type: 'select' },
+                    { captionTitle: '类型', placeholder: '请选择类型', dom: 'exhibit_type', itemId: 6, type: 'select' },
+
+                    { captionTitle: '年度', placeholder: '请输入年度', dom: 'nd', itemId: 7, type: 'input' },
+                    { captionTitle: '档号', placeholder: '请输入档号', dom: 'dh', itemId: 8, type: 'input' },
+                    { captionTitle: '案由', placeholder: '请输入案由', dom: 'ay', itemId: 9, type: 'input' },
+                    { captionTitle: '犯罪嫌疑人', placeholder: '请输入犯罪嫌疑人', dom: 'bgr', itemId:10, type: 'input' },
+                    { captionTitle: '类型', placeholder: '请选择案件类型', dom: 'case_type_id', itemId: 11, type: 'select' },
+                ],
+                setDynamicBtn: [
+                    { title: '新增案件', fun: 'addCaseItem' }
+                ],
             }
-           
         },
         mounted(){
             this.getTypeList();
@@ -190,6 +255,12 @@
                 this.pagination['pageNum'] = val;
                 this.getTableList(this.pagination)
             },
+            setDynamicBtnFun(data){
+                const statusMap = {
+                    "addCaseItem": "addCaseItem"
+                }
+                this[statusMap[data]]()
+            },
             // DialogPagin
             dialogTablePagin(data){
                 this.showModel.gridData = data
@@ -198,6 +269,9 @@
                 let dataArr = [
                     { showModel: 'selectOption_time', store: 'exhibit_time_bg' },
                     { showModel: 'selectOption_type', store: 'exhibit_type' },
+                    { showModel: 'bgqx', store: 'exhibit_time_bg' },
+                    { showModel: 'exhibit_type', store: 'exhibit_type' },
+                    { showModel: 'case_type_id', store: 'case_type' },
                 ]
                 dataArr.map(item=> this.showModel[item.showModel] = this[item.store] )
             },
@@ -206,6 +280,7 @@
                 this.loadingTable = true;
                 this.showModel.dialogTableVisible = false;
                 this.showModel.dialogReceivedVisible = false;
+                this.showModel.dialogAddCaseVisible = false;
                 const resultData = await this.$api.getConfirmedByPage(dataInfo);
                 const pagination = { ...this.pagination };
                 let resultData_table = [];
@@ -247,7 +322,10 @@
                 this.submitDataInfo.exhibit_type = this.showModel.selectOption_type[0].value;
                 this.submitDataInfo.bgqx = this.showModel.selectOption_time[0].value;
             },
-            
+            //重置表单
+            resetSubmitInfo_case(){
+                for( let key in this.submitDataInfo_case){ this.submitDataInfo_case[key] = '' }
+            },
             // 确认提交
             async confirmBtn(){
                 ['print_code','print_accept'].map(item=> this.submitDataInfo[item] = Number(this.submitDataInfo[item]))
@@ -257,7 +335,17 @@
                     this.getCaseType()
                     this.resetSubmitInfo()
                 }
-            }
+            },
+            async addCaseItem(){
+                this.showModel.dialogAddCaseVisible = true;
+            },
+            async confirmAddCase(){
+                let resultData = await this.$api.addOldExhibit(this.submitDataInfo_case)
+                if(resultData && resultData.code =='0') {
+                    this.showModel.dialogAddCaseVisible = false;
+                    this.$message.success('操作成功')
+                }
+            },
         },
     }
 </script>
@@ -305,6 +393,24 @@
         }
         .checkboxSelect{
             padding: 15px 0 0 10%;;
+        }
+        .addCaseBox_container{
+            display: inline-flex;
+            width: 100%;
+            .addCaseBox_item{
+                width: 50%;
+                .item{
+                    display:table;
+                    width: 100%;
+                    margin-bottom: 10px;
+                    >span{
+                        display:table-cell;
+                        width: 35%;
+                        text-align: right;
+                        padding-right: 20px;
+                    }
+                }
+            }
         }
     }
 </style>

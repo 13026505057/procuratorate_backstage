@@ -98,7 +98,6 @@ const actions = {
         data.list.map(item=>{
           selectOption.push({ value: item.case_type_id, label: item.case_type_name })
         })
-        selectOption.unshift({ value: '',label: '全部' })
         let dataInfo = { case_type: selectOption, case_type_origin: data.list }
         commit('SET_CASE_TYPE', dataInfo)
         resolve(selectOption)

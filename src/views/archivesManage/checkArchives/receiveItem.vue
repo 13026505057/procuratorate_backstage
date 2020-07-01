@@ -1,7 +1,7 @@
 <template>
     <div class="receiveItemPage">
         <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"
-            :printReceiptBtn="true" @printReceiptFun="openPrintReceiptFun"/>
+            :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
@@ -235,7 +235,10 @@
                     { captionTitle: '卷宗类型(必填)', placeholder: '', dom: 'exhibit_type', itemId: 4 },
                     { captionTitle: '选择年度(必填)', placeholder: '请输入年度 如 2018', dom: 'nd', itemId: 5 },
                     { captionTitle: '选择期限(必填)', placeholder: '', dom: 'bgqx', itemId: 6 },
-                ]
+                ],
+                setDynamicBtn: [
+                    { title: '批量打印回执单', fun: 'exprotFunAll' }
+                ],
             }
            
         },
@@ -245,6 +248,12 @@
         },
         methods: {
             ...mapActions({ "setTemporaryNd": "settings/setTemporaryNd" }),
+            setDynamicBtnFun(data){
+                const statusMap = {
+                    "exprotFunAll": "openPrintReceiptFun"
+                }
+                this[statusMap[data]]()
+            },
             receivedAddress(data){
                 Object.keys(data).map(item=> this.pagination[item] = data[item] )
             },
@@ -386,8 +395,7 @@
             //重置表单
             resetSubmitInfo(){
                 for( let key in this.submitDataInfo){ this.submitDataInfo[key] = '' }
-                // this.submitDataInfo.nd = new Date().getFullYear()
-                this.submitDataInfo.nd = this.temporary_nd;
+                this.submitDataInfo.nd = this.temporary_nd || new Date().getFullYear();
                 this.submitDataInfo.exhibit_type = this.showModel.selectOption_type[0].value;
                 this.submitDataInfo.bgqx = this.showModel.selectOption_time[0].value;
             },

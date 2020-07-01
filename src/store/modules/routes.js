@@ -8,6 +8,7 @@ const asyncDataRoutes = [
         "children": [
             {"path": "progress", "component": "views/caseManage/progress", "name": "Progress", "meta":{ "title":"案件进度查询","icon": "icon-jinduchaxun" }},
             {"path": "waitAssessment", "component": "views/caseManage/waitAssessment", "name": "WaitAssessment", "meta":{ "title":"等待质量评查","icon": "icon-zhiliangpingcha" }},
+            {"path": "shallCompletedAllCase", "component": "views/caseManage/shallCompletedAllCase", "name": "ShallCompletedAllCase", "meta":{ "title":"所有应归档案件","icon": "icon-zhiliangpingcha" }},
             {   "path": "filingCondition", "component": "views/caseManage/filingCondition/index",
                 "name": "FilingCondition", "meta":{ "title":"符合归档条件案件","icon": "icon-jinduchaxun" },
                 "children": [
@@ -33,13 +34,13 @@ const asyncDataRoutes = [
                     {"path": "completed", "component": "views/archivesManage/shallCompleted/completed", "name": "CompletedArchives", "meta":{ "title":"已归档案件","icon": "icon-zhiliangpingcha" }}
                 ]
             },
+            {"path": "checkItem", "component": "views/archivesManage/checkItem", "name": "CheckItem", "meta":{ "title":"档案检查","icon": "icon-jinduchaxun" }},
             {   "path": "checkArchives", "component": "views/archivesManage/checkArchives/index", 
                 "redirect": "/archivesManage/CheckArchives/readyItem",
-                "name": "CheckArchives", "meta":{ "title":"档案检查","icon": "icon-zhiliangpingcha" },
+                "name": "CheckArchives", "meta":{ "title":"档案接收","icon": "icon-zhiliangpingcha" },
                 "children": [
                     {"path": "readyItem", "component": "views/archivesManage/checkArchives/readyItem", "name": "ReadyItem", "meta":{ "title":"档案预入库","icon": "icon-zhiliangpingcha" }},
                     {"path": "receiveItem", "component": "views/archivesManage/checkArchives/receiveItem", "name": "ReceiveItem", "meta":{ "title":"档案接收","icon": "icon-zhiliangpingcha" }},
-                    {"path": "checkItem", "component": "views/archivesManage/checkArchives/checkItem", "name": "CheckItem", "meta":{ "title":"档案检查","icon": "icon-zhiliangpingcha" }}
                 ]
             },
             {   "path": "checkHistory", "component": "views/archivesManage/checkHistory/index", 
@@ -105,7 +106,7 @@ const asyncDataRoutes = [
         "redirect": "/byPersonal/archivesSituation",
         "children": [
             {   "path": "personalAcceptance", "component": "views/byPersonal/personalAcceptance/index", "name": "PersonalAcceptance", "meta":{ "title":"个人受理案件","icon": "icon-zhiliangpingcha" } },
-            // {   "path": "personalAcceptance", "component": "views/byPersonal/personalAcceptance/index", "name": "PersonalAcceptance", "meta":{ "title":"受理案件上传","icon": "icon-zhiliangpingcha" } },
+            {   "path": "uploadAcceptance", "component": "views/byPersonal/uploadAcceptance/index", "name": "UploadAcceptance", "meta":{ "title":"受理案件上传","icon": "icon-zhiliangpingcha" } },
             {   "path": "archivesSituation", "component": "views/byPersonal/archivesSituation/index", 
                 "name": "ArchivesSituation", "meta":{ "title":"案件归档情况","icon": "icon-zhiliangpingcha" },
                 "redirect": "/byPersonal/archivesSituation/caseShallCompleted",

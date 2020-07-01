@@ -3,26 +3,26 @@
         <div class="searchItem" v-for="item in searchList" :key="item.itemId">
             <template v-if="item.name == 'input'">
                 <el-input v-model="item.value" :placeholder="item.placeholder" 
-                    class="item"></el-input>
+                    class="item" clearable></el-input>
             </template>
             <template v-else-if="item.name == 'dataPicker'">
-                <el-date-picker v-model="item.value" :placeholder="item.placeholder" 
+                <el-date-picker v-model="item.value" :placeholder="item.placeholder" clearable
                     type="year" class="item" value-format="yyyy"></el-date-picker>
             </template>
             <template v-else-if="item.name == 'select'">
-                <el-select v-model="item.value" :placeholder="item.placeholder">
+                <el-select v-model="item.value" :placeholder="item.placeholder" clearable>
                     <el-option v-for="itemChild in selectOption[item.dom]"
                         :key="itemChild.value" :label="itemChild.label" :value="itemChild.value">
                     </el-option>
                 </el-select>
             </template>
             <template v-else-if="item.name == 'daterange'">
-                <el-date-picker v-model="item.value" type="daterange" range-separator="至"
+                <el-date-picker v-model="item.value" type="daterange" range-separator="至" clearable
                     start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd">
                 </el-date-picker>
             </template>
             <template v-else-if="item.name == 'selectTimeStatus'">
-                <el-select v-model="item.value" :placeholder="item.placeholder">
+                <el-select v-model="item.value" :placeholder="item.placeholder" clearable>
                     <el-option v-for="itemChild in selectOption[item.dom]"
                         :key="itemChild.case_time_status" :label="itemChild.case_time_status_name" :value="itemChild.case_time_status">
                     </el-option>
@@ -33,10 +33,6 @@
             <el-button type="search" @click="comfirmSearch">查询</el-button>
             <el-button type="search" @click="importCaseBtn">导入</el-button>
             <el-button type="search" @click="exportCaseBtn">导出</el-button>
-            <!-- <el-button type="search" @click="comfirmSearch">新增</el-button> -->
-            <!-- <el-button type="search" @click="comfirmSearch">人工匹配</el-button>
-            <el-button type="search" @click="comfirmSearch">未绑查询</el-button>
-            <el-button type="search" @click="comfirmSearch">匹配历史</el-button> -->
         </div>
         <!-- 案件导入 -->
         <el-dialog v-dialogDrag title="历史案件导入" :visible.sync="showModel.importCaseModel">
@@ -64,7 +60,7 @@ export default {
                 { dom: 'out_exhibit_id', value: '', placeholder: '请扫描案卷条码', itemId: 1, name: 'input' },
                 { dom: 'exhibit_name', value: '', placeholder: '请输入案件名', itemId: 2, name: 'input' },
                 { dom: 'nd', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
-                { dom: 'case_type_id', value: '', placeholder: '请选择案件类型', itemId: 4, name: 'select' },
+                { dom: 'case_type_id', value: '0', placeholder: '请选择案件类型', itemId: 4, name: 'select' },
                 { dom: 'stock_status', value: null, placeholder: '请选择案件状态', itemId: 5, name: 'select' },
             ],
             selectOption: {

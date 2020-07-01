@@ -1,6 +1,7 @@
 <template>
     <div class="unCompleted-content">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" 
+        @receivedAddress="receivedAddress" @exportExcelFun="openExportExcelFun" :exportExcelBtn="true"/>
         <div class="head-tab">
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane class="tab-pane-position" v-for="tabItem in tabItems" :key="tabItem.case_type_id" :name="tabItem.case_type_id" >
@@ -116,10 +117,6 @@
                     </div>
                     <DialogPagin ref="dialogTablePagin" :tableData="tableData1_temporary" @dialogTablePagin="dialogTablePagin"/>
                 </template>
-                <!-- <span slot="footer" class="dialog-footer">
-                    <el-button type="primary" @click="dialogVisible = false">调 取</el-button>
-                    <el-button type="primary" @click="dialogVisible = false">关 闭</el-button>
-                </span> -->
             </el-dialog>
         </div>
     </div>
@@ -128,9 +125,13 @@
     import Search from '@/components/Search'
     import DialogPagin from '@/components/DialogPagin'
     import { setTimeout } from 'timers';
+    import { mapGetters } from 'vuex'
 
     export default {
         components: { Search,DialogPagin },
+        computed: {
+            ...mapGetters(['base_url'])
+        },
         data()  {
             return  {
                 addSearch: [
@@ -354,7 +355,6 @@
                 }
                 .highlight-btn{
                     background-color: #6cb5ff;
-                    
                 }
                 .ash-btn{
                     background-color: #d1d1d1;
@@ -385,10 +385,7 @@
             }
             .tab-badge-num{
                 position: absolute;
-                top: -2px;
-            }
-            .customClass{
-                // background-color: #47ccff;
+                top: -8px;
             }
             .step-flex{
                 display: flex;

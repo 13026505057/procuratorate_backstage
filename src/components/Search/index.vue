@@ -37,6 +37,7 @@
         </div>
         <el-button type="search" @click="comfirmSearch">查询</el-button>
         <el-button v-for="item in setDynamicBtn" type="search" @click="setDynamicBtnFun(item.fun)" :key="item.title">{{ item.title }}</el-button>
+        <el-button class="searchItem" type="search" @click="exportExcelFun" v-if="exportExcelBtn">导出</el-button>
     </div>
 </template>
 
@@ -48,6 +49,10 @@ export default {
         addSearch: [Array],
         selectOption: [Object],
         setDynamicBtn: [Array],
+        exportExcelBtn: {
+            type: Boolean,
+            default: false
+        }
     },
     computed: {
         ...mapGetters(['org_list','address_id'])
@@ -98,6 +103,10 @@ export default {
             })
             return dataInfo
         },
+        exportExcelFun(){
+            let dataInfo = this.resultDataInfo()
+            this.$emit('exportExcelFun',dataInfo)
+        }
     }
 }
 </script>
@@ -118,6 +127,9 @@ export default {
                     border: 0;
                 }
             }
+        }
+        .el-button:hover, .el-button:focus {
+            color: #ffffff;
         }
     }
 </style>

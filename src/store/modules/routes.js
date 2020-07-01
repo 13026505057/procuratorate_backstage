@@ -80,8 +80,8 @@ const asyncDataRoutes = [
         "path": "/historyCase",
         "redirect": "/historyCase/historyCase",
         "children": [
-            {"path": "historyCase", "component": "views/historyCase/historyCase", "name": "HistoryCaseItem", "meta":{ "title":"历史卷宗","icon": "icon-zhiliangpingcha" }},
-            {"path": "historicalCases", "component": "views/historyCase/historyCase", "name": "HistoricalCases", "meta":{ "title":"历史案件","icon": "icon-zhiliangpingcha" }},
+            {"path": "historyCase", "component": "views/historyCase/historyCase", "name": "HistoryCaseItem", "meta":{ "title":"新增历史案卷","icon": "icon-zhiliangpingcha" }},
+            {"path": "historicalCases", "component": "views/historyCase/historyCase", "name": "HistoricalCases", "meta":{ "title":"新增历史案件","icon": "icon-zhiliangpingcha" }},
             {"path": "bySelfMatch", "component": "views/historyCase/bySelfMatch", "name": "BySelfMatch", "meta":{ "title":"人工匹配","icon": "icon-zhiliangpingcha" }},
             {"path": "notBindCheck", "component": "views/historyCase/notBindCheck", "name": "NotBindCheck", "meta":{ "title":"未绑查询","icon": "icon-zhiliangpingcha" }},
             {"path": "matchingHistory", "component": "views/historyCase/matchingHistory", "name": "MatchingHistory", "meta":{ "title":"匹配历史","icon": "icon-zhiliangpingcha" }}
@@ -104,6 +104,8 @@ const asyncDataRoutes = [
         "path": "/byPersonal",
         "redirect": "/byPersonal/archivesSituation",
         "children": [
+            {   "path": "personalAcceptance", "component": "views/byPersonal/personalAcceptance/index", "name": "PersonalAcceptance", "meta":{ "title":"个人受理案件","icon": "icon-zhiliangpingcha" } },
+            // {   "path": "personalAcceptance", "component": "views/byPersonal/personalAcceptance/index", "name": "PersonalAcceptance", "meta":{ "title":"受理案件上传","icon": "icon-zhiliangpingcha" } },
             {   "path": "archivesSituation", "component": "views/byPersonal/archivesSituation/index", 
                 "name": "ArchivesSituation", "meta":{ "title":"案件归档情况","icon": "icon-zhiliangpingcha" },
                 "redirect": "/byPersonal/archivesSituation/caseShallCompleted",

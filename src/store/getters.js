@@ -22,5 +22,6 @@ const getters = {
   case_type: state => state.settings.case_type,
   case_type_origin: state => state.settings.case_type_origin,
   stock_status: state => state.settings.stock_status,
+  temporary_nd: state => state.settings.temporary_nd,
 }
 export default getters

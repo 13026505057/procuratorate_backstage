@@ -127,11 +127,11 @@
 <script>
     import Search from '@/components/Search'
     import DialogPagin from '@/components/DialogPagin'
-    import { mapGetters } from 'vuex'
+    import { mapGetters,mapActions } from 'vuex'
     export default {
         components: { Search,DialogPagin },
         computed :{
-            ...mapGetters(['exhibit_type','exhibit_time_bg'])
+            ...mapGetters(['exhibit_type','exhibit_time_bg','temporary_nd'])
         },
         filters: {
             mapStatus(status){
@@ -207,7 +207,7 @@
                 },
                 // table表头
                 columns: [
-                    { title: 'case_bh', dataIndex: '案件编号', itemId: 1 },
+                    { title: 'case_bh', dataIndex: '统一受案号', itemId: 1 },
                     { title: 'case_name', dataIndex: '案件名称', itemId: 10 },
                     { title: 'case_type_name', dataIndex: '案件类型', itemId: 2 },
                     { title: 'case_desc', dataIndex: '案件描述', overflow: true, itemId: 11 },
@@ -244,6 +244,7 @@
             this.getTypeList();
         },
         methods: {
+            ...mapActions({ "setTemporaryNd": "settings/setTemporaryNd" }),
             receivedAddress(data){
                 Object.keys(data).map(item=> this.pagination[item] = data[item] )
             },
@@ -308,6 +309,7 @@
             },
             // 类型分类
             getCaseType(){
+                console.log(new Date().getTime())
                 this.$api.getCaseType().then(async (res)=>{
                     this.showModel.tableList = res.data.list;
                     if(this.showModel.activeNameTab !== '0') this.pagination.case_type_id = this.showModel.activeNameTab
@@ -384,7 +386,8 @@
             //重置表单
             resetSubmitInfo(){
                 for( let key in this.submitDataInfo){ this.submitDataInfo[key] = '' }
-                this.submitDataInfo.nd = new Date().getFullYear()
+                // this.submitDataInfo.nd = new Date().getFullYear()
+                this.submitDataInfo.nd = this.temporary_nd;
                 this.submitDataInfo.exhibit_type = this.showModel.selectOption_type[0].value;
                 this.submitDataInfo.bgqx = this.showModel.selectOption_time[0].value;
             },
@@ -393,6 +396,7 @@
                 ['print_code','print_accept'].map(item=> this.submitDataInfo[item] = Number(this.submitDataInfo[item]))
                 let resultData = await this.$api.addExhibitData(this.submitDataInfo)
                 if(resultData && resultData.code=='0'){
+                    this.setTemporaryNd(this.submitDataInfo.nd)
                     this.$message.success('添加成功')
                     this.getCaseType()
                     this.resetSubmitInfo()

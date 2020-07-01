@@ -16,7 +16,8 @@ const state = {
   exhibit_time_bg: [],
   case_type: [],
   case_type_origin: [],
-  stock_status: []
+  stock_status: [],
+  temporary_nd: ''
 }
 
 const mutations = {
@@ -41,11 +42,17 @@ const mutations = {
   SET_STOCK_STATUS(state,stock_status){
     state.stock_status = stock_status
   },
+  SET_TEMPORARY_ND(state,temporary_nd){
+    state.temporary_nd = temporary_nd
+  },
 }
 
 const actions = {
   changeSetting({ commit }, data) {
     commit('CHANGE_SETTING', data)
+  },
+  setTemporaryNd({ commit }, data) {
+    commit('SET_TEMPORARY_ND', data)
   },
   caseTimeStatusGet({ commit }){
     return new Promise((resolve, reject) => {

@@ -1,6 +1,7 @@
 <template>
     <div class="uncompletedShallPage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" 
+            @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
@@ -66,6 +67,9 @@
     import { mapGetters } from 'vuex'
     export default {
         components: { Search,DialogPagin },
+        computed: {
+            ...mapGetters(['base_url'])
+        },
         data()  {
             return  {
                 pagination: {
@@ -83,6 +87,9 @@
                 addSearch: [
                     { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
                     { dom: 'case_none_status', value: '',placeholder: '是否已交卷', itemId: 6, name: 'select' },
+                ],
+                setDynamicBtn: [
+                    { title: '导出', fun: 'exprotFun' }
                 ],
                 selectOption: {
                     case_none_status: [
@@ -111,7 +118,7 @@
                 },
                 // table表头
                 columns: [
-                    { title: 'case_bh', dataIndex: '案件编号', overflow: false, itemId: 1 },
+                    { title: 'case_bh', dataIndex: '统一受案号', overflow: false, itemId: 1 },
                     { title: 'case_name', dataIndex: '案件名称', overflow: false, itemId: 10 },
                     { title: 'case_desc', dataIndex: '案件描述', overflow: true, itemId: 11 },
                     { title: 'case_type_name', dataIndex: '案件类型', overflow: false, itemId: 2 },
@@ -121,12 +128,20 @@
                     { title: 'dangan_accept_day', dataIndex: '交卷天数', overflow: false, itemId: 6 },
                 ],
             }
-           
         },
         mounted(){
             this.getCaseType();
         },
         methods: {
+            setDynamicBtnFun(data){
+                const statusMap = {
+                    "exprotFun": "exprotUncompleteData"
+                }
+                this[statusMap[data]]()
+            },
+            exprotUncompleteData(){
+                window.open(this.base_url+'/cases/cases/exportDangAnWeiGui?case_name='+this.pagination.case_name+'&case_bh='+this.pagination.case_bh+'&timeYear='+this.pagination.timeYear+'&case_take_user_name='+this.pagination.case_take_user_name+'&case_none_status='+this.pagination.case_none_status)
+            },
             receivedAddress(data){
                 Object.keys(data).map(item=> this.pagination[item] = data[item] )
             },

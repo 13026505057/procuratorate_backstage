@@ -126,7 +126,7 @@
                 },
                 // table表头
                 columns: [
-                    { title: 'case_bh', dataIndex: '案件编号', itemId: 1 },
+                    { title: 'case_bh', dataIndex: '统一受案号', itemId: 1 },
                     { title: 'case_name', dataIndex: '案件名称', itemId: 10 },
                     { title: 'case_type_name', dataIndex: '案件类型', itemId: 2 },
                     { title: 'case_desc', dataIndex: '案件描述', overflow: true, itemId: 11 },

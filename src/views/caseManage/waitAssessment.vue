@@ -1,6 +1,7 @@
 <template>
     <div class="wait-content">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" 
+            @receivedAddress="receivedAddress" @exportExcelFun="openExportExcelFun" :exportExcelBtn="true"/>
         <div class="head-tab">
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane class="tab-pane-position" v-for="tabItem in tabItems" :key="tabItem.case_type_id" :name="tabItem.case_type_id" >
@@ -9,32 +10,13 @@
                         <el-badge :value="tabItem.contNum" v-if="tabItem.contNum == '0'?false:true" class="item tab-badge-num"></el-badge>
                     </span>
                     <div class="table-dataList" >
-                        <el-table
-                            v-loading="tableLoading"
-                            ref="multipleTable"
-                            :data="tableData"
-                            :header-cell-style="headerRowStyle"
-                            border
-                            @selection-change="handleSelectionChange"
-                            style="width: 100%">
+                        <el-table v-loading="tableLoading" ref="multipleTable" :data="tableData" :header-cell-style="headerRowStyle"
+                            border @selection-change="handleSelectionChange" style="width: 100%">
+                            <el-table-column type="selection" width="55"> </el-table-column>
+                            <el-table-column align="center" label="序号" width="60" type="index"> </el-table-column>
                             <el-table-column
-                                type="selection"
-                                width="55">
-                            </el-table-column>
-                            <el-table-column
-                                align="center"
-                                label="序号"
-                                width="60"
-                                type="index">
-                            </el-table-column>
-                            <el-table-column
-                                :show-overflow-tooltip="tableItem.overflow"
-                                align="center"
-                                v-for="tableItem in tableItems"
-                                :prop="tableItem.prop"
-                                :label="tableItem.label"
-                                :key="tableItem.label"
-                                >
+                                :show-overflow-tooltip="tableItem.overflow" align="center" v-for="tableItem in tableItems"
+                                :prop="tableItem.prop" :label="tableItem.label" :key="tableItem.label" >
                                 <template slot-scope="{row}">
                                     <span v-if="tableItem.tableId == 4">
                                         {{row[tableItem.prop]== 'in'?'已入库':'待入库'}}
@@ -72,9 +54,12 @@
 <script>
     import Search from '@/components/Search'
     import { setTimeout } from 'timers';
-
+    import { mapGetters } from 'vuex'
     export default {
         components: { Search },
+        computed: {
+            ...mapGetters(['base_url'])
+        },
         data()  {
             return  {
                 addSearch: [
@@ -101,9 +86,9 @@
                     {label: "案件描述", prop: "case_desc", overflow: true, tableId:6},
                     {label: "是否归档", prop: "time_status", tableId:7},
                     {label: "承办人", prop: "case_take_user_name", tableId:8},
-                    {label: "总案卷数", prop: "total_quantity", tableId:9},
-                    {label: "在库案卷数", prop: "in_quantity", tableId:10},
-                    {label: "待入库案卷数", prop: "total_quantity-in_quantity", tableId:11},
+                    // {label: "总案卷数", prop: "total_quantity", tableId:9},
+                    // {label: "在库案卷数", prop: "in_quantity", tableId:10},
+                    // {label: "待入库案卷数", prop: "total_quantity-in_quantity", tableId:11},
                     // total_quantity-in_quantity
 
                 ],
@@ -169,7 +154,6 @@
                     
                     this.getDataList(seatchData);
                     let dataInfo = { ...seatchData }
-                    
                     const resultData = await this.$api.getCornerMarkType(dataInfo);
                     this.badgeList = resultData.data;
                     Object.keys(resultData.data).map(item=>{
@@ -182,9 +166,7 @@
                         })
                     })
                 })
-                
             },
-            
             // 默认数据列表
             async getDataList(seatchData){
                 this.tableLoading = true;
@@ -198,6 +180,18 @@
                     this.total1 = resultData.data.total;
                     this.tableLoading = false;
                 }
+            },
+            // 导出
+            openExportExcelFun(data){
+                // console.log(data)
+                console.log(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&timeYear='+
+                    data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&case_zm='+data.case_zm+
+                    '&city_id='+data.city_id+'&province_id='+data.province_id+'&area_id='+data.area_id+'&anguan_pingcha_chaoqi='+
+                    data.anguan_pingcha_chaoqi)
+                // window.open(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&timeYear='+
+                    // data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&case_zm='+data.case_zm+
+                    // '&city_id='+data.city_id+'&province_id='+data.province_id+'&area_id='+data.area_id+'&anguan_pingcha_chaoqi='+
+                    // data.anguan_pingcha_chaoqi)
             },
             comfirmSearch(data){
                 this.$nextTick(()=>{ for(let key in data) { this.seatchData[key] = data[key] } })
@@ -218,9 +212,7 @@
                         item.clearSelection();
                     })
                 }
-                setTimeout(()=>{
-                    this.disabled1 = false;
-                },2000)
+                setTimeout(()=>{ this.disabled1 = false; },500)
             },
            
             handleSelectionChange(val) {
@@ -255,7 +247,6 @@
                 // console.log(this.activeName);
                 //暂存数据
                 this.activeName2 = this.activeName;
-
                 this.getDataList(this.seatchData);
             },
             // 页面分页
@@ -263,8 +254,6 @@
                 console.log(`当前页: ${val}`);
                 this.getDataList(this.seatchData);
             },
-           
-            
         },
     }
 </script>
@@ -307,7 +296,6 @@
                 }
                 .highlight-btn{
                     background-color: #6cb5ff;
-                    
                 }
                 .ash-btn{
                     background-color: #d1d1d1;
@@ -338,10 +326,7 @@
             }
             .tab-badge-num{
                 position: absolute;
-                top: -2px;
-            }
-            .customClass{
-                // background-color: #47ccff;
+                top: -8px;
             }
             .step-flex{
                 display: flex;

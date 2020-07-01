@@ -3,14 +3,14 @@
         <div class="searchItem" v-for="item in searchList" :key="item.itemId">
             <template v-if="item.name == 'input'">
                 <el-input v-model="item.value" :placeholder="item.placeholder" 
-                    class="item"></el-input>
+                    class="item" clearable></el-input>
             </template>
             <template v-else-if="item.name == 'dataPicker'">
                 <el-date-picker v-model="item.value" :placeholder="item.placeholder" 
-                    type="year" class="item" value-format="yyyy"></el-date-picker>
+                    type="year" class="item" value-format="yyyy" clearable></el-date-picker>
             </template>
             <template v-else-if="item.name == 'select'">
-                <el-select v-model="item.value" :placeholder="item.placeholder">
+                <el-select v-model="item.value" :placeholder="item.placeholder" clearable>
                     <el-option v-for="itemChild in selectOption[item.dom]"
                         :key="itemChild.value" :label="itemChild.label" :value="itemChild.value">
                     </el-option>
@@ -18,11 +18,11 @@
             </template>
             <template v-else-if="item.name == 'daterange'">
                 <el-date-picker v-model="item.value" type="daterange" range-separator="至"
-                    start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd">
+                    start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd" clearable>
                 </el-date-picker>
             </template>
             <template v-else-if="item.name == 'selectTimeStatus'">
-                <el-select v-model="item.value" :placeholder="item.placeholder">
+                <el-select v-model="item.value" :placeholder="item.placeholder" clearable>
                     <el-option v-for="itemChild in selectOption[item.dom]"
                         :key="itemChild.case_time_status" :label="itemChild.case_time_status_name" :value="itemChild.case_time_status">
                     </el-option>
@@ -35,9 +35,10 @@
                     :props="{ checkStrictly: true }" filterable clearable></el-cascader>
             </template>
         </div>
-        <el-button type="search" @click="comfirmSearch">查询</el-button>
+        <el-button class="searchItem" type="search" @click="comfirmSearch">查询</el-button>
         <el-button type="search" @click="printReceiptFun" v-if="printReceiptBtn">批量打印回执单</el-button>
         <el-button v-for="item in setDynamicBtn" type="search" @click="setDynamicBtnFun(item.fun)" :key="item.title">{{ item.title }}</el-button>
+        <el-button class="searchItem" type="search" @click="exportExcelFun" v-if="exportExcelBtn">导出</el-button>
     </div>
 </template>
 
@@ -53,6 +54,10 @@ export default {
             default: false
         },
         setDynamicBtn: [Array],
+        exportExcelBtn: {
+            type: Boolean,
+            default: false
+        }
     },
     computed: {
         ...mapGetters(['org_list','address_id'])
@@ -105,6 +110,10 @@ export default {
         },
         printReceiptFun(){
             this.$emit('printReceiptFun')
+        },
+        exportExcelFun(){
+            let dataInfo = this.resultDataInfo()
+            this.$emit('exportExcelFun',dataInfo)
         }
     }
 }
@@ -126,6 +135,9 @@ export default {
                     border: 0;
                 }
             }
+        }
+        .el-button:hover, .el-button:focus {
+            color: #ffffff;
         }
     }
 </style>

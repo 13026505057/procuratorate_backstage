@@ -1,6 +1,7 @@
 <template>
     <div class="progress-content">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" 
+            @receivedAddress="receivedAddress" @exportExcelFun="openExportExcelFun" :exportExcelBtn="true"/>
         <div class="head-tab">
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane class="tab-pane-position" v-for="tabItem in tabItems" :key="tabItem.case_type_id" :name="tabItem.case_type_id" >
@@ -15,12 +16,7 @@
                             :header-cell-style="headerRowStyle"
                             border
                             style="width: 100%">
-                            <el-table-column
-                                align="center"
-                                label="序号"
-                                width="60"
-                                type="index">
-                            </el-table-column>
+                            <el-table-column align="center" label="序号" width="60" type="index"> </el-table-column>
                             <el-table-column
                                 align="center"
                                 :show-overflow-tooltip="tableItem.overflow"
@@ -28,6 +24,7 @@
                                 :prop="tableItem.prop"
                                 :label="tableItem.label"
                                 :key="tableItem.label"
+                                :width="tableItem.tableWidth"
                                 >
                                 <template slot-scope="{row}">
                                     <span v-if="tableItem.tableId == 5">{{ row[tableItem.prop] | pigeonhole }}</span>
@@ -38,10 +35,7 @@
                                     <span v-else>{{row[tableItem.prop]}}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column
-                                width="190"
-                                align="center"
-                                label="操作">
+                            <el-table-column  width="160" align="center" label="操作">
                                 <template slot-scope="props">
                                     <el-button :disabled="disabled1" :loading="disabled1" @click="examineClick(props.row)" class="highlight-btn" size="small">查看进度</el-button>
                                 </template>
@@ -90,20 +84,21 @@
                     </div>
                 </span>
                 <span slot="footer" class="dialog-footer">
-                    <!-- <el-button type="primary" @click="dialogVisible = false">调 取</el-button> -->
                     <el-button type="primary" @click="dialogVisible = false">关 闭</el-button>
                 </span>
             </el-dialog>
-           
         </div>
     </div>
 </template>
 <script>
     import Search from '@/components/Search'
     import { setTimeout } from 'timers';
-
+    import { mapGetters } from 'vuex'
     export default {
         components: { Search },
+        computed: {
+            ...mapGetters(['base_url'])
+        },
         data()  {
             return  {
                 addSearch: [
@@ -116,32 +111,27 @@
                 tableData:[],
                 badgeList:[],
                 tableItems:[
-                    {label: "统一受案号", prop: "case_bh", tableId:1},
+                    {label: "统一受案号", prop: "case_bh", tableId:1, tableWidth:"190"},
                     {label: "案件名称", prop: "case_name", tableId:2},
                     {label: "案件类型", prop: "case_type_name", tableId:3},
                     {label: "案件描述", prop: "case_desc", overflow: true, tableId:4},
                     {label: "是否归档", prop: "time_status", tableId:5},
                     {label: "承办人", prop: "case_take_user_name", tableId:6},
+                    {label: "嫌疑人", prop: "case_name", tableId:11},
                     {label: "是否成卷", prop: "chengjuan", tableId:7},
                     {label: "总案卷数", prop: "total_quantity", tableId:8},
                     {label: "在库案卷数", prop: "in_quantity", tableId:9},
                     {label: "待入库案卷数", prop: "total_quantity-in_quantity", tableId:10},
-                    // total_quantity-in_quantity
-
                 ],
                 dialogVisible:false,
                 currentPage1:1,
                 pageSize:10,
                 total1:0,
-                stepItems:[{
-                    title:"是否办结：已办结",
-                    description: "时间：overtime"
-                }],
                 headStyle:{
                     backgroundColor: '#eaf5ff',
                     borderTop: '1px solid #97cfff',
                     borderBottom: '1px solid #97cfff',
-                    fontSize: '18px',
+                    fontSize: '16px',
                     color: '#2c2c2c'
                 },
                 progressList:{},
@@ -150,13 +140,10 @@
                     case_name:'',
                     case_bh:'', //统一受案号
                     case_take_user_name:'',
-
                 },
                 disabled1:false,
                 tableLoading:false,
-
             }
-           
         },
         filters:{
             pigeonhole(status){
@@ -224,6 +211,16 @@
 
                 }
             },
+            // 导出
+            openExportExcelFun(data){
+                // console.log(data)
+                console.log(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&timeYear='+
+                    data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&case_zm='+data.case_zm+
+                    '&city_id='+data.city_id+'&province_id='+data.province_id+'&area_id='+data.area_id)
+                // window.open(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&timeYear='+
+                    // data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&case_zm='+data.case_zm+
+                    // '&city_id='+data.city_id+'&province_id='+data.province_id+'&area_id='+data.area_id)
+            },
             comfirmSearch(data){
                 // console.log(data)
                 this.$nextTick(()=>{ for(let key in data) { this.seatchData[key] = data[key] } })
@@ -246,13 +243,8 @@
             
             // 小弹窗
             examineClick(res){ 
-                // this.disabled1 = true;
                 this.dialogVisible = true;
                 this.progressList = res;
-                // setTimeout(()=>{
-                //     this.disabled1 = false;
-                // },200)
-
             },
             
         },
@@ -315,7 +307,8 @@
             }
             .tab-badge-num{
                 position: absolute;
-                top: -2px;
+                top: -8px;
+
             }
             .step-flex{
                 display: flex;

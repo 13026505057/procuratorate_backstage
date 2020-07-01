@@ -1,26 +1,18 @@
 <template>
     <div class="unCompleted-content">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" 
+            @receivedAddress="receivedAddress" @exportExcelFun="openExportExcelFun" :exportExcelBtn="true"/>
         <div class="head-tab">
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane class="tab-pane-position" v-for="tabItem in tabItems" :key="tabItem.case_type_id" :name="tabItem.case_type_id" >
-                    <span slot="label">
+                    <span slot="label"> 
                         {{tabItem.case_type_name}}
                         <el-badge :value="tabItem.contNum" v-if="tabItem.contNum == '0'?false:true" class="item tab-badge-num"></el-badge>
                     </span>
                     <div class="table-dataList" >
-                        <el-table
-                            v-loading="tableLoading"
-                            :data="tableData"
-                            :header-cell-style="headerRowStyle"
-                            border
-                            style="width: 100%">
-                            <el-table-column
-                                align="center"
-                                label="序号"
-                                width="60"
-                                type="index">
-                            </el-table-column>
+                        <el-table v-loading="tableLoading" :data="tableData" :header-cell-style="headerRowStyle"
+                            border style="width: 100%">
+                            <el-table-column align="center" label="序号"  width="60" type="index"> </el-table-column>
                             <el-table-column
                                 :show-overflow-tooltip="tableItem.overflow"
                                 align="center"
@@ -39,10 +31,7 @@
                                     <span v-else>{{row[tableItem.prop]}}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column
-                                width="190"
-                                align="center"
-                                label="操作">
+                            <el-table-column width="190" align="center" label="操作">
                                 <template slot-scope="props">
                                     <el-button @click="examineClick(props.row)" :disabled="disabled1" :loading="disabled1" class="highlight-btn" size="small">已有案卷</el-button>
                                 </template>
@@ -61,33 +50,15 @@
                     </div>
                 </el-tab-pane>
             </el-tabs>
-            <el-dialog v-dialogDrag
-                title="案卷详情"
-                :visible.sync="dialogVisibleDetails"
-                width="68%"
-                center>
+            <el-dialog v-dialogDrag title="案卷详情" :visible.sync="dialogVisibleDetails" width="68%" center>
                 <span>
                     <div class="table-dataList" >
-                        <el-table
-                            v-loading="tableLoading1"
-                            :data="tableData1"
-                            :header-cell-style="headerRowStyle"
-                            border
-                            row-key="exhibit_id"
-                            style="width: 100%"
-                            @row-click="cellClick">
+                        <el-table v-loading="tableLoading1" :data="tableData1" :header-cell-style="headerRowStyle" border
+                            row-key="exhibit_id" style="width: 100%" @row-click="cellClick">
+                            <el-table-column align="center" type="index"></el-table-column>
                             <el-table-column
-                                align="center"
-                                type="index">
-                            </el-table-column>
-                            <el-table-column
-                                :show-overflow-tooltip="tableItem.overflow"
-                                align="center"
-                                v-for="tableItem in dialogTableItems"
-                                :prop="tableItem.prop"
-                                :label="tableItem.label"
-                                :key="tableItem.label"
-                                >
+                                :show-overflow-tooltip="tableItem.overflow" align="center"
+                                v-for="tableItem in dialogTableItems" :prop="tableItem.prop" :label="tableItem.label" :key="tableItem.label" >
                                 <template slot-scope="{row}">
                                     <span v-if="tableItem.tableId == 6" :class="row[tableItem.prop] == 'in'?'':'colorRed'">
                                         {{row[tableItem.prop] == 'in'?'已入库':'待入库'}}
@@ -95,15 +66,10 @@
                                     <span v-else-if="tableItem.tableId == 7" :class="row[tableItem.prop] == '0'?'colorRed':''">
                                         {{row[tableItem.prop] == '0'?'失效':'有效'}}
                                     </span>
-                                    <span v-else>
-                                        {{row[tableItem.prop]}}
-                                    </span>
+                                    <span v-else> {{row[tableItem.prop]}} </span>
                                 </template>
                             </el-table-column>
-                            <el-table-column
-                                width="200"
-                                align="center"
-                                label="操作">
+                            <el-table-column width="200" align="center" label="操作">
                                 <template slot-scope="{ row }">
                                     <el-button @click="reprintClick(row.exhibit_id)" :disabled="disabled2" :loading="row.exhibit_id == showModel.exhibit_id_print" class="highlight-btn" size="small">补打条码</el-button>
                                     <el-button @click="cancellation(row.exhibit_id)" :disabled="disabled3" :loading="row.exhibit_id == showModel.exhibit_id_del" class="highlight-btn" size="small">作废</el-button>
@@ -113,24 +79,20 @@
                     </div>
                     <DialogPagin ref="dialogTablePagin" :tableData="tableData1_temporary" @dialogTablePagin="dialogTablePagin"/>
                 </span>
-                <!-- <span slot="footer" class="dialog-footer">
-                    <el-button type="primary" @click="dialogVisible = false">调 取</el-button>
-                    <el-button type="primary" @click="dialogVisible = false">关 闭</el-button>
-                </span> -->
             </el-dialog>
         </div>
     </div>
 </template>
 <script>
- import Search from '@/components/Search'
- import DialogPagin from '@/components/DialogPagin'
- import { mapGetters } from "vuex";
+    import Search from '@/components/Search'
+    import DialogPagin from '@/components/DialogPagin'
+    import { mapGetters } from "vuex";
     import { setTimeout } from 'timers';
 
     export default {
         components: { Search,DialogPagin },
         computed: {
-            ...mapGetters(['case_type_origin'])
+            ...mapGetters(['case_type_origin','base_url'])
         },
         data()  {
             return  {
@@ -139,7 +101,8 @@
                     { dom: 'anguan_pingcha_chaoqi', value: '',placeholder: '评查是否超期', itemId: 6, name: 'select' },
                 ],
                 selectOption:{
-                    anguan_pingcha_chaoqi:[{value: '',label: '全部'}, 
+                    anguan_pingcha_chaoqi:[
+                        {value: '',label: '全部'}, 
                         {value: '1',label: '评查超期'}, 
                         {value: '0',label: '评查未超期'}
                     ],
@@ -192,7 +155,6 @@
                     case_take_user_name:'',
                     anguan_pingcha_chaoqi:'',
                     cout_for: 'weigui',
-
                 },
                 total2:1,
                 currentPage2:1,
@@ -267,9 +229,6 @@
                 console.log(data)
                 this.tableLoading1 = true;
                 this.tableData1 = data;
-                // setTimeout(() => {
-                    
-                // }, 1000);
                 this.tableLoading1 = false;
 
             },
@@ -314,7 +273,18 @@
                     this.$message.success('操作成功')
                 }
                 this.getCaseType(this.seatchData)
-
+            },
+             // 导出
+            openExportExcelFun(data){
+                console.log(data)
+                console.log(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&timeYear='+
+                    data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&case_zm='+data.case_zm+
+                    '&city_id='+data.city_id+'&province_id='+data.province_id+'&area_id='+data.area_id+'&anguan_pingcha_chaoqi='+
+                    data.anguan_pingcha_chaoqi)
+                // window.open(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&timeYear='+
+                    // data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&case_zm='+data.case_zm+
+                    // '&city_id='+data.city_id+'&province_id='+data.province_id+'&area_id='+data.area_id+'&anguan_pingcha_chaoqi='+
+                    // data.anguan_pingcha_chaoqi)
             },
             headerRowStyle({row, rowIndex}){ 
                 return this.headStyle
@@ -422,10 +392,7 @@
             }
             .tab-badge-num{
                 position: absolute;
-                top: -2px;
-            }
-            .customClass{
-                // background-color: #47ccff;
+                top: -8px;
             }
             .step-flex{
                 display: flex;

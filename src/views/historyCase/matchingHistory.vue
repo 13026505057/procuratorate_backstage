@@ -46,7 +46,7 @@
                 },
                 tableLoading: false,
                 addSearch: [
-                    { dom: 'dh', value: '',placeholder: '请输入统一涉案号', itemId: 5, name: 'input' },
+                    { dom: 'dh', value: '',placeholder: '请输入统一受案号', itemId: 5, name: 'input' },
                     { dom: 'exhibit_name', value: '',placeholder: '请输入案卷名', itemId: 6, name: 'input' },
                     { dom: 'nd', value: '',placeholder: '请选择年度', itemId: 7, name: 'dataPicker' },
                     { dom: 'exhibit_type', value: '',placeholder: '请选择类型', itemId: 8, name: 'select' },

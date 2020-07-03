@@ -29,7 +29,7 @@
                 </el-select>
             </template>
         </div>
-        <div class="searchItem">
+        <div class="searchItem" v-if="hiddenAdress">
             <template v-if="org_list[0].level !== 'area'">
                 <el-cascader ref="treeOrg" placeholder="试试搜索：青岛市" v-model="selectOrgId" :options="org_list" 
                     :props="{ checkStrictly: true }" filterable clearable></el-cascader>
@@ -49,6 +49,10 @@ export default {
         addSearch: [Array],
         selectOption: [Object],
         setDynamicBtn: [Array],
+        hiddenAdress: {
+            type: Boolean,
+            default: true
+        },
         exportExcelBtn: {
             type: Boolean,
             default: false

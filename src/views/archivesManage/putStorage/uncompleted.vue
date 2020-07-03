@@ -80,7 +80,7 @@
                 exhibitNum:'',
                 exhibitType:[],
                 addSearch: [
-                    { dom: 'case_bh', value: '',placeholder: '请输入统一涉案号', itemId: 5, name: 'input' },
+                    { dom: 'case_bh', value: '',placeholder: '请输入统一受案号', itemId: 5, name: 'input' },
                     { dom: 'case_name', value: '',placeholder: '请输入案件名', itemId: 6, name: 'input' },
                     { dom: 'timeData', value: '',placeholder: '', itemId: 7, name: 'daterange' },
                 ],

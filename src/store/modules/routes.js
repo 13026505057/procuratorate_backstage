@@ -34,7 +34,6 @@ const asyncDataRoutes = [
                     {"path": "completed", "component": "views/archivesManage/shallCompleted/completed", "name": "CompletedArchives", "meta":{ "title":"已归档案件","icon": "icon-zhiliangpingcha" }}
                 ]
             },
-            {"path": "checkItem", "component": "views/archivesManage/checkItem", "name": "CheckItem", "meta":{ "title":"档案检查","icon": "icon-jinduchaxun" }},
             {   "path": "checkArchives", "component": "views/archivesManage/checkArchives/index", 
                 "redirect": "/archivesManage/CheckArchives/readyItem",
                 "name": "CheckArchives", "meta":{ "title":"档案接收","icon": "icon-zhiliangpingcha" },
@@ -43,6 +42,17 @@ const asyncDataRoutes = [
                     {"path": "receiveItem", "component": "views/archivesManage/checkArchives/receiveItem", "name": "ReceiveItem", "meta":{ "title":"档案接收","icon": "icon-zhiliangpingcha" }},
                 ]
             },
+            {   "path": "exhibitDoubt", "component": "views/archivesManage/exhibitDoubt/index", 
+                "redirect": "/archivesManage/exhibitDoubt/mergeRequest",
+                "name": "ExhibitDoubt", "meta":{ "title":"问题卷","icon": "icon-zhiliangpingcha" },
+                "children": [
+                    {"path": "finishStatus", "component": "views/archivesManage/exhibitDoubt/finishStatus", "name": "FinishStatus", "meta":{ "title":"办结情况查询","icon": "icon-zhiliangpingcha" }},
+                    {"path": "mergeRequest", "component": "views/archivesManage/exhibitDoubt/mergeRequest", "name": "MergeRequest", "meta":{ "title":"多案并卷","icon": "icon-zhiliangpingcha" }},
+                    {"path": "bindReadyItem", "component": "views/archivesManage/exhibitDoubt/bindReadyItem", "name": "BindReadyItem", "meta":{ "title":"绑定预入库","icon": "icon-zhiliangpingcha" }},
+                    {"path": "matterExhibit", "component": "views/archivesManage/exhibitDoubt/matterExhibit", "name": "MatterExhibit", "meta":{ "title":"问题卷记录","icon": "icon-zhiliangpingcha" }},
+                ]
+            },
+            {"path": "checkItem", "component": "views/archivesManage/checkItem", "name": "CheckItem", "meta":{ "title":"档案审查","icon": "icon-jinduchaxun" }},
             {   "path": "checkHistory", "component": "views/archivesManage/checkHistory/index", 
                 "name": "CheckHistory", "meta":{ "title":"审查记录","icon": "icon-zhiliangpingcha" },
                 "redirect": "/archivesManage/checkHistory/agree",

@@ -34,6 +34,11 @@ import PutStorage from '@/views/archivesManage/putStorage/index'
 import UncompletedPut from '@/views/archivesManage/putStorage/uncompleted'
 import CompletedPut from '@/views/archivesManage/putStorage/completed'
 import Temporary from '@/views/archivesManage/putStorage/temporary'
+import ExhibitDoubt from '@/views/archivesManage/exhibitDoubt/index'
+import FinishStatus from '@/views/archivesManage/exhibitDoubt/finishStatus'
+import MergeRequest from '@/views/archivesManage/exhibitDoubt/mergeRequest'
+import BindReadyItem from '@/views/archivesManage/exhibitDoubt/bindReadyItem'
+import MatterExhibit from '@/views/archivesManage/exhibitDoubt/matterExhibit'
 
 // 档案利用
 import OutWarehouse from '@/views/utilizeArchives/outWarehouse'
@@ -105,6 +110,11 @@ let routesNav = {
     CompletedPut: CompletedPut,
     Temporary: Temporary,
     ReadyItem: ReadyItem,
+    ExhibitDoubt: ExhibitDoubt,
+    FinishStatus: FinishStatus,
+    MergeRequest: MergeRequest,
+    BindReadyItem: BindReadyItem,
+    MatterExhibit: MatterExhibit,
     
     // 档案利用
     OutWarehouse:OutWarehouse,

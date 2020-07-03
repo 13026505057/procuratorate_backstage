@@ -61,6 +61,10 @@ const exhibit = {
     printTodayExhibits(data) {
         return request({ url: '/exhibit/exhibit/printTodayExhibits', method: 'post', data })
     },
+    //并卷操作
+    isAddCase(data){
+        return request({ url: '/exhibit/exhibit/isAddCase', method: 'post', data })
+    },
     //查询存储设备信息
     getStock(data){
         return request({ url: '/shale/shale/getByPage', method: 'post', data })

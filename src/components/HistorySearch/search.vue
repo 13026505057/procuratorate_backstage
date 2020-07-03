@@ -51,12 +51,12 @@ import { mapGetters } from 'vuex'
 import { getToken } from '@/utils/auth'
 export default {
     computed: {
-        ...mapGetters(['org_list','address_id','base_url','case_type','stock_status'])
+        ...mapGetters(['base_url','case_type','stock_status'])
     },
     data(){
         return{
             searchList: [
-                { dom: 'tysah', value: '', placeholder: '请输入统一涉案号', itemId: 0, name: 'input' },
+                { dom: 'tysah', value: '', placeholder: '请输入统一受案号', itemId: 0, name: 'input' },
                 { dom: 'out_exhibit_id', value: '', placeholder: '请扫描案卷条码', itemId: 1, name: 'input' },
                 { dom: 'exhibit_name', value: '', placeholder: '请输入案件名', itemId: 2, name: 'input' },
                 { dom: 'nd', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },

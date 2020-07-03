@@ -65,7 +65,7 @@ export default {
         },
         // table表头
         columns: [
-            { title: 'tysah', dataIndex: '统一涉案号', itemId: 1 },
+            { title: 'tysah', dataIndex: '统一受案号', itemId: 1 },
             { title: 'out_exhibit_id', dataIndex: '条形码号', itemId: 10 },
             { title: 'dh', dataIndex: '档号', itemId: 2 },
             { title: 'jh', dataIndex: '卷号', itemId: 11 },

@@ -43,7 +43,7 @@
                 },
                 tableLoading: false,
                 addSearch: [
-                    { dom: 'case_bh', value: '',placeholder: '请输入统一涉案号', itemId: 1, name: 'input' },
+                    { dom: 'case_bh', value: '',placeholder: '请输入统一受案号', itemId: 1, name: 'input' },
                     { dom: 'case_name', value: '',placeholder: '请输入案件名', itemId: 2, name: 'input' },
                     { dom: 'timeYear', value: '',placeholder: '选择年份', itemId: 3, name: 'dataPicker' },
                 ],
@@ -53,7 +53,7 @@
                 },
                 // table表头
                 columns: [
-                    { title: 'case_bh', dataIndex: '统一涉案号', itemId: 1 },
+                    { title: 'case_bh', dataIndex: '统一受案号', itemId: 1 },
                     { title: 'out_exhibit_id', dataIndex: '条形码号', itemId: 10 },
                     { title: 'case_type_name', dataIndex: '档号', itemId: 2 },
                     { title: 'jh', dataIndex: '卷号', itemId: 11 },

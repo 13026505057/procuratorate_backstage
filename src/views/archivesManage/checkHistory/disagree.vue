@@ -40,7 +40,7 @@
                 },
                 loadingTable: false,
                 addSearch: [
-                    { dom: 'tysah', value: '',placeholder: '请输入统一涉案号', itemId: 1, name: 'input' },
+                    { dom: 'tysah', value: '',placeholder: '请输入统一受案号', itemId: 1, name: 'input' },
                     { dom: 'case_name', value: '',placeholder: '请输入案件名', itemId: 2, name: 'input' },
                     { dom: 'timeYear', value: '',placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
                 ],
@@ -51,7 +51,7 @@
                 },
                 // table表头
                 columns: [
-                    { title: 'tysah', dataIndex: '统一涉案号', itemId: 1 },
+                    { title: 'tysah', dataIndex: '统一受案号', itemId: 1 },
                     { title: 'out_exhibit_id', dataIndex: '条形码号', itemId: 10 },
                     { title: 'dh', dataIndex: '档号', itemId: 2 },
                     { title: 'jh', dataIndex: '卷号', overflow: true, itemId: 11 },

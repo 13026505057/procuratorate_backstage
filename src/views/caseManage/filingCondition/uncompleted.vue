@@ -102,7 +102,7 @@
                 ],
                 selectOption:{
                     anguan_pingcha_chaoqi:[
-                        {value: '',label: '全部'}, 
+                        {value: '',label: '评查是否超期'}, 
                         {value: '1',label: '评查超期'}, 
                         {value: '0',label: '评查未超期'}
                     ],
@@ -184,7 +184,7 @@
             }
         },
         mounted(){
-            console.log(this.case_type_origin)
+            // console.log(this.case_type_origin)
             this.getCaseType(this.seatchData);
         },
         methods: {
@@ -276,15 +276,15 @@
             },
              // 导出
             openExportExcelFun(data){
-                console.log(data)
-                console.log(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&timeYear='+
-                    data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&case_zm='+data.case_zm+
-                    '&city_id='+data.city_id+'&province_id='+data.province_id+'&area_id='+data.area_id+'&anguan_pingcha_chaoqi='+
-                    data.anguan_pingcha_chaoqi)
-                // window.open(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&timeYear='+
-                    // data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&case_zm='+data.case_zm+
-                    // '&city_id='+data.city_id+'&province_id='+data.province_id+'&area_id='+data.area_id+'&anguan_pingcha_chaoqi='+
-                    // data.anguan_pingcha_chaoqi)
+                this.$nextTick(()=>{
+                    console.log(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&case_zm='+ data.case_zm+
+                        '&timeYear='+ data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&anguan_pingcha_chaoqi='+
+                        data.anguan_pingcha_chaoqi+'&province_id='+data.province_id+ '&city_id='+data.city_id+'&area_id='+data.area_id)
+                    // window.open(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&case_zm='+ data.case_zm+
+                        // '&timeYear='+ data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&anguan_pingcha_chaoqi='+
+                        // data.anguan_pingcha_chaoqi+'&province_id='+data.province_id+ '&city_id='+data.city_id+'&area_id='+data.area_id)
+                })
+                
             },
             headerRowStyle({row, rowIndex}){ 
                 return this.headStyle
@@ -306,16 +306,11 @@
             
             // 大弹窗
             examineClick(res){ 
-                // console.log(res)
-                // this.disabled1 = true;
                 this.dialogVisibleDetails = true;
                 this.tableData1_temporary = res.exhibits
                 this.$nextTick(() => {
                     this.$refs.dialogTablePagin.dialogTablePagin(1)
                 })
-                // setTimeout(()=>{
-                //     this.disabled1 = false;
-                // },2000)
             },
             
         },

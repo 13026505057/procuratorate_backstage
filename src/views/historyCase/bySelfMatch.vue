@@ -1,8 +1,8 @@
 <template>
     <div class="bySelfMatchPage">
         <div class="bindCheckBox binf_left">
-            <Search :addSearch="addSearch_left" :selectOption="selectOption_left" :resetData="true"
-                @comfirmSearch="comfirmSearch_left" @receivedAddress="receivedAddress_left"/>
+            <Search :addSearch="addSearch_left" :selectOption="selectOption_left" :resetData="true" @comfirmSearch="comfirmSearch_left" 
+                @receivedAddress="receivedAddress_left"  @exportExcelFun="openExportExcelFun_left" :exportExcelBtn="true"/>
             <div class="head-tab">
                 <div class="table-dataList" >
                     <el-table :data="showModel_left.tableData" border style="width: 100%" @cell-click="selectCellItem">
@@ -49,8 +49,8 @@
                 </div>
             </div>
             <div class="right_bottom">
-                <Search :addSearch="addSearch_right" :selectOption="selectOption_right" :resetData="true"
-                    @comfirmSearch="comfirmSearch_right" @receivedAddress="receivedAddress_right"/>
+                <Search :addSearch="addSearch_right" :selectOption="selectOption_right" :resetData="true" @comfirmSearch="comfirmSearch_right" 
+                    @receivedAddress="receivedAddress_right"  @exportExcelFun="openExportExcelFun_right" :exportExcelBtn="true"/>
                 <div class="head-tab">
                     <div class="table-dataList" >
                         <el-table :data="showModel_right.tableData_bottom" border style="width: 100%">
@@ -184,6 +184,17 @@
                 this.$nextTick(()=>{ for(let key in data){ this.pagination_left[key] = data[key] }  })
                 this.getTableList_left(this.pagination_left)
             },
+            // 导出
+            openExportExcelFun_left(data){
+                this.$nextTick(()=>{
+                    console.log(this.base_url+'/?nd='+data.nd+'&exhibit_name='+ data.exhibit_name+'&bgr='+ data.bgr+
+                        '&out_exhibit_id='+ data.out_exhibit_id+'&province_id='+data.province_id+ 
+                        '&city_id='+data.city_id+ '&area_id='+data.area_id)
+                    // window.open(this.base_url+'/?nd='+data.nd+'&exhibit_name='+ data.exhibit_name+'&bgr='+ data.bgr+
+                        // '&out_exhibit_id='+ data.out_exhibit_id+'&province_id='+data.province_id+ 
+                        // '&city_id='+data.city_id+ '&area_id='+data.area_id)
+                })
+            },
             async selectCellItem(cellData){
                 this.loading_right_top = true;
                 this.exhibitTemporaryId = cellData.exhibit_id;
@@ -215,10 +226,22 @@
                 pagination.total = resultData.data.total;
                 this.pagination_right = pagination;
             },
+            
             // 确认搜索
             comfirmSearch_right(data){
                 this.$nextTick(()=>{ for(let key in data){ this.pagination_right[key] = data[key] }  })
                 this.getTableList_right(this.pagination_right)
+            },
+            openExportExcelFun_right(data){
+                console.log(data)
+                this.$nextTick(()=>{
+                    console.log(this.base_url+'/?case_bh='+data.case_bh+'&bmsah='+ data.bmsah+'&case_name='+ data.case_name+
+                        '&case_take_user_name='+ data.case_take_user_name+'&province_id='+data.province_id+ 
+                        '&city_id='+data.city_id+ '&area_id='+data.area_id)
+                    // window.open(this.base_url+'/?case_bh='+data.case_bh+'&bmsah='+ data.bmsah+'&case_name='+ data.case_name+
+                        // '&case_take_user_name='+ data.case_take_user_name+'&province_id='+data.province_id+ 
+                        // '&city_id='+data.city_id+ '&area_id='+data.area_id)
+                })
             },
         },
     }

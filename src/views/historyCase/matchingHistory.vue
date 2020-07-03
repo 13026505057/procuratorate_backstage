@@ -1,6 +1,7 @@
 <template>
     <div class="matchingHistoryPage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" 
+            @receivedAddress="receivedAddress" @exportExcelFun="openExportExcelFun" :exportExcelBtn="true"/>
         <div class="head-tab">
             <div class="table-dataList" >
                 <el-table :data="showModel.tableData" border style="width: 100%" v-loading="tableLoading">
@@ -31,7 +32,7 @@
     export default {
         components: { Search },
         computed :{
-            ...mapGetters(['stock_status'])
+            ...mapGetters(['stock_status','base_url'])
         },
         data()  {
             return  {
@@ -98,6 +99,16 @@
             comfirmSearch(data){
                 this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] }  })
                 this.getTableList(this.pagination)
+            },
+            // 导出
+            openExportExcelFun(data){
+                console.log(data)
+                this.$nextTick(()=>{
+                    console.log(this.base_url+'/?dh='+data.dh+'&exhibit_name='+ data.exhibit_name+'&nd='+ data.nd+'&exhibit_type='+ 
+                        data.exhibit_type+'&province_id='+data.province_id+'&city_id='+data.city_id+ '&area_id='+data.area_id)
+                    // window.open(this.base_url+'/?dh='+data.dh+'&exhibit_name='+ data.exhibit_name+'&nd='+ data.nd+'&exhibit_type='+ 
+                        // data.exhibit_type+'&province_id='+data.province_id+'&city_id='+data.city_id+ '&area_id='+data.area_id)
+                })
             },
         },
     }

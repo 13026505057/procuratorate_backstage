@@ -13,7 +13,7 @@
                         <el-table v-loading="tableLoading" ref="multipleTable" :data="tableData" :header-cell-style="headerRowStyle"
                             border @selection-change="handleSelectionChange" style="width: 100%">
                             <el-table-column type="selection" width="55"> </el-table-column>
-                            <el-table-column align="center" label="序号" width="60" type="index"> </el-table-column>
+                            <el-table-column align="center" label="序号" width="60" type="index"></el-table-column>
                             <el-table-column
                                 :show-overflow-tooltip="tableItem.overflow" align="center" v-for="tableItem in tableItems"
                                 :prop="tableItem.prop" :label="tableItem.label" :key="tableItem.label" >
@@ -67,7 +67,8 @@
                     { dom: 'anguan_pingcha_chaoqi', value: '',placeholder: '评查是否超期', itemId: 6, name: 'select' },
                 ],
                 selectOption:{
-                    anguan_pingcha_chaoqi:[{value: '',label: '全部'}, 
+                    anguan_pingcha_chaoqi:[
+                        {value: '',label: '评查是否超期'}, 
                         {value: '1',label: '评查超期'}, 
                         {value: '0',label: '评查未超期'}
                     ],
@@ -100,7 +101,7 @@
                     backgroundColor: '#eaf5ff',
                     borderTop: '1px solid #97cfff',
                     borderBottom: '1px solid #97cfff',
-                    fontSize: '18px',
+                    fontSize: '16px',
                     color: '#2c2c2c'
                 },
                 seatchData: {
@@ -115,10 +116,7 @@
                 disabled1:false,
                 disabled2:false,
                 tableLoading:false,
-
-
             }
-           
         },
         filters:{
             pigeonhole(status){
@@ -151,7 +149,6 @@
                     }else{
                         this.activeName = res.data.list[0].case_type_id;
                     }
-                    
                     this.getDataList(seatchData);
                     let dataInfo = { ...seatchData }
                     const resultData = await this.$api.getCornerMarkType(dataInfo);
@@ -184,14 +181,15 @@
             // 导出
             openExportExcelFun(data){
                 // console.log(data)
-                console.log(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&timeYear='+
-                    data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&case_zm='+data.case_zm+
-                    '&city_id='+data.city_id+'&province_id='+data.province_id+'&area_id='+data.area_id+'&anguan_pingcha_chaoqi='+
-                    data.anguan_pingcha_chaoqi)
-                // window.open(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&timeYear='+
-                    // data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&case_zm='+data.case_zm+
-                    // '&city_id='+data.city_id+'&province_id='+data.province_id+'&area_id='+data.area_id+'&anguan_pingcha_chaoqi='+
-                    // data.anguan_pingcha_chaoqi)
+                this.$nextTick(()=>{ 
+                    console.log(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&case_zm='+ data.case_zm+
+                        '&timeYear='+ data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&province_id='+data.province_id+
+                        '&city_id='+data.city_id+ '&area_id='+data.area_id+'&anguan_pingcha_chaoqi='+ data.anguan_pingcha_chaoqi)
+                    // window.open(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&case_zm='+ data.case_zm+
+                        // '&timeYear='+ data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&province_id='+data.province_id+
+                        // '&city_id='+data.city_id+ '&area_id='+data.area_id+'&anguan_pingcha_chaoqi='+ data.anguan_pingcha_chaoqi)
+                })
+                
             },
             comfirmSearch(data){
                 this.$nextTick(()=>{ for(let key in data) { this.seatchData[key] = data[key] } })

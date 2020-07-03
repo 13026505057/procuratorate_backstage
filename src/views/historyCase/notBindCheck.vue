@@ -5,7 +5,7 @@
                 @comfirmSearch="comfirmSearch_left" @receivedAddress="receivedAddress_left"/>
             <div class="head-tab">
                 <div class="table-dataList" >
-                    <el-table :data="showModel_left.tableData" border style="width: 100%">
+                    <el-table :data="showModel_left.tableData" border style="width: 100%" v-loading="loading_left">
                         <el-table-column align="center" type="index"></el-table-column>
                         <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
                             v-for="item in columns_left" :key="item.itemId" align="center">
@@ -31,7 +31,7 @@
                 @comfirmSearch="comfirmSearch_right" @receivedAddress="receivedAddress_right"/>
             <div class="head-tab">
                 <div class="table-dataList" >
-                    <el-table :data="showModel_right.tableData" border style="width: 100%">
+                    <el-table :data="showModel_right.tableData" border style="width: 100%"  v-loading="loading_right">
                         <el-table-column align="center" type="index"></el-table-column>
                         <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
                             v-for="item in columns_right" :key="item.itemId" align="center">
@@ -103,6 +103,8 @@
                     { title: 'bjrq', dataIndex: '办结日期', itemId: 4 },
                     { title: 'case_type_name', dataIndex: '案件类型', itemId: 3 },
                 ],
+                loading_left:false,
+                loading_right:false,
             }
            
         },
@@ -122,10 +124,12 @@
             },
             // 获取案件列表
             async getTableList_left(dataInfo){
+                this.loading_left = true;
                 const resultData = await this.$api.historyExhibitList(dataInfo);
                 const pagination = { ...this.pagination_left };
                 this.showModel_left.tableData = resultData.data.list;
                 pagination.total = resultData.data.total;
+                this.loading_left = false;
                 this.pagination_left = pagination;
             },
             // 确认搜索
@@ -151,10 +155,12 @@
             },
             // 获取案件列表
             async getTableList_right(dataInfo){
+                this.loading_right = true;
                 const resultData = await this.$api.getCasesByPage(dataInfo);
                 const pagination = { ...this.pagination_right };
                 this.showModel_right.tableData = resultData.data.list;
                 pagination.total = resultData.data.total;
+                this.loading_right = false;
                 this.pagination_right = pagination;
             },
             // 确认搜索

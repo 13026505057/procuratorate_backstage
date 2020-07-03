@@ -137,6 +137,9 @@ export default {
             &.settingBtn{
                 margin-top: 15px;
             }
+            .el-button:hover, .el-button:focus {
+                color: #ffffff;
+            }
         }
     }
 </style>

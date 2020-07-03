@@ -151,7 +151,7 @@
                 const statusMap = {
                     "addCaseItem": "addCaseItem"
                 }
-                this[statusMap[data]]()
+                this[statusMap[data.fun]]()
             },
             // 分页
             handleCurrentChange(val) {

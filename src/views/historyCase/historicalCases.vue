@@ -2,7 +2,7 @@
     <div class="historicalCasesPage">
         <!-- <DynamicSearch  @comfirmSearch="comfirmSearch"/> -->
         <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch"
-            :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
+            :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun" @exportExcelFun="openExportExcelFun" :exportExcelBtn="true"/>
         <div class="head-tab">
             <div class="table-dataList" >
                 <el-table :data="showModel.tableData" border style="width: 100%" v-loading="loadingTable">
@@ -121,7 +121,7 @@
     export default {
         components: { Search,DialogPagin },
         computed :{
-            ...mapGetters(['exhibit_type','exhibit_time_bg','case_type'])
+            ...mapGetters(['exhibit_type','exhibit_time_bg','case_type','base_url'])
         },
         filters: {
             mapStatus(status){
@@ -241,7 +241,8 @@
                     { captionTitle: '类型', placeholder: '请选择案件类型', dom: 'case_type_id', itemId: 11, type: 'select' },
                 ],
                 setDynamicBtn: [
-                    { title: '新增案件', fun: 'addCaseItem' }
+                    { title: '新增案件', fun: 'addCaseItem' },
+                    // { title: '导出', fun: 'exprotFun'}
                 ],
             }
         },
@@ -250,6 +251,8 @@
             this.getTableList(this.pagination);
         },
         methods: {
+            
+            
             // 分页
             handleCurrentChange(val) {
                 this.pagination['pageNum'] = val;
@@ -259,7 +262,7 @@
                 const statusMap = {
                     "addCaseItem": "addCaseItem"
                 }
-                this[statusMap[data]]()
+                this[statusMap[data.fun]]()
             },
             // DialogPagin
             dialogTablePagin(data){
@@ -296,6 +299,16 @@
             comfirmSearch(data){
                 this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] }  })
                 this.getTableList(this.pagination)
+            },
+            // 导出
+            openExportExcelFun(data){
+                // console.log(data)
+                this.$nextTick(()=>{
+                    console.log(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&case_zm='+ data.case_zm+
+                        '&timeYear='+ data.timeYear+'&province_id='+data.province_id+'&city_id='+data.city_id+ '&area_id='+data.area_id)
+                    // window.open(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&case_zm='+ data.case_zm+
+                        // '&timeYear='+ data.timeYear+'&province_id='+data.province_id+'&city_id='+data.city_id+ '&area_id='+data.area_id)
+                })
             },
             showDialogPanel(dataInfo){
                 this.showModel.dialogTableVisible = true;

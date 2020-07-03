@@ -9,7 +9,8 @@
             <el-input class="scan-input" v-model="exhibitNum" ref="exhibitNumRef" @change="exhibitNumChange" placeholder="扫描案卷码"></el-input>
             <span class="head-text">先扫描货架码，光标自动移动到案卷码位置后在扫描案卷码</span>
         </div>
-        <Search class="searchInfo" :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
+        <Search class="searchInfo" :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" 
+            @receivedAddress="receivedAddress" @exportExcelFun="openExportExcelFun" :exportExcelBtn="true"/>
         <div class="head-tab">
             
             <div class="table-dataList" >
@@ -177,9 +178,12 @@
 <script>
     import Search from '@/components/Search'
     import { setTimeout } from 'timers';
-
+    import { mapGetters } from 'vuex'
     export default {
         components: { Search },
+        computed: {
+            ...mapGetters(['base_url'])
+        },
         data()  {
             return  {
                 addSearch: [
@@ -401,7 +405,18 @@
                 console.log(`当前页: ${val}`);
                 this.getDataList(this.seatchData);
             },
-            
+            // 导出
+            openExportExcelFun(data){
+                // console.log(data)
+                this.$nextTick(()=>{
+                    console.log(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&case_zm='+ data.case_zm+
+                        '&timeYear='+ data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&province_id='+data.province_id+ 
+                        '&city_id='+data.city_id+ '&area_id='+data.area_id)
+                    // window.open(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&case_zm='+ data.case_zm+
+                        // '&timeYear='+ data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&province_id='+data.province_id+ 
+                        // '&city_id='+data.city_id+ '&area_id='+data.area_id)
+                })
+            },
             // 小弹窗
             examineClick(res){ 
                 console.log(res)

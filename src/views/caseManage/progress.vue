@@ -2,30 +2,18 @@
     <div class="progress-content">
         <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" 
             @receivedAddress="receivedAddress" @exportExcelFun="openExportExcelFun" :exportExcelBtn="true"/>
+             <!-- :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun" -->
         <div class="head-tab">
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane class="tab-pane-position" v-for="tabItem in tabItems" :key="tabItem.case_type_id" :name="tabItem.case_type_id" >
-                    <span slot="label">
-                        {{tabItem.case_type_name}}
+                    <span slot="label"> {{tabItem.case_type_name}}
                         <el-badge :value="tabItem.contNum" v-if="tabItem.contNum == '0'?false:true" class="item tab-badge-num"></el-badge>
                     </span>
                     <div class="table-dataList" >
-                        <el-table
-                            v-loading="tableLoading"
-                            :data="tableData"
-                            :header-cell-style="headerRowStyle"
-                            border
-                            style="width: 100%">
+                        <el-table v-loading="tableLoading" :data="tableData" :header-cell-style="headerRowStyle" border style="width: 100%">
                             <el-table-column align="center" label="序号" width="60" type="index"> </el-table-column>
-                            <el-table-column
-                                align="center"
-                                :show-overflow-tooltip="tableItem.overflow"
-                                v-for="tableItem in tableItems"
-                                :prop="tableItem.prop"
-                                :label="tableItem.label"
-                                :key="tableItem.label"
-                                :width="tableItem.tableWidth"
-                                >
+                            <el-table-column align="center" :show-overflow-tooltip="tableItem.overflow" :width="tableItem.tableWidth"
+                                v-for="tableItem in tableItems" :prop="tableItem.prop" :label="tableItem.label" :key="tableItem.label">
                                 <template slot-scope="{row}">
                                     <span v-if="tableItem.tableId == 5">{{ row[tableItem.prop] | pigeonhole }}</span>
                                     <span v-else-if="tableItem.tableId == 7">{{row[tableItem.prop]==0?'未成卷':'已成卷'}}</span>
@@ -35,7 +23,7 @@
                                     <span v-else>{{row[tableItem.prop]}}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column  width="160" align="center" label="操作">
+                            <el-table-column align="center" label="操作">
                                 <template slot-scope="props">
                                     <el-button :disabled="disabled1" :loading="disabled1" @click="examineClick(props.row)" class="highlight-btn" size="small">查看进度</el-button>
                                 </template>
@@ -103,6 +91,9 @@
             return  {
                 addSearch: [
                     { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
+                ],
+                setDynamicBtn: [
+                    // { title: '导出', fun: 'openExportExcelFun' },
                 ],
                 selectOption:{},
                 activeName: "0",
@@ -191,9 +182,7 @@
                         })
                     })
                 })
-                
             },
-            
             // 默认数据列表
             async getDataList(){
                 // console.log({...this.seatchData})
@@ -211,16 +200,22 @@
 
                 }
             },
+            setDynamicBtnFun(data){
+                console.log(data)
+            },
             // 导出
             openExportExcelFun(data){
                 // console.log(data)
-                console.log(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&timeYear='+
-                    data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&case_zm='+data.case_zm+
-                    '&city_id='+data.city_id+'&province_id='+data.province_id+'&area_id='+data.area_id)
-                // window.open(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&timeYear='+
-                    // data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&case_zm='+data.case_zm+
-                    // '&city_id='+data.city_id+'&province_id='+data.province_id+'&area_id='+data.area_id)
+                this.$nextTick(()=>{
+                    console.log(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&case_zm='+ data.case_zm+
+                        '&timeYear='+ data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&province_id='+data.province_id+ 
+                        '&city_id='+data.city_id+ '&area_id='+data.area_id)
+                    // window.open(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&case_zm='+ data.case_zm+
+                        // '&timeYear='+ data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&province_id='+data.province_id+ 
+                        // '&city_id='+data.city_id+ '&area_id='+data.area_id)
+                })
             },
+            // 搜索
             comfirmSearch(data){
                 // console.log(data)
                 this.$nextTick(()=>{ for(let key in data) { this.seatchData[key] = data[key] } })
@@ -235,12 +230,11 @@
                 this.activeName2 = this.activeName;
                 this.getDataList(this.seatchData);
             },
-            
+            // 分页
             handleCurrentChange1(val) {
                 console.log(`当前页: ${val}`);
                 this.getDataList(this.seatchData);
             },
-            
             // 小弹窗
             examineClick(res){ 
                 this.dialogVisible = true;

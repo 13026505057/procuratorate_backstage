@@ -35,8 +35,8 @@
                     :props="{ checkStrictly: true }" filterable clearable></el-cascader>
             </template>
         </div>
-        <el-button type="search" @click="comfirmSearch">查询</el-button>
-        <el-button v-for="item in setDynamicBtn" type="search" @click="setDynamicBtnFun(item.fun)" :key="item.title">{{ item.title }}</el-button>
+        <el-button class="searchItem" type="search" @click="comfirmSearch">查询</el-button>
+        <el-button class="searchItem" v-for="item in setDynamicBtn" type="search" @click="setDynamicBtnFun(item.fun)" :key="item.title">{{ item.title }}</el-button>
         <el-button class="searchItem" type="search" @click="exportExcelFun" v-if="exportExcelBtn">导出</el-button>
     </div>
 </template>
@@ -77,7 +77,8 @@ export default {
     },
     methods: {
         setDynamicBtnFun(fun){
-            this.$emit('setDynamicBtnFun',fun)
+            let dataInfo = this.resultDataInfo()
+            this.$emit('setDynamicBtnFun',{ fun,dataInfo })
         }, 
         comfirmSearch(){
             let dataInfo = this.resultDataInfo()
@@ -114,11 +115,11 @@ export default {
     .searchInfo{
         border: 1px solid #8fcbff;
         background-color: #eaf5ff;
-        padding: 15px 0;
+        padding-bottom: 15px;
         .searchItem{
             width: auto;
             display: inline-block;
-            margin: 0 15px;
+            margin: 15px 15px 0 15px;
             .item{
                 border: 1px solid #8fcbff;
                 border-radius: 3px;
@@ -126,6 +127,10 @@ export default {
                 input{
                     border: 0;
                 }
+            }
+            input{
+                width: 190px;
+                
             }
         }
         .el-button:hover, .el-button:focus {

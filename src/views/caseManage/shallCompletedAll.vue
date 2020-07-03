@@ -1,6 +1,7 @@
 <template>
     <div class="shallCompletedAllPage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" 
+            @receivedAddress="receivedAddress" @exportExcelFun="openExportExcelFun" :exportExcelBtn="true"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
@@ -9,7 +10,7 @@
                         <el-badge :value="item.contNum" v-if="item.contNum == '0'?false:true" class="item tab-badge-num"></el-badge>
                     </span>
                     <div class="table-dataList" >
-                        <el-table :data="showModel.tableData" border style="width: 100%" v-loading="loadingTable">
+                        <el-table :data="showModel.tableData" border style="width: 100%"  :header-cell-style="headerRowStyle" v-loading="loadingTable">
                             <el-table-column align="center" type="index"></el-table-column>
                             <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
                                 v-for="item in columns" :key="item.itemId" align="center">
@@ -18,7 +19,7 @@
                                     <span v-else>{{ row[item.title] }}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column align="center" label="操作" width="250">
+                            <el-table-column align="center" label="操作">
                                 <template slot-scope="{row}">
                                     <el-button @click="showDialogPanel(row.exhibits)" class="highlight-btn" size="small">已有案卷</el-button>
                                 </template>
@@ -38,8 +39,8 @@
             </el-tabs>
         </div>
         <!-- 案卷详情 -->
-        <el-dialog v-dialogDrag title="案卷详情" :visible.sync="showModel.dialogTableVisible">
-            <el-table :data="showModel.gridData" align="center">
+        <el-dialog v-dialogDrag title="案卷详情"  width="60%" :visible.sync="showModel.dialogTableVisible">
+            <el-table :data="showModel.gridData" align="center" :header-cell-style="headerRowStyle" border>
                 <el-table-column type="index" label="#"></el-table-column>
                 <el-table-column :label="item.dataIndex"
                     v-for="item in showModel.gridData_columns" :key="item.itemId" align="center">
@@ -68,7 +69,7 @@
     export default {
         components: { Search,DialogPagin },
         computed :{
-            ...mapGetters(['exhibit_type','exhibit_time_bg'])
+            ...mapGetters(['exhibit_type','exhibit_time_bg','base_url'])
         },
         filters: {
             mapStatus(status){
@@ -95,12 +96,20 @@
                     timeYear: '',
                     case_take_user_name: '',
                     case_type_id: '',
+                    anguan_pingcha_chaoqi:'',
                 },
                 loadingTable: false,
                 addSearch: [
                     { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
+                    { dom: 'anguan_pingcha_chaoqi', value: '',placeholder: '评查是否超期', itemId: 6, name: 'select' },
                 ],
-                selectOption: {},
+                selectOption:{
+                    anguan_pingcha_chaoqi:[
+                        {value: '',label: '评查是否超期'}, 
+                        {value: '1',label: '评查超期'}, 
+                        {value: '0',label: '评查未超期'}
+                    ],
+                },
                 showModel: {
                     activeNameTab: "0",
                     tableList:[],   // 类型
@@ -132,6 +141,13 @@
                     { title: 'in_quantity', dataIndex: '在库案卷数', itemId: 6 },
                     { title: 'wait_quantity', dataIndex: '待入库案卷数', itemId: 7 },
                 ],
+                headStyle:{
+                    backgroundColor: '#eaf5ff',
+                    borderTop: '1px solid #97cfff',
+                    borderBottom: '1px solid #97cfff',
+                    fontSize: '16px',
+                    color: '#2c2c2c'
+                },
             }
         },
         mounted(){
@@ -193,6 +209,19 @@
                 this.pagination = pagination;
                 this.loadingTable = false;
             },
+             // 导出
+            openExportExcelFun(data){
+                // console.log(data)
+                this.$nextTick(()=>{ 
+                    console.log(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&case_zm='+data.case_zm+
+                        '&timeYear='+ data.timeYear+'&case_take_user_name='+data.case_take_user_name+ '&anguan_pingcha_chaoqi='+
+                        data.anguan_pingcha_chaoqi+ '&province_id='+data.province_id+'&city_id='+data.city_id+'&area_id='+data.area_id)
+                    // window.open(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&case_zm='+data.case_zm+
+                        // '&timeYear='+ data.timeYear+'&case_take_user_name='+data.case_take_user_name+ '&anguan_pingcha_chaoqi='+
+                        // data.anguan_pingcha_chaoqi+ '&province_id='+data.province_id+'&city_id='+data.city_id+'&area_id='+data.area_id)
+                })
+                
+            },
             // 确认搜索
             comfirmSearch(data){
                 this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] } })
@@ -222,6 +251,9 @@
                     this.$message.success('操作成功')
                     this.getCaseType()
                 }
+            },
+            headerRowStyle({row, rowIndex}){ 
+                return this.headStyle
             },
         },
     }

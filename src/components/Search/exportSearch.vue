@@ -35,8 +35,8 @@
                     :props="{ checkStrictly: true }" filterable clearable></el-cascader>
             </template>
         </div>
-        <el-button type="search" @click="comfirmSearch">查询</el-button>
-        <el-button type="search" @click="exportData">导出</el-button>
+        <el-button class="searchItem" type="search" @click="comfirmSearch">查询</el-button>
+        <el-button class="searchItem" type="search" @click="exportData">导出</el-button>
     </div>
 </template>
 
@@ -101,11 +101,11 @@ export default {
     .exportSearch{
         border: 1px solid #8fcbff;
         background-color: #eaf5ff;
-        padding: 15px 0;
+        padding-bottom: 15px;
         .searchItem{
             width: auto;
             display: inline-block;
-            margin: 0 15px;
+            margin: 15px 15px 0 15px;
             .item{
                 border: 1px solid #8fcbff;
                 border-radius: 3px;
@@ -114,6 +114,9 @@ export default {
                     border: 0;
                 }
             }
+        }
+        .el-button:hover, .el-button:focus {
+            color: #ffffff;
         }
     }
 </style>

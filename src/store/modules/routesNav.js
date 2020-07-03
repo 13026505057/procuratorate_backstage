@@ -49,6 +49,7 @@ import UncompletedType from '@/views/appraise/uncompletedType'
 import QualifiedHandler from '@/views/appraise/qualifiedHandler'
 import CompletedHandler from '@/views/appraise/completedHandler'
 import UncompletedHandler from '@/views/appraise/uncompletedHandler'
+import AgingEvaluate from '@/views/appraise/agingEvaluate'
 // 个人相关 
 import ArchivesSituation from '@/views/byPersonal/archivesSituation/index'
 import CaseNum from '@/views/byPersonal/archivesSituation/caseNum'
@@ -119,6 +120,7 @@ let routesNav = {
     QualifiedHandler: QualifiedHandler,
     CompletedHandler: CompletedHandler,
     UncompletedHandler: UncompletedHandler,
+    AgingEvaluate: AgingEvaluate,
     
     // 个人相关 
     ArchivesSituation: ArchivesSituation,

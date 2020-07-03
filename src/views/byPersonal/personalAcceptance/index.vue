@@ -1,6 +1,7 @@
 <template>
     <div class="personalAcceptancePage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" 
+            @receivedAddress="receivedAddress" @exportExcelFun="openExportExcelFun" :exportExcelBtn="true"/>
         <div class="head-tab">
             <div class="table-dataList" >
                 <el-table :data="showModel.tableData" border style="width: 100%" v-loading="loadingTable">
@@ -33,7 +34,7 @@
     export default {
         components: { Search },
         computed :{
-            ...mapGetters(['exhibit_type','exhibit_time_bg'])
+            ...mapGetters(['exhibit_type','exhibit_time_bg','base_url'])
         },
         filters: {
             mapStatus(status){
@@ -118,6 +119,18 @@
             comfirmSearch(data){
                 this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] }  })
                 this.getTableList(this.pagination)
+            },
+            // 导出
+            openExportExcelFun(data){
+                // console.log(data)
+                this.$nextTick(()=>{
+                    console.log(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&case_zm='+ data.case_zm+
+                        '&timeYear='+ data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&province_id='+data.province_id+ 
+                        '&city_id='+data.city_id+ '&area_id='+data.area_id)
+                    // window.open(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&case_zm='+ data.case_zm+
+                        // '&timeYear='+ data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&province_id='+data.province_id+ 
+                        // '&city_id='+data.city_id+ '&area_id='+data.area_id)
+                })
             },
         },
     }

@@ -1,7 +1,8 @@
 <template>
     <div class="uploadAcceptancePage">
         <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" 
-            @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
+            @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"
+            @exportExcelFun="openExportExcelFun" :exportExcelBtn="true"/>
         <div class="head-tab">
             <div class="table-dataList" >
                 <el-table :data="showModel.tableData" border style="width: 100%" v-loading="loadingTable">
@@ -110,7 +111,7 @@
                 const statusMap = {
                     "importCase": "importCaseData"
                 }
-                this[statusMap[data]]()
+                this[statusMap[data.fun]]()
             },
             importCaseData(){
                 this.showModel.importCasePanel = true;
@@ -137,10 +138,31 @@
                 this.pagination = pagination;
                 this.loadingTable = false;
             },
+            uploadSuccess(response){
+                if(response.code == '0') {
+                    this.showModel.importUserModel = false;
+                    this.$message.success('上传成功')
+                } else {
+                    this.$message.warning(response.msg)
+                    this.$refs.uploadExcel.clearFiles()
+                }
+            },
             // 确认搜索
             comfirmSearch(data){
                 this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] }  })
                 this.getTableList(this.pagination)
+            },
+             // 导出
+            openExportExcelFun(data){
+                // console.log(data)
+                this.$nextTick(()=>{
+                    console.log(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&case_zm='+ data.case_zm+
+                        '&timeYear='+ data.timeYear+'&province_id='+data.province_id+ 
+                        '&city_id='+data.city_id+ '&area_id='+data.area_id)
+                    // window.open(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&case_zm='+ data.case_zm+
+                        // '&timeYear='+ data.timeYear+'&province_id='+data.province_id+ 
+                        // '&city_id='+data.city_id+ '&area_id='+data.area_id)
+                })
             },
         },
     }

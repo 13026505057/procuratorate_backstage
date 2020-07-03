@@ -252,7 +252,7 @@
                 const statusMap = {
                     "exprotFunAll": "openPrintReceiptFun"
                 }
-                this[statusMap[data]]()
+                this[statusMap[data.fun]]()
             },
             receivedAddress(data){
                 Object.keys(data).map(item=> this.pagination[item] = data[item] )

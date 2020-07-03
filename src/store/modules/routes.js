@@ -134,7 +134,9 @@ const asyncDataRoutes = [
             {"path": "uncompletedType", "component": "views/appraise/uncompletedType", "name": "UncompletedType", "meta":{ "title":"各业务类型未归档案件","icon": "icon-zhiliangpingcha" }},
             {"path": "qualifiedHandler", "component": "views/appraise/qualifiedHandler", "name": "QualifiedHandler", "meta":{ "title":"办案人符合归档条件","icon": "icon-zhiliangpingcha" }},
             {"path": "completedHandler", "component": "views/appraise/completedHandler", "name": "CompletedHandler", "meta":{ "title":"办案人已归档案件","icon": "icon-zhiliangpingcha" }},
-            {"path": "uncompletedHandler", "component": "views/appraise/uncompletedHandler", "name": "UncompletedHandler", "meta":{ "title":"办案人未归档案件","icon": "icon-zhiliangpingcha" }}
+            {"path": "uncompletedHandler", "component": "views/appraise/uncompletedHandler", "name": "UncompletedHandler", "meta":{ "title":"办案人未归档案件","icon": "icon-zhiliangpingcha" }},
+            {"path": "agingEvaluate", "component": "views/appraise/agingEvaluate", "name": "AgingEvaluate", "meta":{ "title":"时效评价","icon": "icon-zhiliangpingcha" }}
+            
         ]
     },
     {

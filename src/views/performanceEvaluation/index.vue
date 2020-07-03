@@ -1,11 +1,11 @@
 <template>
     <div class="progress-content">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" 
+            @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun" />
         <div class="head-tab">
-           
             <div class="table-dataList" >
                 <el-table
-                    :loading="isLoading"
+                    v-loading="isLoading"
                     :data="tableData"
                     :header-cell-style="headerRowStyle"
                     border
@@ -24,29 +24,14 @@
                         :key="tableItem.label"
                         >
                         <template slot-scope="{row}">
-                            <span v-if="tableItem.tableId == 2">{{Number(row.in_count)+Number(row.chaoqi_count)}}</span>
-                            <span v-if="tableItem.tableId == 22">{{Number(row.all_count)-Number(row.in_count)}}</span>
+                            <span v-if="tableItem.tableId == 2">{{Number(row.none_count)+Number(row.in_count)}}</span>
+                            <!-- <span v-if="tableItem.tableId == 22">{{Number(row.all_count)-Number(row.in_count)}}</span> -->
                             <span v-else>{{row[tableItem.prop]}}</span>
                         </template>
                     </el-table-column>
-                    <!-- <el-table-column
-                        label="待入库案卷数"
-                        align="center">
-                        <template slot-scope="props">
-                            <span>{{props.row.total_quantity-props.row.in_quantity}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        width="190"
-                        align="center"
-                        label="操作">
-                        <template slot-scope="props">
-                            <el-button :disabled="disabled1" :loading="disabled1" @click="examineClick(props.row)" class="highlight-btn" size="small">查看进度</el-button>
-                        </template>
-                    </el-table-column> -->
                 </el-table>
             </div>
-            <div class="pagination">
+            <!-- <div class="pagination">
                 <el-pagination
                     background
                     @current-change="handleCurrentChange1"
@@ -55,7 +40,7 @@
                     layout="prev, pager, next, jumper"
                     :total="total1">
                 </el-pagination>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -66,14 +51,18 @@
     export default {
         components: { Search },
         computed:{
-            ...mapGetters(['org_id'])
+            ...mapGetters(['org_id','base_url'])
         },
         data()  {
             return  {
                 addSearch: [
                     { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
+                    { dom: 'timeYear', value: '',placeholder: '请选择年份', itemId: 6, name: 'dataPicker' },
                 ],
                 selectOption:{},
+                setDynamicBtn: [
+                    { title: '导出', fun: 'exprotFun' }
+                ],
                 activeName: "0",
                 tabItems:[],
                 tableData:[],
@@ -84,12 +73,6 @@
                     {label: "实交卷数量", prop: "in_count", tableId:3},
                     {label: "超期未交卷数量", prop: "chaoqi_count", tableId:4},
                     {label: "交卷率", prop: "persent", tableId:5},
-                    // {label: "承办人", prop: "case_take_user_name", tableId:6},
-                    // {label: "是否成卷", prop: "chengjuan", tableId:7},
-                    // {label: "总案卷数", prop: "total_quantity", tableId:8},
-                    // {label: "在库案卷数", prop: "in_quantity", tableId:9},
-                    // {label: "待入库案卷数", prop: "", tableId:10},
-                    // total_quantity-in_quantity
 
                 ],
                 tableItemsCity:[
@@ -98,25 +81,15 @@
                     {label: "实交卷数量", prop: "in_count", tableId:3},
                     {label: "超期未交卷数量", prop: "chaoqi_count", tableId:4},
                     {label: "交卷率", prop: "persent", tableId:5},
-                    // {label: "承办人", prop: "case_take_user_name", tableId:6},
-                    // {label: "是否成卷", prop: "chengjuan", tableId:7},
-                    // {label: "总案卷数", prop: "total_quantity", tableId:8},
-                    // {label: "在库案卷数", prop: "in_quantity", tableId:9},
-                    // {label: "待入库案卷数", prop: "", tableId:10},
-                    // total_quantity-in_quantity
-
                 ],
                 tableItemsArea:[
                     {label: "办案人姓名", prop: "case_take_user_name", tableId:1},
                     {label: "单位名称", prop: "org_name", tableId:3},
                     {label: "部门名称", prop: "dept_name", tableId:4},
-                    {label: "应交卷数量", prop: "all_count", tableId:5},
+                    {label: "应交卷数量", prop: "", tableId:2},
                     {label: "实交卷数量", prop: "in_count", tableId:6},
-                    {label: "未交卷数量", prop: "", tableId:22},
+                    {label: "未交卷数量", prop: "chaoqi_count", tableId:22},
                     {label: "交卷率", prop: "persent", tableId:7},
-                    // {label: "待入库案卷数", prop: "", tableId:10},
-                    // total_quantity-in_quantity
-
                 ],
                 currentPage1:1,
                 pageSize:10,
@@ -132,7 +105,6 @@
                     fontSize: '18px',
                     color: '#2c2c2c'
                 },
-                progressList:{},
                 seatchData: {
                     timeYear:'',
                     case_name:'',
@@ -140,11 +112,11 @@
                     case_take_user_name:'',
                 },
                 isLoading:false,
-                disabled1:false,
             }
         },
         mounted(){
-            this.getCaseType(this.seatchData);
+            // this.getCaseType(this.seatchData);
+            this.getDataList()
         },
         methods: {
             receivedAddress(data){
@@ -171,73 +143,72 @@
             },
             // 默认数据列表
             async getDataList(){
-                console.log({...this.seatchData})
+                // console.log({...this.seatchData})
                 this.isLoading = true;
-                // dataInfo ['case_type_id'] = this.activeName;
                 if(this.seatchData.area_id&&this.seatchData.area_id!=''){
                     //查询基层院的归档率
                     this.tableItems = this.tableItemsArea;
                     let dataInfo = { ...this.seatchData }
-                    // dataInfo ['pageNum'] = this.currentPage1;
-                    // dataInfo ['pageSize'] = this.pageSize;
                     // dataInfo ['area_id'] = this.org_id;
-                    dataInfo ['nd'] = '2019';
+                    dataInfo ['nd'] = this.seatchData.timeYear;
                     dataInfo ['city_id'] = '';
-                    // dataInfo ['area_id'] = this.org_id;
                     const resultData = await this.$api.caseJauge(dataInfo);
                     if(resultData && resultData.code == '0') {
-                        this.tableData = resultData.data.list,
-                        this.total1 = resultData.data.total,
+                        this.tableData = resultData.data;
                         this.isLoading = false
                     }
                 }else{
                     //查询地级市的归档率
                     let dataInfo = { ...this.seatchData }
-                    // dataInfo ['pageNum'] = this.currentPage1;
-                    // dataInfo ['pageSize'] = this.pageSize;
-                    // dataInfo ['area_id'] = this.org_id;
-                    dataInfo ['nd'] = '2019';
+                    dataInfo ['nd'] = this.seatchData.timeYear;
                     dataInfo ['area_id'] = '';
                     this.tableItems = this.tableItemsCity;
                     const resultData = await this.$api.caseJaugeAll(dataInfo);
                     if(resultData && resultData.code == '0') {
-                        this.tableData = resultData.data,
+                        this.tableData = resultData.data;
                         this.isLoading = false
-                        // this.total1 = resultData.data.total
                     }
                 }
-                
             },
             comfirmSearch(data){
-                console.log(data)
-                this.$nextTick(()=>{ for(let key in data) { this.seatchData[key] = data[key] } })
-                this.getCaseType(this.seatchData);
+                // console.log(data)
+                this.$nextTick(()=>{ 
+                    for(let key in data) { this.seatchData[key] = data[key] } 
+                    this.getDataList();
+                })
             },
+            setDynamicBtnFun(data){
+                const statusMap = {
+                    "exprotFun": "openExportExcelFun"
+                }
+                this[statusMap[data.fun]](data.dataInfo)
+            },
+            // 导出
+            openExportExcelFun(data){
+                this.$nextTick(()=>{ 
+                    console.log(this.base_url+'/?nd='+ data.timeYear+'&case_take_user_name='+data.case_take_user_name+
+                        '&province_id='+data.province_id+'&city_id='+data.city_id+'&area_id='+data.area_id);
+                    // window.open(this.base_url+'/?nd='+ data.timeYear+'&case_take_user_name='+data.case_take_user_name+
+                        // '&province_id='+data.province_id+'&city_id='+data.city_id+'&area_id='+data.area_id)
+                })
+                
+                
+            },
+            
             headerRowStyle({row, rowIndex}){ 
                 return this.headStyle
             },
             // 标签页
             handleClick(tab, event) {
                 console.log(tab, event);
-                this.getDataList(this.seatchData);
+                this.getDataList();
             },
             
             handleCurrentChange1(val) {
                 console.log(`当前页: ${val}`);
-                this.getDataList(this.seatchData);
+                this.getDataList();
             },
             
-            // 小弹窗
-            examineClick(res){ 
-                console.log(res)
-                this.disabled1 = true;
-                this.dialogVisible = true;
-                this.progressList = res;
-                setTimeout(()=>{
-                    this.disabled1 = false;
-                },2000)
-
-            },
             
         },
     }

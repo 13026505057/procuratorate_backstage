@@ -217,8 +217,8 @@
         },
         methods: {
             setDynamicBtnFun(data){
-                if(data=='addSingleUser') this.addUnitClick('add','')
-                    else if(data == 'importUserData') this.openImportUser()
+                if(data.fun=='addSingleUser') this.addUnitClick('add','')
+                    else if(data.fun == 'importUserData') this.openImportUser()
             },
             openImportUser(){
                 this.showModel.importUserModel = true;

@@ -40,7 +40,7 @@
             </el-tabs>
         </div>
         <!-- 案卷详情 -->
-        <el-dialog v-dialogDrag title="案卷详情" :visible.sync="showModel.dialogTableVisible">
+        <el-dialog v-dialogDrag title="案卷详情" :visible.sync="showModel.dialogTableVisible" width="70%">
             <el-table :data="showModel.gridData" align="center">
                 <el-table-column type="index" label="#"></el-table-column>
                 <el-table-column :label="item.dataIndex"
@@ -51,8 +51,9 @@
                         <span v-else>{{ row[item.title] }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="操作" width="300">
+                <el-table-column align="center" label="操作" width="350">
                     <template slot-scope="{row}">
+                        <el-button @click="editExhibitData(row)" class="highlight-btn" type="operation" size="small">编辑</el-button>
                         <el-button @click="printQrCodeAgain(row.exhibit_id)" class="highlight-btn" type="operation" size="small">补打条码</el-button>
                         <el-button @click="printReceipt(row.exhibit_id)" class="highlight-btn" type="operation" size="small">打印回执单</el-button>
                         <el-button @click="deleteCancel(row.exhibit_id)" class="highlight-btn" type="operation" size="small">作废</el-button>
@@ -62,13 +63,12 @@
             <DialogPagin ref="dialogTablePagin" :tableData="showModel.gridData_temporary" @dialogTablePagin="dialogTablePagin"/>
         </el-dialog>
         <!-- 接收案卷 -->
-        <el-dialog v-dialogDrag title="接收案卷" :visible.sync="showModel.dialogReceivedVisible">
-            <div v-for="(item,index) in eachDataInfoList" :key="index"
-                style="display:table;width: 100%;margin-bottom: 10px">
+        <el-dialog v-dialogDrag :title="showModel.dialogReceivedTitle" :visible.sync="showModel.dialogReceivedVisible">
+            <div v-for="(item,index) in eachDataInfoList" :key="index" style="display:table;width: 100%;margin-bottom: 10px">
                 <span style="display:table-cell;width: 25%;text-align: right;padding-right: 20px">
                     {{ item.captionTitle }}：
                 </span>
-                <el-input v-model="submitDataInfo[item.dom]" v-if="item.itemId<4 ||item.itemId == 5"
+                <el-input v-model="submitDataInfo[item.dom]" v-if="item.itemId<4 || item.itemId == 5"
                     :placeholder="item.placeholder" style="width: auto"></el-input>
                 <el-select v-model="submitDataInfo[item.dom]" :placeholder="item.placeholder" v-else-if="item.itemId == 4">
                     <el-option v-for="itemChild in showModel.selectOption_type" :key="itemChild.value" 
@@ -171,6 +171,7 @@
                     tableData:[],   // 数据信息
                     // 案卷详情
                     dialogTableVisible: false,
+                    submiteModel: false,
                     gridData: [],
                     gridData_temporary: [],
                     gridData_columns: [
@@ -185,6 +186,7 @@
                     ],
                     // 新增案卷
                     dialogReceivedVisible: false,
+                    dialogReceivedTitle: '',
                     selectOption_type: [],
                     selectOption_time: [],
                     // 批量打印回执单
@@ -228,6 +230,7 @@
                     print_code: 0,
                     print_accept: 0
                 },
+                submitDataInfo_temporary: {},
                 eachDataInfoList: [
                     { captionTitle: '档号', placeholder: '请输入档号', dom: 'dh', itemId: 1 },
                     { captionTitle: '卷号(必填)', placeholder: '请输入卷号', dom: 'jh', itemId: 2 },
@@ -240,7 +243,6 @@
                     { title: '批量打印回执单', fun: 'exprotFunAll' }
                 ],
             }
-           
         },
         mounted(){
             this.getCaseType();
@@ -267,13 +269,8 @@
                 this.showModel.gridData = data
             },
             toggleSelection(rows) {
-                if (rows) {
-                    rows.forEach(row => {
-                    this.$refs.multipleTable.toggleAllSelection();
-                });
-                } else {
-                    this.$refs.multipleTable.clearSelection();
-                }
+                if (rows) rows.forEach(row => this.$refs.multipleTable.toggleAllSelection() )
+                    else this.$refs.multipleTable.clearSelection()
             },
             resetPrintPagination(){
                 this.showModel.pagination.pageNum = 1;
@@ -284,7 +281,6 @@
                 this.printReceiptFun(this.showModel.pagination)
             },
             async printReceiptFun(dataInfo){
-                console.log(dataInfo)
                 this.loadingTable_print = true;
                 let resultData = await this.$api.getTodayByPage(dataInfo)
                 if(resultData && resultData.code == '0'){
@@ -318,7 +314,6 @@
             },
             // 类型分类
             getCaseType(){
-                console.log(new Date().getTime())
                 this.$api.getCaseType().then(async (res)=>{
                     this.showModel.tableList = res.data.list;
                     if(this.showModel.activeNameTab !== '0') this.pagination.case_type_id = this.showModel.activeNameTab
@@ -389,6 +384,7 @@
             // 接收案卷信息
             receivedItem(case_id){
                 this.showModel.dialogReceivedVisible = true;
+                this.showModel.dialogReceivedTitle = '接收案件'
                 this.resetSubmitInfo();
                 this.submitDataInfo.case_id = case_id;
             },
@@ -401,7 +397,11 @@
             },
             // 确认提交
             async confirmBtn(){
-                ['print_code','print_accept'].map(item=> this.submitDataInfo[item] = Number(this.submitDataInfo[item]))
+                ['print_code','print_accept'].map(item=> this.submitDataInfo[item] = Number(this.submitDataInfo[item])) || 0
+                if(this.showModel.submiteModel) this.confirmEditExhibit();
+                    else this.addExhibitData()
+            },
+            async addExhibitData(){
                 let resultData = await this.$api.addExhibitData(this.submitDataInfo)
                 if(resultData && resultData.code=='0'){
                     this.setTemporaryNd(this.submitDataInfo.nd)
@@ -409,7 +409,32 @@
                     this.getCaseType()
                     this.resetSubmitInfo()
                 }
-            }
+            },
+            async confirmEditExhibit(){
+                const checkEdit = () => { 
+                    let edit = false;
+                    Object.keys(this.submitDataInfo_temporary).map(item=>{
+                        if(this.submitDataInfo[item] !== this.submitDataInfo_temporary[item]) edit = true
+                    })
+                    return edit
+                }
+                if(checkEdit()) {
+                    this.submitDataInfo.print_code = 1;
+                    let resultData = await this.$api.editCaseData(this.submitDataInfo);
+                    if(resultData && resultData.code=='0') this.$message.success('修改成功')
+                }
+                
+            },
+            // 编辑案卷
+            async editExhibitData(data){
+                this.showModel.submiteModel = true;
+                this.showModel.dialogReceivedTitle = '编辑案件信息'
+                this.showModel.dialogReceivedVisible = true
+                Object.keys(this.submitDataInfo).map(item=> this.submitDataInfo[item] = data[item] )
+                this.submitDataInfo['dh'] = data['dh'].split('-')[3]
+                this.submitDataInfo['exhibit_id'] = data['exhibit_id']
+                this.submitDataInfo_temporary = { ...this.submitDataInfo }
+            },
         },
     }
 </script>

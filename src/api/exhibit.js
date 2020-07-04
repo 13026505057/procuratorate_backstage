@@ -81,5 +81,9 @@ const exhibit = {
     getIds(data){
         return request({ url: '/stock/stock/getScanCode', method: 'post', data })
     },
+    //查询卷宗入库记录
+    getExhibitLog(data){
+        return request({ url: '/stock/stock-log/getByPage', method: 'post', data })
+    },
 }
 export default exhibit

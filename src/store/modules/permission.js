@@ -18,7 +18,8 @@ export function filterAsyncRoutes(routes,status) {
       })
     }
     if(status) tmp['component'] = Layout
-      else tmp['component'] = routesNav[tmp['name']]
+      // else tmp['component'] = routesNav[tmp['name']]
+      else tmp['component'] = routesNav[tmp['name'].split(' - ')[1]]
     if(tmp.children && tmp.children.length>0) tmp.children = filterAsyncRoutes(tmp.children,false)
       else delete tmp.children
     res_arr.push(tmp)

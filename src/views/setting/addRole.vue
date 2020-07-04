@@ -1,5 +1,6 @@
 <template>
   <div class="editRoutesPage">
+    <el-button @click="addRole" type="search">新增</el-button>
     <el-table :data="rolesList" style="width: 100%;margin-top:30px;" border :header-cell-style="headerRowStyle">
         <el-table-column align="center" type="index" label="#"></el-table-column>
       <el-table-column align="center" label="权限组名称" prop="group_name"></el-table-column>
@@ -10,7 +11,7 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog v-dialogDrag :visible.sync="dialogVisible" title="修改权限配置" @close="resetRoutes">
+    <el-dialog v-dialogDrag :visible.sync="dialogVisible" :title="showModel.dialogTitle" @close="resetRoutes">
       <el-form :model="role" label-width="100px" label-position="left">
         <el-form-item label="权限组名称">
           <el-input v-model="role.group_name" placeholder="请输入权限组名称" style="width:auto"/>
@@ -48,6 +49,10 @@ export default {
         routes: [],
         rolesList: [],
         dialogVisible: false,
+        showModel: {
+          dialogTitle: '',
+          modelType: false, // true为修改 false为新增
+        },
         checkStrictly: false,
         defaultProps: {
             children: 'children',
@@ -73,6 +78,11 @@ export default {
     this.getRoutesGroup()
   },
   methods: {
+    async addRole(){
+      this.dialogVisible = true;
+      this.showModel.modelType = false;
+      this.showModel.dialogTitle = '新增权限配置'
+    },
     // 获取默认路由列表
     async getDefaultRoutes() {
         const resultData = await this.$api.getDefaultRoutes()
@@ -83,7 +93,7 @@ export default {
     },
     // 获取权限组列表
     async getRoutesGroup() {
-      const resultData = await this.$api.getRoutesGroup()
+      const resultData = await this.$api.getRoutesData()
       if(resultData && resultData.code == '0') this.rolesList = resultData.data
     },
     generateArr(routes) {
@@ -102,6 +112,8 @@ export default {
     async handleEdit(group_name) {
       this.dialogVisible = true
       this.checkStrictly = true
+      this.showModel.modelType = true
+      this.showModel.dialogTitle = '修改权限配置'
       let resultData = await this.$api.getRoutesData({group_name})
       let accessedRoutes = []
       if(resultData.data.length>0) {
@@ -131,6 +143,18 @@ export default {
         }).catch(error => reject(error) )
       })
     },
+    addRouteFun(params){
+      return new Promise((resolve, reject) => {
+        axios({
+          method: 'post',
+          url: this.base_url+'/vueRoleAdd',
+          data: params,
+          headers: { 'kf-token': getToken() },
+        }).then(res=>{
+          resolve(res.data)
+        }).catch(error => reject(error) )
+      })
+    },
     generateTree(routes, checkedKeys) {
       const res = []
       for (const route of routes) {
@@ -145,16 +169,28 @@ export default {
       }
       return res
     },
-    async confrimBtn(){
+    confrimBtn(){
         const checkedKeys = this.$refs.tree.getCheckedKeys()
         const routesArr = [ ...this.routes ]
         this.role.routes = this.generateTree(routesArr, checkedKeys)
-        console.log(this.role)
-        const resultData = await this.editRouteFun(this.role)
-        if(resultData && resultData.code =='0') {
-          this.dialogVisible = false;
-          this.$message.success('操作成功')
-        }
+        if(this.showModel.modelType) this.editRouleItem()
+          else this.addRouleItem()
+    },
+    async editRouleItem(){
+      const resultData = await this.editRouteFun(this.role)
+      if(resultData && resultData.code =='0') {
+        this.dialogVisible = false;
+        this.$message.success('操作成功')
+        this.getRoutesGroup()
+      }
+    },
+    async addRouleItem(){
+      const resultData = await this.addRouteFun(this.role)
+      if(resultData && resultData.code =='0') {
+        this.dialogVisible = false;
+        this.$message.success('操作成功')
+        this.getRoutesGroup()
+      }
     },
     headerRowStyle({row, rowIndex}){ 
         return this.headStyle

@@ -87,7 +87,7 @@ const actions = {
         const { data } = response
         let bgqx = [];
         data.map(item=>{
-            bgqx.push({ value: item.exhibit_bgqx_code, lable: item.exhibit_bgqx_name })
+            bgqx.push({ value: item.exhibit_bgqx_code, label: item.exhibit_bgqx_name })
         })
         commit('SET_Exhibit_Time', bgqx)
         resolve(bgqx)

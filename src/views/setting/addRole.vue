@@ -7,6 +7,7 @@
       <el-table-column align="center" label="操作">
         <template slot-scope="{ row }">
           <el-button type="primary" size="small" @click="handleEdit(row.group_name)">修改</el-button>
+          <el-button type="danger" size="small" @click="deleItem(row.vue_role_id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -81,6 +82,7 @@ export default {
     async addRole(){
       this.dialogVisible = true;
       this.showModel.modelType = false;
+      this.role.group_name = '';
       this.showModel.dialogTitle = '新增权限配置'
     },
     // 获取默认路由列表
@@ -131,6 +133,7 @@ export default {
     resetRoutes(){
       this.getDefaultRoutes()
     },
+    // 权限组信息更改
     editRouteFun(params){
       return new Promise((resolve, reject) => {
         axios({
@@ -143,6 +146,7 @@ export default {
         }).catch(error => reject(error) )
       })
     },
+    // 新增权限组信息
     addRouteFun(params){
       return new Promise((resolve, reject) => {
         axios({
@@ -176,6 +180,7 @@ export default {
         if(this.showModel.modelType) this.editRouleItem()
           else this.addRouleItem()
     },
+    // 编辑权限组
     async editRouleItem(){
       const resultData = await this.editRouteFun(this.role)
       if(resultData && resultData.code =='0') {
@@ -184,6 +189,7 @@ export default {
         this.getRoutesGroup()
       }
     },
+    // 新增权限组
     async addRouleItem(){
       const resultData = await this.addRouteFun(this.role)
       if(resultData && resultData.code =='0') {
@@ -191,6 +197,11 @@ export default {
         this.$message.success('操作成功')
         this.getRoutesGroup()
       }
+    },
+    // 删除权限组
+    async deleItem(vue_role_id){
+      let resultData = await this.$api.delRoutesData({vue_role_id})
+      if(resultData && resultData.code == '0') this.$message.success('操作成功')
     },
     headerRowStyle({row, rowIndex}){ 
         return this.headStyle

@@ -7,7 +7,7 @@
             </el-radio-group>
             <el-input class="scan-input" v-model="stockNum" ref="stockNumRef" @change="stockNumChange" placeholder="扫描货架码"></el-input>
             <el-input class="scan-input" v-model="exhibitNum" ref="exhibitNumRef" @change="exhibitNumChange" placeholder="扫描案卷码"></el-input>
-            <span class="head-text">先扫描货架码，光标自动移动到案卷码位置后在扫描案卷码</span>
+            <span class="head-text">先扫描货架码，光标自动移动到案卷码位置后在扫描案卷码,每次入库操作都会记录在下方</span>
         </div>
         <Search style="margin-top:10px;" :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
         <div class="head-tab">
@@ -23,8 +23,8 @@
                             <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
                                 v-for="item in columns" :key="item.itemId" align="center">
                                 <template slot-scope="{row}">
-                                    <span v-if="item.itemId == 4">{{ row[item.title] | mapStatus }}</span>
-                                    <span v-else>{{ row[item.title] }}</span>
+                                    <span v-if="item.itemId == 12">{{ row[item.title] | mapStatus }}</span>
+                                    <span >{{ row[item.title] }}</span>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -35,7 +35,7 @@
                             style="text-align: center;margin-top: 20px;padding-bottom:20px;"
                             @current-change="handleCurrentChange" :current-page.sync="pagination.pageNum"
                             :page-size="pagination.pageSize" layout="prev, pager, next, jumper"
-                            :total="pagination.total">
+                            :total="showModel.tableList[0].contNum">
                         </el-pagination>
                     </div>
                 </el-tab-pane>
@@ -51,14 +51,9 @@
         filters:{
             mapStatus(status){
                 const statusList = {
-                    in:"已归档",
-                    in_jj_out:"已归档（交卷超期）",
-                    in_rk_out:"已归档（入库超期）",
-                    in_all_out:"已归档（双超期）",
-                    none:"未归档",
-                    none_jj_out:"未归档（交卷超期）",
-                    none_rk_out:"未归档（入库超期）",
-                    none_all_out:"未归档（双超期）",
+                    SS:"诉讼",
+                    JS:"技术",
+                    WS:"文书",
                 }
                 return statusList[status]
             }
@@ -93,7 +88,7 @@
                     tableList:[{
                         case_type_id:'inHistory',
                         case_type_name:'入库记录',
-                        contNum:'0'
+                        contNum: 0
                     }],   // 类型
                     tableData:[],   // 数据信息
                     // 案卷详情
@@ -104,14 +99,17 @@
                 // table表头
                 columns: [
                     { title: 'case_bh', dataIndex: '统一受案号', itemId: 1 },
-                    { title: 'case_name', dataIndex: '案件名称', itemId: 10 },
-                    { title: 'case_type_name', dataIndex: '案件类型', itemId: 2 },
-                    { title: 'case_desc', dataIndex: '案件描述', overflow: true, itemId: 11 },
-                    { title: 'time_status', dataIndex: '是否归档', itemId: 4 },
-                    { title: 'case_take_user_name', dataIndex: '承办人', itemId: 3 },
-                    { title: 'total_quantity', dataIndex: '总案卷数', itemId: 5 },
-                    { title: 'in_quantity', dataIndex: '在库案卷数', itemId: 6 },
-                    { title: 'wait_quantity', dataIndex: '待入库案卷数', itemId: 7 },
+                    { title: 'case_bh', dataIndex: '部门受案号', itemId: 2 },
+                    { title: 'case_name', dataIndex: '案件名称', itemId: 3 },
+                    { title: 'case_type_name', dataIndex: '案件类型', itemId: 4 },
+                    { title: 'case_take_user_name', dataIndex: '承办人', itemId: 5 },
+                    { title: 'bgr', dataIndex: '嫌疑人', itemId: 6 },
+                    { title: 'exhibit_type', dataIndex: '案卷类型', itemId: 12 },
+                    { title: 'dh', dataIndex: '档号', overflow: true, itemId: 7 },
+                    { title: 'jh', dataIndex: '卷号', overflow: true, itemId: 8 },
+                    { title: 'nd', dataIndex: '年度', overflow: true, itemId: 9 },
+                    { title: 'cell_name', dataIndex: '存放位置', itemId: 10 },
+                    { title: 'stock_user_name', dataIndex: '操作人', itemId: 11 },
                 ],
             }
            
@@ -120,7 +118,7 @@
             // this.getCaseType();
             this.getFocus();
             this.getExhibitType();
-            this.getExhibitInLog();
+            this.getExhibitInLog(this.pagination);
         },
         methods: {
             //查询卷宗类别如：诉讼 文书 技术
@@ -139,13 +137,12 @@
                 }
             },
             //查询入库记录
-            async getExhibitInLog(){
+            async getExhibitInLog(dataInfo){
                 // console.log({...this.seatchData})
-                let dataInfo = { ...this.pagination }
                 const resultData = await this.$api.getExhibitLog(dataInfo);
                 if(resultData && resultData.code == '0') {
-                    this.showModel.tableData = resultData.data;
-                    this.showModel.tableData.contNum = resultData.data.total;
+                    this.showModel.tableData = resultData.data.list;
+                    this.showModel.tableList[0].contNum = Number(resultData.data.total);
                     // console.log(this.exhibitType)
                     // this.total1 = resultData.data.total
                 }
@@ -205,11 +202,11 @@
                     
                     const resultData = await this.$api.exhibitIn(dataInfo);
                     if(resultData && resultData.code == '0') {
-                        this.getDataList();
                         this.$message({
                             message: '入库成功',
                             type: 'success'
                         });
+                        this.getExhibitInLog(this.pagination);
                         this.exhibitNum = "";
                         this.getFocus('exhibitNumRef');
                     }

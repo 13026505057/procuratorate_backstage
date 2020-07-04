@@ -2,32 +2,40 @@
     <div class="bindReadyItemPage">
         <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
         <div class="head-tab">
-            <div class="table-dataList" >
-                <el-table :data="showModel.tableData" border style="width: 100%" v-loading="loadingTable">
-                    <el-table-column align="center" type="index"></el-table-column>
-                    <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
-                        v-for="item in columns" :key="item.itemId" align="center">
-                        <template slot-scope="{row}">
-                            <span v-if="item.itemId == 6">{{ row[item.title]=='none'?'未入库':'已入库' }}</span>
-                            <span v-else>{{ row[item.title] }}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column align="center" label="操作">
-                        <template slot-scope="{row}">
-                            <el-button @click="showDialogPanel({ tysah: row.tysah, case_name: row.case_name, case_take_user_name: row.case_take_user_name})" class="highlight-btn" size="small">绑定预入库</el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-            </div>
-            <div class="pagination">
-                <!-- 分页 -->
-                <el-pagination small background
-                    style="text-align: center;margin-top: 20px;padding-bottom:20px;"
-                    @current-change="handleCurrentChange" :current-page.sync="pagination.pageNum"
-                    :page-size="pagination.pageSize" layout="prev, pager, next, jumper"
-                    :total="pagination.total">
-                </el-pagination>
-            </div>
+            <el-tabs v-model="showModel.activeNameTab">
+                <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
+                    <span slot="label">
+                        {{item.case_type_name}}
+                        <el-badge :value="pagination.total" v-if="item.contNum == '0'?false:true" class="item tab-badge-num"></el-badge>
+                    </span>
+                    <div class="table-dataList" >
+                        <el-table :data="showModel.tableData" border style="width: 100%" v-loading="loadingTable">
+                            <el-table-column align="center" type="index"></el-table-column>
+                            <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
+                                v-for="item in columns" :key="item.itemId" align="center">
+                                <template slot-scope="{row}">
+                                    <span v-if="item.itemId == 6">{{ row[item.title]=='none'?'未入库':'已入库' }}</span>
+                                    <span v-else>{{ row[item.title] }}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column align="center" label="操作">
+                                <template slot-scope="{row}">
+                                    <el-button @click="showDialogPanel({ tysah: row.tysah, case_name: row.case_name, case_take_user_name: row.case_take_user_name },row.exhibit_id)" class="highlight-btn" size="small">绑定预入库</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                    <div class="pagination">
+                        <!-- 分页 -->
+                        <el-pagination small background
+                            style="text-align: center;margin-top: 20px;padding-bottom:20px;"
+                            @current-change="handleCurrentChange" :current-page.sync="pagination.pageNum"
+                            :page-size="pagination.pageSize" layout="prev, pager, next, jumper"
+                            :total="pagination.total">
+                        </el-pagination>
+                    </div>
+                </el-tab-pane>
+            </el-tabs>
         </div>
         <!-- 案件列表 -->
         <el-dialog v-dialogDrag title="案件列表" :visible.sync="showModel.dialogTableVisible" width="70%">
@@ -44,7 +52,7 @@
                 </el-table-column>
                 <el-table-column align="center" label="操作">
                     <template slot-scope="{row}">
-                        <el-button @click="printQrCodeAgain(row.exhibit_id)" class="highlight-btn" type="operation" size="small">并卷</el-button>
+                        <el-button @click="bindCaseData(row.case_id)" class="highlight-btn" type="operation" size="small">绑定</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -91,7 +99,9 @@
                 },
                 showModel: {
                     activeNameTab: "0",
-                    tableList:[],   // 类型
+                    tableList:[
+                        { case_type_id: '0', case_type_name: '预入库待绑定' }
+                    ],   // 类型
                     tableData:[],   // 数据信息
                     // 案件列表
                     dialogTableVisible: false,
@@ -137,6 +147,10 @@
                     case_name: '',
                     case_take_user_name: ''
                 },
+                bindCaseData: {
+                    exhibit_id: '',
+                    case_id: ''
+                }
             }
         },
         mounted(){
@@ -180,8 +194,9 @@
                 this.$nextTick(()=>{ for(let key in data){ this.pagination_merge[key] = data[key] } })
                 this.getWasInHouseList(this.pagination_merge)
             },
-            showDialogPanel(dataInfo){
+            showDialogPanel(dataInfo,exhibit_id){
                 this.showModel.dialogTableVisible = true;
+                this.bindCaseData.exhibit_id = exhibit_id;
                 ['tysah','case_name','case_take_user_name'].map((item,index)=>{
                     this.mergeData.addSearch[index].value = dataInfo[item];
                     this.pagination_merge[item] = dataInfo[item];
@@ -191,12 +206,17 @@
             // 获取已入库案件信息
             async getWasInHouseList(dataInfo){
                 this.loadingTable_merge = true;
-                const resultData = await this.$api.getDangAnWeiGui(dataInfo);
+                const resultData = await this.$api.getConfirmedByPage(dataInfo);
                 const pagination = { ...this.pagination_merge };
                 this.showModel.gridData = resultData.data.list;
                 pagination.total = resultData.data.total;
                 this.pagination_merge = pagination;
                 this.loadingTable_merge = false;
+            },
+            async bindCaseData(case_id){
+                this.bindCaseData.case_id = case_id;
+                let resultData = await this.$api.attachExhibitToCase(this.bindCaseData)
+                if(resultData && resultData.code == '0') this.$message.success('操作成功')
             }
         }
     }

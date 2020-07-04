@@ -191,8 +191,6 @@
                     // window.open(this.base_url+'/?nd='+ data.timeYear+'&case_take_user_name='+data.case_take_user_name+
                         // '&province_id='+data.province_id+'&city_id='+data.city_id+'&area_id='+data.area_id)
                 })
-                
-                
             },
             
             headerRowStyle({row, rowIndex}){ 

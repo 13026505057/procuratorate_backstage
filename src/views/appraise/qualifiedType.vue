@@ -1,6 +1,7 @@
 <template>
     <div class="qualifiedPage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" 
+            @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
@@ -67,7 +68,7 @@
     export default {
         components: { Search,DialogPagin },
         computed: {
-            ...mapGetters(['caseTimeStatus'])
+            ...mapGetters(['caseTimeStatus','base_url'])
         },
         filters: {
             mapStatus(status){
@@ -95,6 +96,9 @@
                     time_status: '',
                     case_type_id: '',
                 },
+                setDynamicBtn: [
+                    { title: '导出', fun: 'exprotFun' }
+                ],
                 tableLoading: false,
                 addSearch: [
                     { dom: 'case_bh', value: '', placeholder: '统一受案号', itemId: 0, name: 'input' },
@@ -201,6 +205,22 @@
             comfirmSearch(data){
                 this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] }  })
                 this.getCaseType()
+            },
+            setDynamicBtnFun(data){
+                const statusMap = {
+                    "exprotFun": "openExportExcelFun"
+                }
+                this[statusMap[data.fun]](data.dataInfo)
+            },
+            // 导出 
+            openExportExcelFun(data){
+                console.log(data)
+                this.$nextTick(()=>{
+                    console.log(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&timeYear='+data.timeYear+
+                        '&time_status='+ data.time_status+'&province_id='+ data.province_id+'&city_id='+data.city_id+ '&area_id='+data.area_id)
+                    // window.open(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&timeYear='+data.timeYear+'&time_status='+
+                        // data.time_status+'&province_id='+ data.province_id+'&city_id='+data.city_id+ '&area_id='+data.area_id)
+                })
             },
             showDialogPanel(dataInfo){
                 this.showModel.dialogTableVisible = true;

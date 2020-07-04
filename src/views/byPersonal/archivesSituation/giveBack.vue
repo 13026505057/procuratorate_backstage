@@ -1,6 +1,7 @@
 <template>
     <div class="giveBackPage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" 
+            @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
         <div class="table-dataList" >
             <el-table :data="showModel.tableData" border style="width: 100%" v-loading="tableLoading">
                 <el-table-column align="center" type="index"></el-table-column>
@@ -29,7 +30,7 @@
     export default {
         components: { Search },
         computed: {
-            ...mapGetters(['user_id'])
+            ...mapGetters(['user_id','base_url'])
         },
         data()  {
             return  {
@@ -41,9 +42,12 @@
                     timeYear: '',
                     user_id: ''
                 },
+                setDynamicBtn: [
+                    { title: '导出', fun: 'exprotFun' }
+                ],
                 tableLoading: false,
                 addSearch: [
-                    { dom: 'case_bh', value: '',placeholder: '请输入统一受案号', itemId: 1, name: 'input' },
+                    { dom: 'case_bh', value: '',placeholder: '统一受案号', itemId: 1, name: 'input' },
                     { dom: 'case_name', value: '',placeholder: '请输入案件名', itemId: 2, name: 'input' },
                     { dom: 'timeYear', value: '',placeholder: '选择年份', itemId: 3, name: 'dataPicker' },
                 ],
@@ -101,6 +105,22 @@
             comfirmSearch(data){
                 this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] }  })
                 this.getTableList(this.pagination)
+            },
+            setDynamicBtnFun(data){
+                const statusMap = {
+                    "exprotFun": "openExportExcelFun"
+                }
+                this[statusMap[data.fun]](data.dataInfo)
+            },
+            // 导出 
+            openExportExcelFun(data){
+                console.log(data)
+                this.$nextTick(()=>{
+                    console.log(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&timeYear='+data.timeYear+
+                        '&province_id='+ data.province_id+'&city_id='+data.city_id+ '&area_id='+data.area_id)
+                    // window.open(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&timeYear='+data.timeYear+
+                        // '&province_id='+ data.province_id+'&city_id='+data.city_id+ '&area_id='+data.area_id)
+                })
             },
             showDialogPanel(dataInfo){
                 this.showModel.dialogTableVisible = true;

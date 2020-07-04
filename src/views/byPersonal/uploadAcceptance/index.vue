@@ -1,8 +1,9 @@
 <template>
     <div class="uploadAcceptancePage">
         <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" 
-            @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"
-            @exportExcelFun="openExportExcelFun" :exportExcelBtn="true"/>
+            @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
+            <!-- 
+            @exportExcelFun="openExportExcelFun" :exportExcelBtn="true" -->
         <div class="head-tab">
             <div class="table-dataList" >
                 <el-table :data="showModel.tableData" border style="width: 100%" v-loading="loadingTable">
@@ -79,6 +80,7 @@
                 selectOption: {},
                 setDynamicBtn: [
                     { title: '导入', fun: 'importCase' },
+                    { title: '导出', fun: 'exprotFun' }
                 ],
                 showModel: {
                     activeNameTab: "0",
@@ -151,6 +153,12 @@
             comfirmSearch(data){
                 this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] }  })
                 this.getTableList(this.pagination)
+            },
+            setDynamicBtnFun(data){
+                const statusMap = {
+                    "exprotFun": "openExportExcelFun"
+                }
+                this[statusMap[data.fun]](data.dataInfo)
             },
              // 导出
             openExportExcelFun(data){

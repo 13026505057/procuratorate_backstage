@@ -6,7 +6,7 @@
                     class="item" clearable></el-input>
             </template>
             <template v-else-if="item.name == 'dataPicker'">
-                <el-date-picker v-model="item.value" :placeholder="item.placeholder" 
+                <el-date-picker v-model="item.value" :placeholder="item.placeholder" :picker-options="pickerOptions"
                     type="year" class="item" value-format="yyyy" clearable></el-date-picker>
             </template>
             <template v-else-if="item.name == 'select'">
@@ -70,7 +70,12 @@ export default {
                 { dom: 'case_zm', value: '', placeholder: '请输入罪名', itemId: 2, name: 'input' },
                 { dom: 'timeYear', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
             ],
-            org_dataList: [{level:'area'}]
+            org_dataList: [{level:'area'}],
+            pickerOptions: {
+                disabledDate(time) {
+                    return time.getFullYear() < 2013 || time.getFullYear() >= new Date().getFullYear()+1
+                }
+            },
         }
     },
     created(){
@@ -111,7 +116,7 @@ export default {
         exportExcelFun(){
             let dataInfo = this.resultDataInfo()
             this.$emit('exportExcelFun',dataInfo)
-        }
+        },
     }
 }
 </script>

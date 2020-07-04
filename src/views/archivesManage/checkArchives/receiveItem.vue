@@ -227,8 +227,8 @@
                     dh: '',
                     jh: '',
                     bgr: '',
-                    print_code: 0,
-                    print_accept: 0
+                    print_code: false,
+                    print_accept: false
                 },
                 submitDataInfo_temporary: {},
                 eachDataInfoList: [
@@ -384,6 +384,7 @@
             // 接收案卷信息
             receivedItem(case_id){
                 this.showModel.dialogReceivedVisible = true;
+                this.showModel.submiteModel = false;
                 this.showModel.dialogReceivedTitle = '接收案件'
                 this.resetSubmitInfo();
                 this.submitDataInfo.case_id = case_id;
@@ -397,11 +398,12 @@
             },
             // 确认提交
             async confirmBtn(){
-                ['print_code','print_accept'].map(item=> this.submitDataInfo[item] = Number(this.submitDataInfo[item])) || 0
                 if(this.showModel.submiteModel) this.confirmEditExhibit();
                     else this.addExhibitData()
             },
+            // 确认新增
             async addExhibitData(){
+                ['print_code','print_accept'].map(item=> this.submitDataInfo[item] = Number(this.submitDataInfo[item])) || 0
                 let resultData = await this.$api.addExhibitData(this.submitDataInfo)
                 if(resultData && resultData.code=='0'){
                     this.setTemporaryNd(this.submitDataInfo.nd)
@@ -410,9 +412,13 @@
                     this.resetSubmitInfo()
                 }
             },
+            // 确认修改
             async confirmEditExhibit(){
+                console.log(this.submitDataInfo_temporary,this.submitDataInfo);
+                ['print_code','print_accept'].map(item=> this.submitDataInfo[item] = Number(this.submitDataInfo[item])) || 0;
                 const checkEdit = () => { 
                     let edit = false;
+                    console.log(this.submitDataInfo_temporary,this.submitDataInfo)
                     Object.keys(this.submitDataInfo_temporary).map(item=>{
                         if(this.submitDataInfo[item] !== this.submitDataInfo_temporary[item]) edit = true
                     })

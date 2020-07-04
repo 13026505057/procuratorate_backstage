@@ -3,57 +3,60 @@
         <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" 
             @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
         <div class="head-tab">
-            <div class="table-dataList" >
-                <el-table :data="showModel.tableData" border style="width: 100%" v-loading="loadingTable">
-                    <el-table-column align="center" type="index"></el-table-column>
-                    <el-table-column :label="item.dataIndex"
-                        v-for="item in columns" :key="item.itemId" align="center">
-                        <template slot-scope="{row}">
-                            <span v-if="item.itemId == 6">{{ row[item.title]=='none'?'未入库':'已入库' }}</span>
-                            <span v-else>{{ row[item.title] }}</span>
-                        </template>
-                    </el-table-column>
-                </el-table>
-            </div>
-            <div class="pagination">
-                <!-- 分页 -->
-                <el-pagination small background
-                    style="text-align: center;margin-top: 20px;padding-bottom:20px;"
-                    @current-change="handleCurrentChange" :current-page.sync="pagination.pageNum"
-                    :page-size="pagination.pageSize" layout="prev, pager, next, jumper"
-                    :total="pagination.total">
-                </el-pagination>
-            </div>
+            <el-tabs v-model="showModel.activeNameTab">
+                <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
+                    <span slot="label">
+                        {{item.case_type_name}}
+                        <el-badge :value="pagination.total" v-if="pagination.total == '0'?false:true" class="item tab-badge-num"></el-badge>
+                    </span>
+                    <div class="table-dataList" >
+                        <el-table :data="showModel.tableData" border style="width: 100%" v-loading="loadingTable">
+                            <el-table-column align="center" type="index"></el-table-column>
+                            <el-table-column :label="item.dataIndex"
+                                v-for="item in columns" :key="item.itemId" align="center">
+                                <template slot-scope="{row}">
+                                    <span v-if="item.itemId == 6">{{ row[item.title]=='none'?'未入库':'已入库' }}</span>
+                                    <span v-else>{{ row[item.title] }}</span>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                    <div class="pagination">
+                        <!-- 分页 -->
+                        <el-pagination small background
+                            style="text-align: center;margin-top: 20px;padding-bottom:20px;"
+                            @current-change="handleCurrentChange" :current-page.sync="pagination.pageNum"
+                            :page-size="pagination.pageSize" layout="prev, pager, next, jumper"
+                            :total="pagination.total">
+                        </el-pagination>
+                    </div>
+                </el-tab-pane>
+            </el-tabs>
         </div>
-        <!-- 新增案件 -->
-        <el-dialog v-dialogDrag title="新增案件" :visible.sync="showModel.dialogReceivedVisible" @close="resetSubmitInfo">
-            <div class="addCaseBox_container">
-                <div class="addCaseBox_item">
-                    <div v-for="(item,index) in eachDataInfoList.slice(0,6)" :key="index" class="item">
-                        <span> {{ item.captionTitle }}：</span>
-                        <el-input v-model="submitDataInfo[item.dom]" v-if="item.type=='input'"
-                            :placeholder="item.placeholder" style="width: auto"></el-input>
-                        <el-select v-model="submitDataInfo[item.dom]" :placeholder="item.placeholder" v-else-if="item.type == 'select'">
-                            <el-option v-for="itemChild in showModel[item.dom]" :key="itemChild.value" 
-                                :label="itemChild.label" :value="itemChild.value"></el-option>
-                        </el-select>
-                    </div>
-                </div>
-                <div class="addCaseBox_item">
-                    <div v-for="(item,index) in eachDataInfoList.slice(6,11)" :key="index" class="item">
-                        <span> {{ item.captionTitle }}：</span>
-                        <el-input v-model="submitDataInfo[item.dom]" v-if="item.type=='input'"
-                            :placeholder="item.placeholder" style="width: auto"></el-input>
-                        <el-select v-model="submitDataInfo[item.dom]" :placeholder="item.placeholder" v-else-if="item.type == 'select'">
-                            <el-option v-for="itemChild in showModel[item.dom]" :key="itemChild.value" 
-                                :label="itemChild.label" :value="itemChild.value"></el-option>
-                        </el-select>
-                    </div>
-                </div>
+        <!-- 接收案卷 -->
+        <el-dialog v-dialogDrag title="新增案卷" :visible.sync="showModel.dialogReceivedVisible">
+            <div v-for="(item,index) in eachDataInfoList" :key="index" style="display:table;width: 100%;margin-bottom: 10px">
+                <span style="display:table-cell;width: 25%;text-align: right;padding-right: 20px">
+                    {{ item.captionTitle }}：
+                </span>
+                <el-input v-model="submitDataInfo[item.dom]" v-if="item.itemId<4 || item.itemId == 5"
+                    :placeholder="item.placeholder" style="width: auto"></el-input>
+                <el-select v-model="submitDataInfo[item.dom]" :placeholder="item.placeholder" v-else-if="item.itemId == 4">
+                    <el-option v-for="itemChild in showModel.exhibit_type" :key="itemChild.value" 
+                        :label="itemChild.label" :value="itemChild.value"></el-option>
+                </el-select>
+                <el-select v-model="submitDataInfo[item.dom]" :placeholder="item.placeholder" v-else-if="item.itemId == 6">
+                    <el-option v-for="itemChild in showModel.bgqx" :key="itemChild.value" 
+                        :label="itemChild.label" :value="itemChild.value"></el-option>
+                </el-select>
+            </div>
+            <div class="checkboxSelect">
+                <el-checkbox v-model="submitDataInfo.print_code">同时打印案件条形码</el-checkbox>
+                <el-checkbox v-model="submitDataInfo.print_accept">同时打印收卷回执单</el-checkbox>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="showModel.dialogReceivedVisible = false">取 消</el-button>
-                <el-button type="primary" @click="confirmAddCase">确 定</el-button>
+                <el-button type="primary" @click="confirmBtn">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -64,7 +67,7 @@
     export default {
         components: { Search },
         computed :{
-            ...mapGetters(['exhibit_type','exhibit_time_bg','case_type','address_id','org_list'])
+            ...mapGetters(['exhibit_type','exhibit_time_bg','case_type','temporary_nd'])
         },
         data()  {
             return  {
@@ -87,6 +90,10 @@
                     case_type_id: []
                 },
                 showModel: {
+                    activeNameTab: "0",
+                    tableList:[
+                        { case_type_id: '0', case_type_name: '案件预入库' }
+                    ],
                     tableData:[],   // 数据信息
                     // 新增案件
                     dialogReceivedVisible: false,
@@ -107,35 +114,28 @@
                     { title: 'case_type_name', dataIndex: '隶属案件类型', itemId: 7 },
                 ],
                 setDynamicBtn: [
-                    { title: '新增案件', fun: 'addCaseItem' }
+                    { title: '新增案卷', fun: 'addCaseItem' }
                 ],
                 submitDataInfo: {
-                    exhibit_name: '',
-                    tysah: '',
-                    jh: '',
-                    cbr: '',
-                    bgqx: '',
-                    exhibit_type: '',
+                    case_id: '',
                     nd: '',
+                    exhibit_type: '',
+                    bgqx: '',
                     dh: '',
-                    ay: '',
+                    jh: '',
                     bgr: '',
-                    case_type_id: ''
+                    print_code: 0,
+                    print_accept: 0
                 },
+                submitDataInfo_temporary: {},
                 eachDataInfoList: [
-                    { captionTitle: '案件名称', placeholder: '请输入案件名称', dom: 'exhibit_name', itemId: 1, type: 'input' },
-                    { captionTitle: '统一受案号', placeholder: '请输入统一受案号', dom: 'tysah', itemId: 2, type: 'input' },
-                    { captionTitle: '卷号', placeholder: '请输入卷号', dom: 'jh', itemId: 3, type: 'input' },
-                    { captionTitle: '承办人', placeholder: '请输入承办人', dom: 'cbr', itemId: 4, type: 'input' },
-                    { captionTitle: '期限', placeholder: '请选择期限', dom: 'bgqx', itemId: 5, type: 'select' },
-                    { captionTitle: '类型', placeholder: '请选择类型', dom: 'exhibit_type', itemId: 6, type: 'select' },
-
-                    { captionTitle: '年度', placeholder: '请输入年度', dom: 'nd', itemId: 7, type: 'input' },
-                    { captionTitle: '档号', placeholder: '请输入档号', dom: 'dh', itemId: 8, type: 'input' },
-                    { captionTitle: '案由', placeholder: '请输入案由', dom: 'ay', itemId: 9, type: 'input' },
-                    { captionTitle: '犯罪嫌疑人', placeholder: '请输入犯罪嫌疑人', dom: 'bgr', itemId:10, type: 'input' },
-                    { captionTitle: '类型', placeholder: '请选择案件类型', dom: 'case_type_id', itemId: 11, type: 'select' },
-                ]
+                    { captionTitle: '档号', placeholder: '请输入档号', dom: 'dh', itemId: 1 },
+                    { captionTitle: '卷号(必填)', placeholder: '请输入卷号', dom: 'jh', itemId: 2 },
+                    { captionTitle: '被告人/嫌疑人(必填)', placeholder: '请输入被告人/嫌疑人', dom: 'bgr', itemId: 3 },
+                    { captionTitle: '卷宗类型(必填)', placeholder: '', dom: 'exhibit_type', itemId: 4 },
+                    { captionTitle: '选择年度(必填)', placeholder: '请输入年度 如 2018', dom: 'nd', itemId: 5 },
+                    { captionTitle: '选择期限(必填)', placeholder: '', dom: 'bgqx', itemId: 6 },
+                ],
             }
         },
         mounted(){
@@ -175,6 +175,7 @@
                 this.getTableList(this.pagination)
             },
             async addCaseItem(){
+                this.resetSubmitInfo();
                 this.showModel.dialogReceivedVisible = true;
             },
             async confirmAddCase(){
@@ -197,8 +198,9 @@
             //重置表单
             resetSubmitInfo(){
                 for( let key in this.submitDataInfo){ this.submitDataInfo[key] = '' }
-                this.showModel.dialogReceivedVisible = false;
-                console.log(this.submitDataInfo)
+                this.submitDataInfo.nd = this.temporary_nd || new Date().getFullYear();
+                this.submitDataInfo.exhibit_type = this.showModel.exhibit_type[0].value;
+                this.submitDataInfo.bgqx = this.showModel.bgqx[0].value;
             },
         },
     }

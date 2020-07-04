@@ -25,6 +25,8 @@ import UncompletedArchives from '@/views/archivesManage/shallCompleted/uncomplet
 import CompletedArchives from '@/views/archivesManage/shallCompleted/completed'
 import CheckArchives from '@/views/archivesManage/checkArchives/index'
 import ReceiveItem from '@/views/archivesManage/checkArchives/receiveItem'
+import AllCaseMaterials from '@/views/archivesManage/checkArchives/allCaseMaterials'
+
 import CheckItem from '@/views/archivesManage/checkItem'
 import ReadyItem from '@/views/archivesManage/checkArchives/readyItem'
 import CheckHistory from '@/views/archivesManage/checkHistory/index'
@@ -101,6 +103,7 @@ let routesNav = {
     CompletedArchives: CompletedArchives,
     CheckArchives: CheckArchives,
     ReceiveItem: ReceiveItem,
+    AllCaseMaterials: AllCaseMaterials,
     CheckItem: CheckItem,
     CheckHistory: CheckHistory,
     Agree: Agree,

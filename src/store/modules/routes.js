@@ -40,6 +40,7 @@ const asyncDataRoutes = [
                 "children": [
                     {"path": "readyItem", "component": "views/archivesManage/checkArchives/readyItem", "name": "ReadyItem", "meta":{ "title":"档案预入库","icon": "icon-zhiliangpingcha" }},
                     {"path": "receiveItem", "component": "views/archivesManage/checkArchives/receiveItem", "name": "ReceiveItem", "meta":{ "title":"档案接收","icon": "icon-zhiliangpingcha" }},
+                    {"path": "allCaseMaterials", "component": "views/archivesManage/checkArchives/allCaseMaterials", "name": "AllCaseMaterials", "meta":{ "title":"所有案卷","icon": "icon-zhiliangpingcha" }},
                 ]
             },
             {   "path": "exhibitDoubt", "component": "views/archivesManage/exhibitDoubt/index", 

@@ -137,10 +137,10 @@
                 const statusMap = {
                     "exprotFun": "exprotUncompleteData"
                 }
-                this[statusMap[data.fun]]()
+                this[statusMap[data.fun]](data.dataInfo)
             },
-            exprotUncompleteData(){
-                window.open(this.base_url+'/cases/cases/exportDangAnWeiGui?case_name='+this.pagination.case_name+'&case_bh='+this.pagination.case_bh+'&timeYear='+this.pagination.timeYear+'&case_take_user_name='+this.pagination.case_take_user_name+'&case_none_status='+this.pagination.case_none_status)
+            exprotUncompleteData(data){
+                window.open(this.base_url+'/cases/cases/exportDangAnWeiGui?case_name='+data.case_name+'&case_bh='+data.case_bh+'&timeYear='+data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&case_none_status='+data.case_none_status)
             },
             receivedAddress(data){
                 Object.keys(data).map(item=> this.pagination[item] = data[item] )

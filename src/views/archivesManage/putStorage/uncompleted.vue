@@ -11,7 +11,7 @@
         </div>
         <Search style="margin-top:10px;" :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
         <div class="head-tab">
-            <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab" v-loading="tableLoading">
+            <el-tabs v-model="showModel.activeNameTab"  v-loading="tableLoading">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
                     <span slot="label">
                         {{item.case_type_name}}
@@ -81,13 +81,20 @@
                 exhibitType:[],
                 addSearch: [
                     { dom: 'case_bh', value: '',placeholder: '请输入统一受案号', itemId: 5, name: 'input' },
-                    { dom: 'case_name', value: '',placeholder: '请输入案件名', itemId: 6, name: 'input' },
+                    { dom: 'case_name', value: '',placeholder: '请输入案件名称', itemId: 6, name: 'input' },
                     { dom: 'timeData', value: '',placeholder: '', itemId: 7, name: 'daterange' },
+                    { dom: 'out_exhibit_id', value: '',placeholder: '扫描条形码', itemId: 8, name: 'input' },
+                    { dom: 'case_take_user_name', value: '',placeholder: '承办人', itemId: 9, name: 'input' },
+                    { dom: 'bgr', value: '',placeholder: '嫌疑人', itemId: 10, name: 'input' },
                 ],
                 selectOption: {},
                 showModel: {
-                    activeNameTab: "0",
-                    tableList:[],   // 类型
+                    activeNameTab: "inHistory",
+                    tableList:[{
+                        case_type_id:'inHistory',
+                        case_type_name:'入库记录',
+                        contNum:'0'
+                    }],   // 类型
                     tableData:[],   // 数据信息
                     // 案卷详情
                     dialogTableVisible: false,
@@ -110,9 +117,10 @@
            
         },
         mounted(){
-            this.getCaseType();
+            // this.getCaseType();
             this.getFocus();
             this.getExhibitType();
+            this.getExhibitInLog();
         },
         methods: {
             //查询卷宗类别如：诉讼 文书 技术
@@ -126,6 +134,18 @@
                 const resultData = await this.$api.getExhibitType();
                 if(resultData && resultData.code == '0') {
                     this.exhibitType = resultData.data
+                    // console.log(this.exhibitType)
+                    // this.total1 = resultData.data.total
+                }
+            },
+            //查询入库记录
+            async getExhibitInLog(){
+                // console.log({...this.seatchData})
+                let dataInfo = { ...this.pagination }
+                const resultData = await this.$api.getExhibitLog(dataInfo);
+                if(resultData && resultData.code == '0') {
+                    this.showModel.tableData = resultData.data;
+                    this.showModel.tableData.contNum = resultData.data.total;
                     // console.log(this.exhibitType)
                     // this.total1 = resultData.data.total
                 }
@@ -206,10 +226,10 @@
             dialogTablePagin(data){
                 this.showModel.gridData = data
             },
-            handleClickTab(e){
-                this.pagination.case_type_id = e.paneName
-                this.getTableList(this.pagination)
-            },
+            // handleClickTab(e){
+            //     this.pagination.case_type_id = e.paneName
+            //     this.getTableList(this.pagination)
+            // },
             // 类型分类
             getCaseType(){
                 this.$api.getCaseType().then(async (res)=>{
@@ -252,7 +272,7 @@
             // 确认搜索
             comfirmSearch(data){
                 this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] }  })
-                this.getCaseType()
+                this.getExhibitInLog(this.pagination)
             },
         },
     }

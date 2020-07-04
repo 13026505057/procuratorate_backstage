@@ -67,6 +67,8 @@ const asyncDataRoutes = [
                 "children": [
                     {"path": "uncompleted", "component": "views/archivesManage/putStorage/uncompleted", "name": "待入库上架 - UncompletedPut", "meta":{ "title":"待入库上架","icon": "icon-zhiliangpingcha" }},
                     {"path": "completed", "component": "views/archivesManage/putStorage/completed", "name": "已入库上架 - CompletedPut", "meta":{ "title":"已入库上架","icon": "icon-zhiliangpingcha" }},
+                    {"path": "uncompletedExhibit", "component": "views/archivesManage/putStorage/uncompletedExhibit", "name": "待入库上架案卷 - UnCompletedPutExhibit", "meta":{ "title":"待入库上架案卷","icon": "icon-zhiliangpingcha" }},
+                    {"path": "completedExhibit", "component": "views/archivesManage/putStorage/completedExhibit", "name": "已入库上架案卷 - CompletedPutExhibit", "meta":{ "title":"已入库上架案卷","icon": "icon-zhiliangpingcha" }},
                     // {"path": "temporary", "component": "views/archivesManage/putStorage/temporary", "name": "卷宗暂存 - Temporary", "meta":{ "title":"卷宗暂存","icon": "icon-zhiliangpingcha" }}
                 ]
             }

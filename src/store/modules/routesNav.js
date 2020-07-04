@@ -39,6 +39,8 @@ import FinishStatus from '@/views/archivesManage/exhibitDoubt/finishStatus'
 import MergeRequest from '@/views/archivesManage/exhibitDoubt/mergeRequest'
 import BindReadyItem from '@/views/archivesManage/exhibitDoubt/bindReadyItem'
 import MatterExhibit from '@/views/archivesManage/exhibitDoubt/matterExhibit'
+import UnCompletedPutExhibit from '@/views/archivesManage/putStorage/uncompletedExhibit'
+import CompletedPutExhibit from '@/views/archivesManage/putStorage/completedExhibit'
 
 // 档案利用
 import OutWarehouse from '@/views/utilizeArchives/outWarehouse'
@@ -115,6 +117,8 @@ let routesNav = {
     MergeRequest: MergeRequest,
     BindReadyItem: BindReadyItem,
     MatterExhibit: MatterExhibit,
+    UnCompletedPutExhibit:UnCompletedPutExhibit,
+    CompletedPutExhibit:CompletedPutExhibit,
     
     // 档案利用
     OutWarehouse:OutWarehouse,

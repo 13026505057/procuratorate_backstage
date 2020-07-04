@@ -36,19 +36,19 @@ const asyncDataRoutes = [
             },
             {   "path": "checkArchives", "component": "views/archivesManage/checkArchives/index", 
                 "redirect": "/archivesManage/CheckArchives/readyItem",
-                "name": "CheckArchives", "meta":{ "title":"档案接收","icon": "icon-zhiliangpingcha" },
+                "name": "CheckArchives", "meta":{ "title":"案卷接收","icon": "icon-zhiliangpingcha" },
                 "children": [
-                    {"path": "readyItem", "component": "views/archivesManage/checkArchives/readyItem", "name": "ReadyItem", "meta":{ "title":"档案预入库","icon": "icon-zhiliangpingcha" }},
-                    {"path": "receiveItem", "component": "views/archivesManage/checkArchives/receiveItem", "name": "ReceiveItem", "meta":{ "title":"档案接收","icon": "icon-zhiliangpingcha" }},
+                    {"path": "readyItem", "component": "views/archivesManage/checkArchives/readyItem", "name": "ReadyItem", "meta":{ "title":"案卷预入库","icon": "icon-zhiliangpingcha" }},
+                    {"path": "bindReadyItem", "component": "views/archivesManage/exhibitDoubt/bindReadyItem", "name": "BindReadyItem", "meta":{ "title":"预入库绑定","icon": "icon-zhiliangpingcha" }},
+                    {"path": "receiveItem", "component": "views/archivesManage/checkArchives/receiveItem", "name": "ReceiveItem", "meta":{ "title":"案卷接收","icon": "icon-zhiliangpingcha" }},
                 ]
             },
             {   "path": "exhibitDoubt", "component": "views/archivesManage/exhibitDoubt/index", 
                 "redirect": "/archivesManage/exhibitDoubt/mergeRequest",
-                "name": "ExhibitDoubt", "meta":{ "title":"问题卷","icon": "icon-zhiliangpingcha" },
+                "name": "ExhibitDoubt", "meta":{ "title":"问题处理","icon": "icon-zhiliangpingcha" },
                 "children": [
                     {"path": "finishStatus", "component": "views/archivesManage/exhibitDoubt/finishStatus", "name": "FinishStatus", "meta":{ "title":"办结情况查询","icon": "icon-zhiliangpingcha" }},
                     {"path": "mergeRequest", "component": "views/archivesManage/exhibitDoubt/mergeRequest", "name": "MergeRequest", "meta":{ "title":"多案并卷","icon": "icon-zhiliangpingcha" }},
-                    {"path": "bindReadyItem", "component": "views/archivesManage/exhibitDoubt/bindReadyItem", "name": "BindReadyItem", "meta":{ "title":"绑定预入库","icon": "icon-zhiliangpingcha" }},
                     {"path": "matterExhibit", "component": "views/archivesManage/exhibitDoubt/matterExhibit", "name": "MatterExhibit", "meta":{ "title":"问题卷记录","icon": "icon-zhiliangpingcha" }},
                 ]
             },
@@ -65,7 +65,7 @@ const asyncDataRoutes = [
                 "name": "PutStorage", "meta":{ "title":"入库上架","icon": "icon-zhiliangpingcha" },
                 "redirect": "/archivesManage/PutStorage/uncompleted",
                 "children": [
-                    {"path": "uncompleted", "component": "views/archivesManage/putStorage/uncompleted", "name": "UncompletedPut", "meta":{ "title":"入库上架","icon": "icon-zhiliangpingcha" }},
+                    {"path": "uncompleted", "component": "views/archivesManage/putStorage/uncompleted", "name": "UncompletedPut", "meta":{ "title":"进行入库上架","icon": "icon-zhiliangpingcha" }},
                     // {"path": "completed", "component": "views/archivesManage/putStorage/completed", "name": "CompletedPut", "meta":{ "title":"已入库上架案件","icon": "icon-zhiliangpingcha" }},
                     {"path": "uncompletedExhibit", "component": "views/archivesManage/putStorage/uncompletedExhibit", "name": "UnCompletedPutExhibit", "meta":{ "title":"待入库上架案卷","icon": "icon-zhiliangpingcha" }},
                     {"path": "completedExhibit", "component": "views/archivesManage/putStorage/completedExhibit", "name": "CompletedPutExhibit", "meta":{ "title":"已入库上架案卷","icon": "icon-zhiliangpingcha" }},

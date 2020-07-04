@@ -13,6 +13,10 @@ const roles = {
   getRoutesData(data){
     return request({ url: '/vueRoleGet', method: 'post', data })
   },
+  // 移除权限组信息
+  delRoutesData(data){
+    return request({ url: '/vueRoleDel', method: 'post', data })
+  },
   // 修改权限组信息
   editRoutesData(data){
     return request({ url: '/vueRoleUpdate', method: 'post', data })

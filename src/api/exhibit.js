@@ -25,7 +25,7 @@ const exhibit = {
     exhibitOut(data){
         return request({ url: '/user/approve/out', method: 'post', data })
     },
-    // 获取待归还列表 
+    // 获取待归还列表
     getBorrowList(data){
         return request({ url: '/borrowLog/getOutByPage', method: 'post', data }) 
     },
@@ -64,6 +64,10 @@ const exhibit = {
     //并卷操作
     isAddCase(data){
         return request({ url: '/exhibit/exhibit/isAddCase', method: 'post', data })
+    },
+    // 案卷列表
+    getExhibit(data){
+        return request({ url: '/exhibit/exhibit/getByPage', method: 'post', data })
     },
     //查询存储设备信息
     getStock(data){

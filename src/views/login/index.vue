@@ -214,7 +214,7 @@ $login_btn:rgb(86,167,255);
     position: relative;
     
     .title {
-      font-size: 26px;
+      font-size: 40px;
       // color: $light_gray;
       color: #fff;
       font-family: 'MicrosoftYaHei';

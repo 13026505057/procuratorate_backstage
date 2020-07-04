@@ -1,6 +1,7 @@
 <template>
     <div class="shallCompletedAllPage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" 
+            @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
@@ -18,7 +19,7 @@
                                     <span v-else>{{ row[item.title] }}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column align="center" label="操作" width="250">
+                            <el-table-column align="center" label="操作" width="180">
                                 <template slot-scope="{row}">
                                     <el-button @click="showDialogPanel(row.exhibits)" class="highlight-btn" size="small">已有案卷</el-button>
                                 </template>
@@ -68,7 +69,7 @@
     export default {
         components: { Search,DialogPagin },
         computed :{
-            ...mapGetters(['exhibit_type','exhibit_time_bg'])
+            ...mapGetters(['exhibit_type','exhibit_time_bg','base_url'])
         },
         filters: {
             mapStatus(status){
@@ -96,6 +97,9 @@
                     case_take_user_name: '',
                     case_type_id: '',
                 },
+                setDynamicBtn: [
+                    { title: '导出', fun: 'exprotFun' }
+                ],
                 loadingTable: false,
                 addSearch: [
                     { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
@@ -197,6 +201,21 @@
             comfirmSearch(data){
                 this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] } })
                 this.getCaseType()
+            },
+            setDynamicBtnFun(data){
+                const statusMap = {
+                    "exprotFun": "openExportExcelFun"
+                }
+                this[statusMap[data.fun]](data.dataInfo)
+            },
+            // 导出
+            openExportExcelFun(data){
+                // console.log(data)
+                this.$nextTick(()=>{
+                    window.open(this.base_url+'/cases/cases/exportCases?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&case_zm='+ data.case_zm+
+                        '&timeYear='+ data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&province_id='+data.province_id+ 
+                        '&city_id='+data.city_id+ '&area_id='+data.area_id)
+                })
             },
             showDialogPanel(dataInfo){
                 this.showModel.dialogTableVisible = true;

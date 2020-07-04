@@ -230,6 +230,7 @@
                     print_code: 0,
                     print_accept: 0
                 },
+                submitDataInfo_temporary: {},
                 eachDataInfoList: [
                     { captionTitle: '档号', placeholder: '请输入档号', dom: 'dh', itemId: 1 },
                     { captionTitle: '卷号(必填)', placeholder: '请输入卷号', dom: 'jh', itemId: 2 },
@@ -396,13 +397,11 @@
             },
             // 确认提交
             async confirmBtn(){
-                if(this.showModel.submiteModel) {
-                    let resultData = await this.$api.editCaseData(this.submitDataInfo);
-                    if(resultData && resultData.code=='0') this.$message.success('修改成功')
-                } else this.addExhibitData()
+                ['print_code','print_accept'].map(item=> this.submitDataInfo[item] = Number(this.submitDataInfo[item])) || 0
+                if(this.showModel.submiteModel) this.confirmEditExhibit();
+                    else this.addExhibitData()
             },
             async addExhibitData(){
-                ['print_code','print_accept'].map(item=> this.submitDataInfo[item] = Number(this.submitDataInfo[item]))
                 let resultData = await this.$api.addExhibitData(this.submitDataInfo)
                 if(resultData && resultData.code=='0'){
                     this.setTemporaryNd(this.submitDataInfo.nd)
@@ -411,6 +410,21 @@
                     this.resetSubmitInfo()
                 }
             },
+            async confirmEditExhibit(){
+                const checkEdit = () => { 
+                    let edit = false;
+                    Object.keys(this.submitDataInfo_temporary).map(item=>{
+                        if(this.submitDataInfo[item] !== this.submitDataInfo_temporary[item]) edit = true
+                    })
+                    return edit
+                }
+                if(checkEdit()) {
+                    this.submitDataInfo.print_code = 1;
+                    let resultData = await this.$api.editCaseData(this.submitDataInfo);
+                    if(resultData && resultData.code=='0') this.$message.success('修改成功')
+                }
+                
+            },
             // 编辑案卷
             async editExhibitData(data){
                 this.showModel.submiteModel = true;
@@ -418,6 +432,8 @@
                 this.showModel.dialogReceivedVisible = true
                 Object.keys(this.submitDataInfo).map(item=> this.submitDataInfo[item] = data[item] )
                 this.submitDataInfo['dh'] = data['dh'].split('-')[3]
+                this.submitDataInfo['exhibit_id'] = data['exhibit_id']
+                this.submitDataInfo_temporary = { ...this.submitDataInfo }
             },
         },
     }

@@ -165,7 +165,8 @@ const asyncDataRoutes = [
             {"path": "PermissionGroup", "component": "views/setting/permissionGroup", "name": "API权限组设置 - PermissionGroup", "meta":{ "title":"API权限组设置","icon": "icon-zhiliangpingcha" }},
             {"path": "Role", "component": "views/setting/role", "name": "角色设置 - Role", "meta":{ "title":"角色设置","icon": "icon-zhiliangpingcha" }},
             {"path": "personnel", "component": "views/setting/personnel", "name": "人员设置 - Personnel", "meta":{ "title":"人员设置","icon": "icon-zhiliangpingcha" }},
-            {"path": "storageLocation", "component": "views/setting/storageLocation", "name": "存储位置设置 - StorageLocation", "meta":{ "title":"存储位置设置","icon": "icon-zhiliangpingcha" }}
+            {"path": "storageLocation", "component": "views/setting/storageLocation", "name": "存储位置设置 - StorageLocation", "meta":{ "title":"存储位置设置","icon": "icon-zhiliangpingcha" }},
+            {"path": "printSetting", "component": "views/setting/printSetting", "name": "打印机设置 - PrintSetting", "meta":{ "title":"打印机设置","icon": "icon-zhiliangpingcha" }}
         ]
     }
 ]

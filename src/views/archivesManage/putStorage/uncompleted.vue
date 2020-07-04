@@ -140,9 +140,11 @@
             async getExhibitInLog(dataInfo){
                 // console.log({...this.seatchData})
                 const resultData = await this.$api.getExhibitLog(dataInfo);
+                this.tableLoading = true;
                 if(resultData && resultData.code == '0') {
                     this.showModel.tableData = resultData.data.list;
                     this.showModel.tableList[0].contNum = Number(resultData.data.total);
+                    this.tableLoading = true;
                     // console.log(this.exhibitType)
                     // this.total1 = resultData.data.total
                 }

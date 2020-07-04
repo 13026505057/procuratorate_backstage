@@ -1,6 +1,7 @@
 <template>
     <div class="checkedItemPage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" 
+            @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
@@ -95,6 +96,9 @@
     import { mapGetters } from 'vuex'
     export default {
         components: { Search,DialogPagin },
+        computed: {
+            ...mapGetters(['base_url'])
+        },
         filters: {
             mapStatus(status){
                 const statusMap = {
@@ -122,6 +126,9 @@
                     case_type_id: '',
                     case_none_confirm:'1'
                 },
+                setDynamicBtn: [
+                    { title: '导出', fun: 'exprotFun' }
+                ],
                 loadingTable: false,
                 addSearch: [
                     { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
@@ -238,6 +245,21 @@
             comfirmSearch(data){
                 this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] }  })
                 this.getCaseType()
+            },
+            setDynamicBtnFun(data){
+                const statusMap = {
+                    "exprotFun": "openExportExcelFun"
+                }
+                this[statusMap[data.fun]](data.dataInfo)
+            },
+            // 导出
+            openExportExcelFun(data){
+                // console.log(data)
+                this.$nextTick(()=>{
+                    window.open(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&case_zm='+ data.case_zm+
+                        '&timeYear='+ data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&province_id='+data.province_id+ 
+                        '&city_id='+data.city_id+ '&area_id='+data.area_id)
+                })
             },
             showDialogPanel(dataInfo){
                 this.showModel.dialogTableVisible = true;

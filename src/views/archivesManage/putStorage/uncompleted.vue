@@ -88,7 +88,7 @@
                     tableList:[{
                         case_type_id:'inHistory',
                         case_type_name:'入库记录',
-                        contNum:'0'
+                        contNum: 0
                     }],   // 类型
                     tableData:[],   // 数据信息
                     // 案卷详情
@@ -142,7 +142,7 @@
                 const resultData = await this.$api.getExhibitLog(dataInfo);
                 if(resultData && resultData.code == '0') {
                     this.showModel.tableData = resultData.data.list;
-                    this.showModel.tableList[0].contNum = resultData.data.total;
+                    this.showModel.tableList[0].contNum = Number(resultData.data.total);
                     // console.log(this.exhibitType)
                     // this.total1 = resultData.data.total
                 }

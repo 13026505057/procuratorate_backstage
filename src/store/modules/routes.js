@@ -36,7 +36,7 @@ const asyncDataRoutes = [
             },
             {   "path": "checkArchives", "component": "views/archivesManage/checkArchives/index", 
                 "redirect": "/archivesManage/CheckArchives/readyItem",
-                "name": "CheckArchives", "meta":{ "title":"案卷接收","icon": "icon-zhiliangpingcha" },
+                "name": "案卷接收 - CheckArchives", "meta":{ "title":"案卷接收","icon": "icon-zhiliangpingcha" },
                 "children": [
                     {"path": "readyItem", "component": "views/archivesManage/checkArchives/readyItem", "name": "案卷预入库 - ReadyItem", "meta":{ "title":"案卷预入库","icon": "icon-zhiliangpingcha" }},
                     {"path": "bindReadyItem", "component": "views/archivesManage/exhibitDoubt/bindReadyItem", "name": "预入库绑定 - BindReadyItem", "meta":{ "title":"预入库绑定","icon": "icon-zhiliangpingcha" }},

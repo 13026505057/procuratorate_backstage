@@ -36,7 +36,7 @@ const asyncDataRoutes = [
             },
             {   "path": "checkArchives", "component": "views/archivesManage/checkArchives/index", 
                 "redirect": "/archivesManage/CheckArchives/readyItem",
-                "name": "CheckArchives", "meta":{ "title":"案卷接收","icon": "icon-zhiliangpingcha" },
+                "name": "案卷接收 - CheckArchives", "meta":{ "title":"案卷接收","icon": "icon-zhiliangpingcha" },
                 "children": [
                     {"path": "readyItem", "component": "views/archivesManage/checkArchives/readyItem", "name": "案卷预入库 - ReadyItem", "meta":{ "title":"案卷预入库","icon": "icon-zhiliangpingcha" }},
                     {"path": "bindReadyItem", "component": "views/archivesManage/exhibitDoubt/bindReadyItem", "name": "预入库绑定 - BindReadyItem", "meta":{ "title":"预入库绑定","icon": "icon-zhiliangpingcha" }},
@@ -46,7 +46,7 @@ const asyncDataRoutes = [
             },
             {   "path": "exhibitDoubt", "component": "views/archivesManage/exhibitDoubt/index", 
                 "redirect": "/archivesManage/exhibitDoubt/mergeRequest",
-                "name": "ExhibitDoubt", "meta":{ "title":"问题处理","icon": "icon-zhiliangpingcha" },
+                "name": "问题处理 - ExhibitDoubt", "meta":{ "title":"问题处理","icon": "icon-zhiliangpingcha" },
                 "children": [
                     {"path": "finishStatus", "component": "views/archivesManage/exhibitDoubt/finishStatus", "name": "办结情况查询 - FinishStatus", "meta":{ "title":"办结情况查询","icon": "icon-zhiliangpingcha" }},
                     {"path": "mergeRequest", "component": "views/archivesManage/exhibitDoubt/mergeRequest", "name": "多案并卷 - MergeRequest", "meta":{ "title":"多案并卷","icon": "icon-zhiliangpingcha" }},
@@ -166,7 +166,8 @@ const asyncDataRoutes = [
             {"path": "PermissionGroup", "component": "views/setting/permissionGroup", "name": "API权限组设置 - PermissionGroup", "meta":{ "title":"API权限组设置","icon": "icon-zhiliangpingcha" }},
             {"path": "Role", "component": "views/setting/role", "name": "角色设置 - Role", "meta":{ "title":"角色设置","icon": "icon-zhiliangpingcha" }},
             {"path": "personnel", "component": "views/setting/personnel", "name": "人员设置 - Personnel", "meta":{ "title":"人员设置","icon": "icon-zhiliangpingcha" }},
-            {"path": "storageLocation", "component": "views/setting/storageLocation", "name": "存储位置设置 - StorageLocation", "meta":{ "title":"存储位置设置","icon": "icon-zhiliangpingcha" }}
+            {"path": "storageLocation", "component": "views/setting/storageLocation", "name": "存储位置设置 - StorageLocation", "meta":{ "title":"存储位置设置","icon": "icon-zhiliangpingcha" }},
+            {"path": "printSetting", "component": "views/setting/printSetting", "name": "打印机设置 - PrintSetting", "meta":{ "title":"打印机设置","icon": "icon-zhiliangpingcha" }}
         ]
     }
 ]

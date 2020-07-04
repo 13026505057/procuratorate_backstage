@@ -9,6 +9,7 @@ import PermissionGroup from '@/views/setting/permissionGroup'
 import Role from '@/views/setting/role'
 import Personnel from '@/views/setting/personnel'
 import StorageLocation from '@/views/setting/storageLocation'
+import PrintSetting from '@/views/setting/printSetting'
 
 // 案管
 import FilingCondition from '@/views/caseManage/filingCondition/index'
@@ -89,6 +90,7 @@ let routesNav = {
     Personnel:Personnel,
     PermissionGroup:PermissionGroup,
     StorageLocation:StorageLocation,
+    PrintSetting:PrintSetting,
     
     // 案管
     FilingCondition: FilingCondition,

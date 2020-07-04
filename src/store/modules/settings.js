@@ -17,7 +17,8 @@ const state = {
   case_type: [],
   case_type_origin: [],
   stock_status: [],
-  temporary_nd: ''
+  temporary_nd: '',
+  print_id:''
 }
 
 const mutations = {
@@ -44,6 +45,9 @@ const mutations = {
   },
   SET_TEMPORARY_ND(state,temporary_nd){
     state.temporary_nd = temporary_nd
+  },
+  SET_PRINT_ID(state,print_id){
+    state.print_id = print_id
   },
 }
 
@@ -117,6 +121,32 @@ const actions = {
       }).catch(error => reject(error) )
     })
   },
+  getPrintId({ commit }){
+    return new Promise((resolve, reject) => {
+      const sendData = {};
+      sendData ['pageNum'] = '1';
+      sendData ['pageSize'] = '10';
+      api.getPrintList(sendData).then(response => {
+        const { data } = response;
+        console.log(data)
+        let print_id = '';
+        if(data.list.map.length>0){
+          if(localStorage.getItem('print_id')){
+            print_id = localStorage.getItem('print_id');
+          }else{
+            print_id = data.list[0].print_id
+          }
+        }else{
+
+        }
+        commit('SET_PRINT_ID', print_id)
+        resolve(print_id)
+      }).catch(error => reject(error) )
+    })
+  },
+  changPrintId({commit},data){
+    commit('SET_PRINT_ID', data)
+  }
 }
 
 export default {

@@ -85,5 +85,9 @@ const exhibit = {
     getExhibitLog(data){
         return request({ url: '/stock/stock-log/getByPage', method: 'post', data })
     },
+    //查询卷宗信息
+    getExhibit(data){
+        return request({ url: '/exhibit/exhibit/getByPage', method: 'post', data })
+    },
 }
 export default exhibit

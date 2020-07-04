@@ -104,6 +104,14 @@ const setting = {
     getStorageList(data) {
         return request({ url: '/shale/shale/getByPage', method: 'post', data })
     },
+    //获取打印机
+    getPrintList(data){
+        return request({ url: '/orgPrintGetByPage', method: 'post', data })
+    },
+    //获取打印机
+    addPrint(data){
+        return request({ url: '/orgPrintAdd', method: 'post', data })
+    }
     
 
 }

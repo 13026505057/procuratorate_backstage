@@ -135,7 +135,10 @@
             },
             // 补打条码
             async reprintCodeClick(res){
-                const resultData = await this.$api.printAgain({exhibit_id:res.exhibit_id});
+                const sendData = {};
+                sendData ['exhibit_id'] = res.exhibit_id;
+                sendData ['print_id'] = this.print_id;
+                const resultData = await this.$api.printAgain(sendData);
                 if(resultData && resultData.code == '0') {
                     this.$message.success('已发送打印请求');
                 }

@@ -144,7 +144,7 @@
                 if(resultData && resultData.code == '0') {
                     this.showModel.tableData = resultData.data.list;
                     this.showModel.tableList[0].contNum = Number(resultData.data.total);
-                    this.tableLoading = true;
+                    this.tableLoading = false;
                     // console.log(this.exhibitType)
                     // this.total1 = resultData.data.total
                 }

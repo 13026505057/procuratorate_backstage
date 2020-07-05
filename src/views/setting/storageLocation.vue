@@ -126,7 +126,7 @@
     
     export default {
         computed:{
-            ...mapGetters(['org_id'])
+            ...mapGetters(['org_id','print_id'])
         },
         data()  {
             return  {
@@ -185,9 +185,9 @@
                 
                 if(this.printType=='shale'){
                     
-                    var dataInfo = {print_type:'shale',shale_id:this.printForm.shale_id,hang:'',lie:'',org_id:this.stockForm.org_id}
+                    var dataInfo = {print_type:'shale',shale_id:this.printForm.shale_id,hang:'',lie:'',org_id:this.stockForm.org_id,print_id:this.print_id}
                 }else{
-                    var dataInfo = {print_type:'cell',shale_id:this.printForm.shale_id,hang:this.printForm.hang,lie:this.printForm.lie,org_id:this.stockForm.org_id}
+                    var dataInfo = {print_type:'cell',shale_id:this.printForm.shale_id,hang:this.printForm.hang,lie:this.printForm.lie,org_id:this.stockForm.org_id,print_id:this.print_id}
                 }
                 
                 const resultData = await this.$api.printCode(dataInfo);

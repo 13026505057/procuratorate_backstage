@@ -41,7 +41,7 @@ const cases = {
     },
 
     // 档案管理
-    // 档案未通过审查案件
+    // 档案审查记录
     caseRefuseHistoryGetByPage(data) {
         return request({ url: '/caseRefuseHistoryGetByPage', method: 'post', data })
     },
@@ -49,9 +49,17 @@ const cases = {
     confirmNone(data) {
         return request({ url: '/cases/cases/confirmNone', method: 'post', data })
     },
-    // 档案未通过审查案件
+    // 档案未通过审查操作
     refuseConfirmNone(data) {
         return request({ url: '/cases/cases/refuseConfirmNone', method: 'post', data })
+    },
+    // 档案未通过审查案件
+    getRefuseCase(data) {
+        return request({ url: '/cases/cases/getDangAnRefuseCases', method: 'post', data })
+    },
+    // 重新接受档案
+    reciveCaseAgain(data) {
+        return request({ url: '/cases/cases/retryAcceptCase', method: 'post', data })
     },
 
     // 分析评估
@@ -103,7 +111,7 @@ const cases = {
     },
     // 案件预新增案件入库
     yrExhibitAdd(data){
-        return request({ url: '/yrExhibitAdd', method: 'post', data })
+        return request({ url: '/exhibit/exhibit/addYrExhibit', method: 'post', data })
     },
     // 获取个人受理案件列表
     casesShouliGetByPage(data){

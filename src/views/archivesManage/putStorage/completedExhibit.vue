@@ -15,7 +15,7 @@
                                 v-for="item in columns" :key="item.itemId" align="center">
                                 <template slot-scope="{row}">
                                     <span v-if="item.itemId == 12">{{ row[item.title] | mapStatus }}</span>
-                                    <span >{{ row[item.title] }}</span>
+                                    <span v-else>{{ row[item.title] }}</span>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -37,8 +37,12 @@
 <script>
     import Search from '@/components/Search'
     import DialogPagin from '@/components/DialogPagin'
+    import { mapGetters } from 'vuex'
     export default {
         components: { Search,DialogPagin },
+        computed :{
+            ...mapGetters(['exhibit_time_bg','base_url'])
+        },
         filters:{
             mapStatus(status){
                 const statusList = {
@@ -67,9 +71,10 @@
                 exhibitType:[],
                 addSearch: [
                     { dom: 'case_bh', value: '',placeholder: '请输入统一受案号', itemId: 5, name: 'input' },
-                    { dom: 'case_name', value: '',placeholder: '请输入案件名称', itemId: 6, name: 'input' },
+                    { dom: 'exhibit_name', value: '',placeholder: '请输入案件名称', itemId: 6, name: 'input' },
                     { dom: 'out_exhibit_id', value: '',placeholder: '扫描条形码', itemId: 8, name: 'input' },
-                    { dom: 'case_take_user_name', value: '',placeholder: '承办人', itemId: 9, name: 'input' },
+                    { dom: 'nd', value: '',placeholder: '选择年度', itemId: 7, name: 'dataPicker' },
+                    { dom: 'cbr', value: '',placeholder: '承办人', itemId: 9, name: 'input' },
                     { dom: 'bgr', value: '',placeholder: '嫌疑人', itemId: 10, name: 'input' },
                 ],
                 setDynamicBtn: [
@@ -95,12 +100,12 @@
                     { title: 'bmsah', dataIndex: '部门受案号', itemId: 2 },
                     { title: 'case_name', dataIndex: '案件名称', itemId: 3 },
                     { title: 'case_type_name', dataIndex: '案件类型', itemId: 4 },
-                    { title: 'case_take_user_name', dataIndex: '承办人', itemId: 5 },
+                    { title: 'cbr', dataIndex: '承办人', itemId: 5 },
                     { title: 'bgr', dataIndex: '嫌疑人', itemId: 6 },
                     { title: 'exhibit_type', dataIndex: '案卷类型', itemId: 12 },
                     { title: 'dh', dataIndex: '档号', overflow: false, itemId: 7 },
-                    { title: 'jh', dataIndex: '卷号', overflow: true, itemId: 8 },
-                    { title: 'nd', dataIndex: '年度', overflow: true, itemId: 9 },
+                    { title: 'jh', dataIndex: '卷号', overflow: true, itemId: 13 },
+                    { title: 'nd', dataIndex: '年度', overflow: true, itemId: 14 },
                     { title: 'out_exhibit_id', dataIndex: '条形码号', overflow: false, itemId: 8 },
                     { title: 'cell_name', dataIndex: '存放位置', overflow: false, itemId: 9 },
                     { title: 'exhibit_create_time', dataIndex: '接受时间', itemId: 11 },
@@ -146,9 +151,6 @@
                 }
             },
             setDynamicBtnFun(data){
-                console.log(data)
-            },
-            setDynamicBtnFun(data){
                 const statusMap = {
                     "exprotFun": "openExportExcelFun"
                 }
@@ -158,9 +160,9 @@
             openExportExcelFun(data){
                 // console.log(data)
                 this.$nextTick(()=>{
-                    window.open(this.base_url+'/cases/cases/exportCases?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&case_zm='+ data.case_zm+
-                        '&timeYear='+ data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&province_id='+data.province_id+ 
-                        '&city_id='+data.city_id+ '&area_id='+data.area_id)
+                    window.open(this.base_url+'/exhibit/exhibit/exoprtExhibits?case_bh='+data.case_bh+'&stock_status=unnone'+'&exhibit_name='+ data.exhibit_name+'&bgr='+ data.bgr+
+                        '&nd='+ data.nd+'&cbr='+data.cbr+'&province_id='+data.province_id+ 
+                        '&city_id='+data.city_id+'&area_id='+data.area_id)
                 })
             },
             //自动获取焦点

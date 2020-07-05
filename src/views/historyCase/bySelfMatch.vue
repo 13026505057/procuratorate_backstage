@@ -5,7 +5,7 @@
                 @receivedAddress="receivedAddress_left"  @exportExcelFun="openExportExcelFun_left" :exportExcelBtn="true"/>
             <div class="head-tab">
                 <div class="table-dataList" >
-                    <el-table :data="showModel_left.tableData" border style="width: 100%" @cell-click="selectCellItem">
+                    <el-table :data="showModel_left.tableData" border style="width: 100%" @cell-click="selectCellItem" v-loading="dataLoading">
                         <el-table-column align="center" type="index"></el-table-column>
                         <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
                             v-for="item in columns_left" :key="item.itemId" align="center">
@@ -110,6 +110,7 @@
                     { dom: 'bgr', value: '', placeholder: '被告人', itemId: 3, name: 'input' },
                     { dom: 'out_exhibit_id', value: '', placeholder: '扫码输入', itemId: 4, name: 'input' },
                 ],
+                dataLoading:false,
                 selectOption_left: {},
                 showModel_left: {
                     tableData:[],   // 数据信息
@@ -173,11 +174,16 @@
             },
             // 获取案件列表
             async getTableList_left(dataInfo){
+                this.dataLoading = true;
                 const resultData = await this.$api.historyExhibitList(dataInfo);
-                const pagination = { ...this.pagination_left };
-                this.showModel_left.tableData = resultData.data.list;
-                pagination.total = resultData.data.total;
-                this.pagination_left = pagination;
+                if(resultData && resultData.code=='0'){
+                    const pagination = { ...this.pagination_left };
+                    this.showModel_left.tableData = resultData.data.list;
+                    pagination.total = resultData.data.total;
+                    this.pagination_left = pagination;
+                    this.dataLoading = false;
+                }
+                
             },
             // 确认搜索
             comfirmSearch_left(data){

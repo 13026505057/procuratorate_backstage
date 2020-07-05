@@ -15,7 +15,7 @@
                             <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
                                 v-for="item in columns" :key="item.itemId" align="center">
                                 <template slot-scope="{row}">
-                                    <span v-if="item.itemId == 4">{{ row[item.title]=='0'?'未交卷':'已交卷' }}</span>
+                                    <span v-if="item.itemId == 4">{{ row[item.title]=='0'?'未交卷':'' }}{{ row[item.title]=='1'?'已交卷':'' }}</span>
                                     <span v-else>{{ row[item.title] }}</span>
                                 </template>
                             </el-table-column>
@@ -38,13 +38,13 @@
                 </el-tab-pane>
             </el-tabs>
         </div>
-        <el-dialog v-dialogDrag title="案卷详情" :visible.sync="showModel.dialogTableVisible">
+        <el-dialog v-dialogDrag title="案卷详情" :visible.sync="showModel.dialogTableVisible" width="70%">
             <el-table :data="showModel.gridData" align="center">
                 <el-table-column type="index" label="#"></el-table-column>
                 <el-table-column :label="item.dataIndex"
                     v-for="item in showModel.gridData_columns" :key="item.itemId" align="center">
                     <template slot-scope="{row}">
-                        <span v-if="item.itemId == 6">{{ row[item.title]=='0'?'已入库':'待入库' }}</span>
+                        <span v-if="item.itemId == 6">{{ row[item.title]=='in'?'已入库':'' }}{{ row[item.title]=='none'?'待入库':'' }}</span>
                         <span v-else-if="item.itemId == 7">{{ row[item.title]=='0'?'失效':'有效' }}</span>
                         <span v-else>{{ row[item.title] }}</span>
                     </template>
@@ -68,7 +68,7 @@
     export default {
         components: { Search,DialogPagin },
         computed: {
-            ...mapGetters(['base_url'])
+            ...mapGetters(['base_url','org_id','print_id'])
         },
         data()  {
             return  {
@@ -113,7 +113,7 @@
                         { title: 'bgr', dataIndex: '被告人/嫌疑人', itemId: 5 },
                         { title: 'stock_status', dataIndex: '案卷状态', itemId: 6 },
                         { title: 'exhibit_status', dataIndex: '是否有效', itemId: 7 },
-                        { title: 'case_type', dataIndex: '存储位置', itemId: 8 },
+                        { title: 'cell_name', dataIndex: '存储位置', itemId: 8 },
                     ]
                 },
                 // table表头
@@ -140,7 +140,11 @@
                 this[statusMap[data.fun]](data.dataInfo)
             },
             exprotUncompleteData(data){
-                window.open(this.base_url+'/cases/cases/exportDangAnWeiGui?case_name='+data.case_name+'&case_bh='+data.case_bh+'&timeYear='+data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&case_none_status='+data.case_none_status)
+                this.$nextTick(()=>{
+                    window.open(this.base_url+'/cases/cases/exportYingGuiWeiGuiCases?case_name='+data.case_name+'&case_bh='+data.case_bh+'&timeYear='+data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&case_none_status='+data.case_none_status+'&province_id='+data.province_id+ 
+                        '&city_id='+data.city_id+ '&area_id='+data.area_id)
+                })
+                
             },
             receivedAddress(data){
                 Object.keys(data).map(item=> this.pagination[item] = data[item] )
@@ -206,7 +210,10 @@
             },
             // 补打条形码
             async printQrCodeAgain(exhibit_id){
-                let resultData = await this.$api.printAgain({exhibit_id})
+                const sendData = {};
+                sendData ['exhibit_id'] = exhibit_id; 
+                sendData ['print_id'] = this.print_id;
+                let resultData = await this.$api.printAgain(sendData)
                 if(resultData && resultData.code == '0') this.$message.success('已发送打印请求')
             },
             // 打印回执单

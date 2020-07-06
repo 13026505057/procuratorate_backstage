@@ -93,5 +93,13 @@ const exhibit = {
     getExhibit(data){
         return request({ url: '/exhibit/exhibit/getByPage', method: 'post', data })
     },
+    //查询卷宗信息
+    undateYrExhibit(data){
+        return request({ url: '/yrExhibitUpdate', method: 'post', data })
+    },
+    //查询犯罪嫌疑人
+    getCasesBgrName(data){
+        return request({ url: '/casesFzxyrGetByPage', method: 'post', data })
+    }
 }
 export default exhibit

@@ -9,7 +9,7 @@
             <el-input class="scan-input" v-model="exhibitNum" ref="exhibitNumRef" @change="exhibitNumChange" placeholder="扫描案卷码"></el-input>
             <span class="head-text">先扫描货架码，光标自动移动到案卷码位置后在扫描案卷码,每次入库操作都会记录在下方</span>
         </div>
-        <Search style="margin-top:10px;" :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
+        <Search style="margin-top:10px;" :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab"  v-loading="tableLoading">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
@@ -24,7 +24,7 @@
                                 v-for="item in columns" :key="item.itemId" align="center">
                                 <template slot-scope="{row}">
                                     <span v-if="item.itemId == 12">{{ row[item.title] | mapStatus }}</span>
-                                    <span >{{ row[item.title] }}</span>
+                                    <span v-else>{{ row[item.title] }}</span>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -46,8 +46,12 @@
 <script>
     import Search from '@/components/Search'
     import DialogPagin from '@/components/DialogPagin'
+    import { mapGetters } from 'vuex'
     export default {
         components: { Search,DialogPagin },
+        computed :{
+            ...mapGetters(['exhibit_time_bg','base_url'])
+        },
         filters:{
             mapStatus(status){
                 const statusList = {
@@ -76,13 +80,17 @@
                 exhibitType:[],
                 addSearch: [
                     { dom: 'case_bh', value: '',placeholder: '请输入统一受案号', itemId: 5, name: 'input' },
-                    { dom: 'case_name', value: '',placeholder: '请输入案件名称', itemId: 6, name: 'input' },
-                    { dom: 'timeData', value: '',placeholder: '', itemId: 7, name: 'daterange' },
+                    { dom: 'exhibit_name', value: '',placeholder: '请输入案件名称', itemId: 6, name: 'input' },
+                    { dom: 'timeData', value: '',placeholder: '入库时间', itemId: 7, name: 'daterange' },
+                    { dom: 'nd', value: '',placeholder: '选择案件年度', itemId: 11, name: 'dataPicker' },
                     { dom: 'out_exhibit_id', value: '',placeholder: '扫描条形码', itemId: 8, name: 'input' },
-                    { dom: 'case_take_user_name', value: '',placeholder: '承办人', itemId: 9, name: 'input' },
+                    { dom: 'cbr', value: '',placeholder: '承办人', itemId: 9, name: 'input' },
                     { dom: 'bgr', value: '',placeholder: '嫌疑人', itemId: 10, name: 'input' },
                 ],
                 selectOption: {},
+                setDynamicBtn: [
+                    { title: '导出', fun: 'exprotFun' }
+                ],
                 showModel: {
                     activeNameTab: "inHistory",
                     tableList:[{
@@ -99,15 +107,15 @@
                 // table表头
                 columns: [
                     { title: 'case_bh', dataIndex: '统一受案号', itemId: 1 },
-                    { title: 'case_bh', dataIndex: '部门受案号', itemId: 2 },
+                    { title: 'bmsah', dataIndex: '部门受案号', itemId: 2 },
                     { title: 'case_name', dataIndex: '案件名称', itemId: 3 },
                     { title: 'case_type_name', dataIndex: '案件类型', itemId: 4 },
-                    { title: 'case_take_user_name', dataIndex: '承办人', itemId: 5 },
+                    { title: 'cbr', dataIndex: '承办人', itemId: 5 },
                     { title: 'bgr', dataIndex: '嫌疑人', itemId: 6 },
                     { title: 'exhibit_type', dataIndex: '案卷类型', itemId: 12 },
-                    { title: 'dh', dataIndex: '档号', overflow: true, itemId: 7 },
-                    { title: 'jh', dataIndex: '卷号', overflow: true, itemId: 8 },
-                    { title: 'nd', dataIndex: '年度', overflow: true, itemId: 9 },
+                    { title: 'dh', dataIndex: '档号', overflow: false, itemId: 7 },
+                    { title: 'jh', dataIndex: '卷号', overflow: false, itemId: 8 },
+                    { title: 'nd', dataIndex: '年度', overflow: false, itemId: 9 },
                     { title: 'cell_name', dataIndex: '存放位置', itemId: 10 },
                     { title: 'stock_user_name', dataIndex: '操作人', itemId: 11 },
                 ],
@@ -121,6 +129,22 @@
             this.getExhibitInLog(this.pagination);
         },
         methods: {
+            // 导出表格
+            setDynamicBtnFun(data){
+                const statusMap = {
+                    "exprotFun": "openExportExcelFun"
+                }
+                this[statusMap[data.fun]](data.dataInfo)
+            },
+            // 导出
+            openExportExcelFun(data){
+                // console.log(data)
+                this.$nextTick(()=>{
+                    window.open(this.base_url+'/stock/stock-log/exoprtStockLog?case_bh='+data.case_bh+'&log_type=init'+'&exhibit_name='+ data.exhibit_name+'&bgr='+ data.bgr+
+                        '&nd='+ data.nd+'&cbr='+data.cbr+'&province_id='+data.province_id+ 
+                        '&city_id='+data.city_id+ '&area_id='+data.area_id)
+                })
+            },
             //查询卷宗类别如：诉讼 文书 技术
             async getExhibitType(){
                 // console.log({...this.seatchData})
@@ -144,7 +168,7 @@
                 if(resultData && resultData.code == '0') {
                     this.showModel.tableData = resultData.data.list;
                     this.showModel.tableList[0].contNum = Number(resultData.data.total);
-                    this.tableLoading = true;
+                    this.tableLoading = false;
                     // console.log(this.exhibitType)
                     // this.total1 = resultData.data.total
                 }
@@ -210,7 +234,7 @@
                         });
                         this.getExhibitInLog(this.pagination);
                         this.exhibitNum = "";
-                        this.getFocus('exhibitNumRef');
+                        this.getFocus2();
                     }
             },
             receivedAddress(data){
@@ -219,7 +243,7 @@
             // 分页
             handleCurrentChange(val) {
                 this.pagination['pageNum'] = val;
-                this.getTableList(this.pagination)
+                this.getExhibitInLog(this.pagination)
             },
             // DialogPagin
             dialogTablePagin(data){

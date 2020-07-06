@@ -229,13 +229,13 @@
                 eachDataInfoList_case: [
                     { captionTitle: '案件名称', placeholder: '请输入案件名称', dom: 'exhibit_name', itemId: 1, type: 'input' },
                     { captionTitle: '统一受案号', placeholder: '请输入统一受案号', dom: 'tysah', itemId: 2, type: 'input' },
-                    { captionTitle: '卷号', placeholder: '请输入卷号', dom: 'jh', itemId: 3, type: 'input' },
+                    // { captionTitle: '卷号', placeholder: '请输入卷号', dom: 'jh', itemId: 3, type: 'input' },
                     { captionTitle: '承办人', placeholder: '请输入承办人', dom: 'cbr', itemId: 4, type: 'input' },
-                    { captionTitle: '期限', placeholder: '请选择期限', dom: 'bgqx', itemId: 5, type: 'select' },
-                    { captionTitle: '类型', placeholder: '请选择类型', dom: 'exhibit_type', itemId: 6, type: 'select' },
+                    // { captionTitle: '期限', placeholder: '请选择期限', dom: 'bgqx', itemId: 5, type: 'select' },
+                    // { captionTitle: '类型', placeholder: '请选择类型', dom: 'exhibit_type', itemId: 6, type: 'select' },
 
                     { captionTitle: '年度', placeholder: '请输入年度', dom: 'nd', itemId: 7, type: 'input' },
-                    { captionTitle: '档号', placeholder: '请输入档号', dom: 'dh', itemId: 8, type: 'input' },
+                    // { captionTitle: '档号', placeholder: '请输入档号', dom: 'dh', itemId: 8, type: 'input' },
                     { captionTitle: '案由', placeholder: '请输入案由', dom: 'ay', itemId: 9, type: 'input' },
                     { captionTitle: '犯罪嫌疑人', placeholder: '请输入犯罪嫌疑人', dom: 'bgr', itemId:10, type: 'input' },
                     { captionTitle: '类型', placeholder: '请选择案件类型', dom: 'case_type_id', itemId: 11, type: 'select' },

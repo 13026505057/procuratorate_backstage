@@ -76,12 +76,18 @@
                 addSearch: [
                     { dom: 'tysah', value: '',placeholder: '请输入统一受案号', itemId: 5, name: 'input' },
                     { dom: 'case_name', value: '',placeholder: '请输入案件名称', itemId: 6, name: 'input' },
-                    { dom: 'timeData', value: '',placeholder: '', itemId: 7, name: 'daterange' },
-                    // { dom: 'out_exhibit_id', value: '',placeholder: '扫描条形码', itemId: 8, name: 'input' },
+                    // { dom: 'timeData', value: '',placeholder: '', itemId: 7, name: 'daterange' },
+                    { dom: 'out_exhibit_id', value: '',placeholder: '扫描条形码', itemId: 8, name: 'input' },
                     { dom: 'cbr', value: '',placeholder: '承办人', itemId: 9, name: 'input' },
                     { dom: 'bgr', value: '',placeholder: '嫌疑人', itemId: 10, name: 'input' },
+                    { dom: 'stock_status', value: '',placeholder: '是否交卷', itemId: 11, name: 'select' },
                 ],
-                selectOption: {},
+                selectOption: {
+                    stock_status: [
+                        { value: 'none', label: '未入库' },
+                        { value: 'in', label: '已入库' },
+                    ],
+                },
                 showModel: {
                     activeNameTab: "inHistory",
                     tableList:[{
@@ -104,11 +110,11 @@
                     { title: 'cbr', dataIndex: '承办人', itemId: 5 },
                     { title: 'bgr', dataIndex: '嫌疑人', itemId: 6 },
                     { title: 'exhibit_type', dataIndex: '案卷类型', itemId: 12 },
-                    { title: 'dh', dataIndex: '档号', overflow: true, itemId: 7 },
+                    { title: 'dh', dataIndex: '档号', overflow: false, itemId: 7 },
                     { title: 'jh', dataIndex: '卷号', overflow: true, itemId: 8 },
                     { title: 'nd', dataIndex: '年度', overflow: true, itemId: 9 },
                     { title: 'cell_name', dataIndex: '存放位置', itemId: 10 },
-                    { title: 'stock_user_name', dataIndex: '操作人', itemId: 11 },
+                    // { title: 'stock_user_name', dataIndex: '操作人', itemId: 11 },
                 ],
                 tableLoading:false,
             }
@@ -135,7 +141,10 @@
             },
             // 补打条码
             async reprintCodeClick(res){
-                const resultData = await this.$api.printAgain({exhibit_id:res.exhibit_id});
+                const sendData = {};
+                sendData ['exhibit_id'] = res.exhibit_id;
+                sendData ['print_id'] = this.print_id;
+                const resultData = await this.$api.printAgain(sendData);
                 if(resultData && resultData.code == '0') {
                     this.$message.success('已发送打印请求');
                 }

@@ -1,6 +1,6 @@
 <template>
     <div class="bindReadyItemPage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
@@ -14,13 +14,14 @@
                             <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
                                 v-for="item in columns" :key="item.itemId" align="center">
                                 <template slot-scope="{row}">
-                                    <span v-if="item.itemId == 6">{{ row[item.title]=='none'?'未入库':'已入库' }}</span>
+                                    <span v-if="item.itemId == 6">{{ row[item.title]=='none'?'未入库':'' }}{{ row[item.title]=='in'?'已入库':'' }}</span>
+                                    <span v-else-if="item.itemId == 14">{{ row[item.title]=='SS'?'诉讼':'' }}{{ row[item.title]=='WS'?'文书':'' }}{{ row[item.title]=='JS'?'技术':'' }}</span>
                                     <span v-else>{{ row[item.title] }}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column align="center" label="操作">
                                 <template slot-scope="{row}">
-                                    <el-button @click="showDialogPanel({ tysah: row.tysah, case_name: row.case_name, case_take_user_name: row.case_take_user_name },row.exhibit_id)" class="highlight-btn" size="small">绑定预入库</el-button>
+                                    <el-button @click="showDialogPanel({ tysah: row.tysah, case_name: row.case_name, case_take_user_name: row.case_take_user_name },row.exhibit_id)" class="highlight-btn" size="small">绑定案件</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -40,7 +41,7 @@
         <!-- 案件列表 -->
         <el-dialog v-dialogDrag title="案件列表" :visible.sync="showModel.dialogTableVisible" width="70%">
             <Search :addSearch="mergeData.addSearch" :selectOption="mergeData.selectOption" :resetData="true" 
-                @comfirmSearch="comfirmSearch_merge" :hiddenAdress="false"/>
+                @comfirmSearch="comfirmSearch_merge" :hiddenAdress="true"/>
             <el-table :data="showModel.gridData" align="center" v-loading="loadingTable_merge">
                 <el-table-column type="index" label="#"></el-table-column>
                 <el-table-column :label="item.dataIndex" :prop="item.title" :show-overflow-tooltip="item.overflow"
@@ -52,7 +53,7 @@
                 </el-table-column>
                 <el-table-column align="center" label="操作">
                     <template slot-scope="{row}">
-                        <el-button @click="bindCaseData(row.case_id)" class="highlight-btn" type="operation" size="small">绑定</el-button>
+                        <el-button @click="bindCaseDataClick(row.case_id)" class="highlight-btn" type="operation" size="small">绑定</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -88,13 +89,17 @@
                 },
                 loadingTable: false,
                 addSearch: [
-                    { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
-                    { dom: 'case_none_status', value: '',placeholder: '是否已交卷', itemId: 6, name: 'select' },
+                    { dom: 'tysah', value: '',placeholder: '统一受案号', itemId: 1, name: 'input' },
+                    { dom: 'case_name', value: '',placeholder: '案件名称', itemId: 2, name: 'input' },
+                    { dom: 'case_zm', value: '',placeholder: '罪名', itemId: 5, name: 'input' },
+                    { dom: 'nd', value: '',placeholder: '选择年份', itemId: 3, name: 'dataPicker' },
+                    { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 4, name: 'input' },
+                    { dom: 'stock_status', value: '',placeholder: '是否已交卷', itemId: 6, name: 'select' },
                 ],
                 selectOption: {
-                    case_none_status: [
-                        { value: 1, label: '未交卷' },
-                        { value: 2, label: '已交卷(未上架)' },
+                    stock_status: [
+                        { value: 'none', label: '未入库' },
+                        { value: 'in', label: '已入库' },
                     ]
                 },
                 showModel: {
@@ -121,14 +126,18 @@
                 // table表头
                 columns: [
                     { title: 'tysah', dataIndex: '统一受案号', itemId: 1 },
+                    { title: 'exhibit_name', dataIndex: '案卷名称', itemId: 12 },
+                    { title: 'bgr', dataIndex: '嫌疑人', itemId: 15 },
+                    { title: 'bgqx', dataIndex: '保管期限', itemId: 13 },
+                    { title: 'exhibit_type', dataIndex: '案卷类型', itemId: 14 },
                     { title: 'out_exhibit_id', dataIndex: '条形码号', itemId: 10 },
                     { title: 'dh', dataIndex: '档号', itemId: 2 },
                     { title: 'jh', dataIndex: '卷号', itemId: 8 },
-                    { title: 'exhibit_name', dataIndex: '案卷名称', itemId: 11 },
+                    { title: 'cbr', dataIndex: '承办人', itemId: 11 },
                     { title: 'cell_name', dataIndex: '存储位置', itemId: 3 },
                     { title: 'nd', dataIndex: '年度', itemId: 5 },
                     { title: 'stock_status', dataIndex: '入库状态', itemId: 6 },
-                    { title: 'case_type_name', dataIndex: '隶属案件类型', itemId: 7 },
+                    // { title: 'case_type_name', dataIndex: '隶属案件类型', itemId: 7 },
                 ],
                 mergeData: {
                     addSearch: [
@@ -173,7 +182,11 @@
                 this.loadingTable = true;
                 this.showModel.dialogTableVisible = false;
                 this.showModel.dialogReceivedVisible = false; 
-                const resultData = await this.$api.yrExhibitGetByPage(dataInfo);
+                this.$nextTick()
+                const sendData = dataInfo;
+                sendData ['nd'] =  dataInfo.timeYear;
+                console.log(sendData)
+                const resultData = await this.$api.yrExhibitGetByPage(sendData);
                 const pagination = { ...this.pagination };
                 let resultData_table = [];
                 resultData.data.list.map(item=>{
@@ -187,7 +200,8 @@
             // 确认搜索
             comfirmSearch(data){
                 this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] } })
-                this.getCaseType()
+                // this.getCaseType()
+                this.getTableList(this.pagination)
             },
             // 确认搜索
             comfirmSearch_merge(data){
@@ -213,10 +227,17 @@
                 this.pagination_merge = pagination;
                 this.loadingTable_merge = false;
             },
-            async bindCaseData(case_id){
+            bindCaseDataClick(case_id){
+                this.bindCaseDataRequest(case_id);
+            },
+            async bindCaseDataRequest(case_id){
                 this.bindCaseData.case_id = case_id;
                 let resultData = await this.$api.attachExhibitToCase(this.bindCaseData)
-                if(resultData && resultData.code == '0') this.$message.success('操作成功')
+                if(resultData && resultData.code == '0'){
+                    this.showModel.dialogTableVisible = false;
+                    this.$message.success('操作成功');
+                    this.getTableList(this.pagination);
+                } 
             }
         }
     }

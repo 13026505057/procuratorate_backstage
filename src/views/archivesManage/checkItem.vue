@@ -318,7 +318,7 @@
                 const dataInfo = { case_ids,mark: this.submitDataInfo.mark }
                 let resultData = await this.$api.refuseConfirmNone(dataInfo)
                 if(resultData && resultData.code=='0') this.$message.success('操作成功')
-                this.getTableList(this.pagination)
+                this.getCaseType(this.pagination)
             },
         },
     }

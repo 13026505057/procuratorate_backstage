@@ -58,8 +58,8 @@ const asyncDataRoutes = [
                 "name": "审查记录 - CheckHistory", "meta":{ "title":"审查记录","icon": "icon-zhiliangpingcha" },
                 "redirect": "/archivesManage/checkHistory/agree",
                 "children": [
-                    {"path": "agree", "component": "views/archivesManage/checkHistory/agree", "name": "通过审查 - Agree", "meta":{ "title":"通过审查","icon": "icon-zhiliangpingcha" }},
-                    {"path": "disagree", "component": "views/archivesManage/checkHistory/disagree", "name": "未通过审查 - Disagree", "meta":{ "title":"未通过审查","icon": "icon-zhiliangpingcha" }}
+                    {"path": "agree", "component": "views/archivesManage/checkHistory/agree", "name": "退查中案件 - Agree", "meta":{ "title":"退查中案件","icon": "icon-zhiliangpingcha" }},
+                    {"path": "disagree", "component": "views/archivesManage/checkHistory/disagree", "name": "审查记录 - Disagree", "meta":{ "title":"审查记录","icon": "icon-zhiliangpingcha" }}
                 ]
             },
             {   "path": "putStorage", "component": "views/archivesManage/putStorage/index", 
@@ -94,8 +94,8 @@ const asyncDataRoutes = [
         "path": "/historyCase",
         "redirect": "/historyCase/historyCase",
         "children": [
-            {"path": "historyCase", "component": "views/historyCase/historyCase", "name": "新增历史案卷 - HistoryCaseItem", "meta":{ "title":"新增历史案卷","icon": "icon-zhiliangpingcha" }},
-            {"path": "historicalCases", "component": "views/historyCase/historyCase", "name": "新增历史案件 - HistoricalCases", "meta":{ "title":"新增历史案件","icon": "icon-zhiliangpingcha" }},
+            {"path": "historyCase", "component": "views/historyCase/historyCase", "name": "历史案卷导入 - HistoryCaseItem", "meta":{ "title":"历史案卷导入","icon": "icon-zhiliangpingcha" }},
+            {"path": "historicalCases", "component": "views/historyCase/historyCase", "name": "新增历史案卷 - HistoricalCases", "meta":{ "title":"新增历史案卷","icon": "icon-zhiliangpingcha" }},
             {"path": "bySelfMatch", "component": "views/historyCase/bySelfMatch", "name": "人工匹配 - BySelfMatch", "meta":{ "title":"人工匹配","icon": "icon-zhiliangpingcha" }},
             {"path": "notBindCheck", "component": "views/historyCase/notBindCheck", "name": "未绑查询 - NotBindCheck", "meta":{ "title":"未绑查询","icon": "icon-zhiliangpingcha" }},
             {"path": "matchingHistory", "component": "views/historyCase/matchingHistory", "name": "匹配历史 - MatchingHistory", "meta":{ "title":"匹配历史","icon": "icon-zhiliangpingcha" }}

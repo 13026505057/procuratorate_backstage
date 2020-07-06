@@ -3,7 +3,7 @@
     <div>
       <div class="title-container">
         <h3 class="title">
-          <img src="@/assets/login/emblem.png" alt="">青岛市检察机关档案管理系统
+          <img src="@/assets/login/emblem.png" alt="">青岛市检察机关档案归档考核系统
         </h3>
       </div>
       <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
@@ -214,7 +214,7 @@ $login_btn:rgb(86,167,255);
     position: relative;
     
     .title {
-      font-size: 40px;
+      font-size: 50px;
       // color: $light_gray;
       color: #fff;
       font-family: 'MicrosoftYaHei';

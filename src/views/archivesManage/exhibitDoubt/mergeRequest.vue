@@ -20,7 +20,7 @@
                             </el-table-column>
                             <el-table-column align="center" label="操作">
                                 <template slot-scope="{row}">
-                                    <el-button @click="showDialogPanel(row.case_bh,row.case_id)" class="highlight-btn" size="small">多案并案</el-button>
+                                    <el-button @click="showDialogPanel(row.case_bh,row.case_id,row.bmsah,row.case_name)" class="highlight-btn" size="small">多案并案</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -38,7 +38,7 @@
             </el-tabs>
         </div>
         <!-- 案件列表 -->
-        <el-dialog v-dialogDrag title="案件列表" :visible.sync="showModel.dialogTableVisible">
+        <el-dialog v-dialogDrag title="案件列表" :visible.sync="showModel.dialogTableVisible" width="70%">
             <Search :addSearch="mergeData.addSearch" :selectOption="mergeData.selectOption" :resetData="true" 
                 @comfirmSearch="comfirmSearch_merge" :hiddenAdress="false"/>
             <el-table :data="showModel.gridData" align="center" v-loading="loadingTable_merge">
@@ -107,6 +107,7 @@
                         { title: 'case_name', dataIndex: '案件名称', itemId: 3 },
                         { title: 'case_desc', dataIndex: '案件描述', itemId: 4, overflow: true },
                         { title: 'case_take_user_name', dataIndex: '承办人', itemId: 5 },
+                        { title: 'bgr', dataIndex: '嫌疑人', itemId: 6 },
                         { title: 'case_type_name', dataIndex: '案件类型', itemId: 6 },
                     ],
                 },
@@ -125,8 +126,12 @@
                 mergeData: {
                     addSearch: [
                         { dom: 'case_bh', value: '',placeholder: '统一受案号', itemId: 1, name: 'input' },
+                        { dom: 'bmsah', value: '',placeholder: '部门受案号', itemId: 4, name: 'input' },
                         { dom: 'case_name', value: '',placeholder: '案件名称', itemId: 2, name: 'input' },
-                        // { dom: 'case_zm', value: '',placeholder: '扫描条形码', itemId: 3, name: 'input' },
+                        { dom: 'case_take_user_name', value: '',placeholder: '承办人', itemId: 5, name: 'input' },
+                        { dom: 'out_exhibit_id', value: '',placeholder: '扫描条形码', itemId: 3, name: 'input' },
+                        
+                        
                         // { dom: 'case_zm', value: '',placeholder: '', itemId: 4, name: 'select' },
                     ],
                     selectOption: {},
@@ -216,17 +221,24 @@
                 this.$nextTick(()=>{ for(let key in data){ this.pagination_merge[key] = data[key] } })
                 this.getWasInHouseList(this.pagination_merge)
             },
-            showDialogPanel(case_bh,case_id){
+            showDialogPanel(case_bh,case_id,bmsah,case_name){
+                console.log(case_bh,case_id,bmsah,case_name)
                 this.showModel.dialogTableVisible = true;
                 this.mergeData.addSearch[0].value = case_bh;
+                // this.mergeData.addSearch[1].value = bmsah;
+                this.mergeData.addSearch[2].value = case_name;
                 this.pagination_merge.case_bh = case_bh;
+                this.pagination_merge.tysah = case_bh;
+                // this.pagination_merge.bmsah = bmsah;
+                this.pagination_merge.case_name = case_name;
                 this.submiteDataInfo.weigui_case_id = case_id;
                 this.getWasInHouseList(this.pagination_merge)
             },
             // 获取已入库案件信息
             async getWasInHouseList(dataInfo){
                 this.loadingTable_merge = true;
-                const resultData = await this.$api.getInByPage(dataInfo);
+                dataInfo ['dangan_accept_status'] = '1'; 
+                const resultData = await this.$api.getConfirmedByPage(dataInfo);
                 const pagination = { ...this.pagination_merge };
                 this.showModel.gridData = resultData.data.list;
                 pagination.total = resultData.data.total;

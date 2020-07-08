@@ -80,21 +80,21 @@
                     case_bh: '',
                     timeYear: '',
                     case_take_user_name: '',
-                    case_none_status: '',
+                    dangan_accept_status: '',
                     case_type_id: '',
                 },
                 loadingTable: false,
                 addSearch: [
                     { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
-                    { dom: 'case_none_status', value: '',placeholder: '是否已交卷', itemId: 6, name: 'select' },
+                    { dom: 'dangan_accept_status', value: '',placeholder: '是否已交卷', itemId: 6, name: 'select' },
                 ],
                 setDynamicBtn: [
                     { title: '导出', fun: 'exprotFun' }
                 ],
                 selectOption: {
-                    case_none_status: [
-                        { value: 1, label: '未交卷' },
-                        { value: 2, label: '已交卷(未上架)' },
+                    dangan_accept_status: [
+                        { value: 0, label: '未交卷' },
+                        { value: 1, label: '已交卷(未上架)' },
                     ]
                 },
                 showModel: {
@@ -119,6 +119,7 @@
                 // table表头
                 columns: [
                     { title: 'case_bh', dataIndex: '统一受案号', overflow: false, itemId: 1 },
+                    { title: 'bmsah', dataIndex: '部门受案号', overflow: false, itemId: 7 },
                     { title: 'case_name', dataIndex: '案件名称', overflow: false, itemId: 10 },
                     { title: 'case_desc', dataIndex: '案件描述', overflow: true, itemId: 11 },
                     { title: 'case_type_name', dataIndex: '案件类型', overflow: false, itemId: 2 },
@@ -141,7 +142,7 @@
             },
             exprotUncompleteData(data){
                 this.$nextTick(()=>{
-                    window.open(this.base_url+'/cases/cases/exportYingGuiWeiGuiCases?case_name='+data.case_name+'&case_bh='+data.case_bh+'&timeYear='+data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&case_none_status='+data.case_none_status+'&province_id='+data.province_id+ 
+                    window.open(this.base_url+'/cases/cases/exportYingGuiWeiGuiCases?case_name='+data.case_name+'&case_bh='+data.case_bh+'&timeYear='+data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&dangan_accept_status='+data.dangan_accept_status+'&province_id='+data.province_id+ 
                         '&city_id='+data.city_id+ '&area_id='+data.area_id)
                 })
                 

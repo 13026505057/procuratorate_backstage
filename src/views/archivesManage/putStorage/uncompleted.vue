@@ -71,7 +71,7 @@
                     case_bh: '',
                     begin_time: '',
                     end_time: '',
-                    stock_log_type: 'init',
+                    stock_log_type: '',
                 },
                 tableLoading:false,
                 exhibit_type:'SS',
@@ -116,8 +116,9 @@
                     { title: 'dh', dataIndex: '档号', overflow: false, itemId: 7 },
                     { title: 'jh', dataIndex: '卷号', overflow: false, itemId: 8 },
                     { title: 'nd', dataIndex: '年度', overflow: false, itemId: 9 },
+                    { title: 'out_exhibit_id', dataIndex: '条形码号', itemId: 13 },
                     { title: 'cell_name', dataIndex: '存放位置', itemId: 10 },
-                    { title: 'stock_user_name', dataIndex: '操作人', itemId: 11 },
+                    { title: 'stock_log_time', dataIndex: '操作时间', itemId: 11 },
                 ],
             }
            

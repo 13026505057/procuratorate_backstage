@@ -20,7 +20,7 @@
                             </el-table-column>
                             <el-table-column align="center" label="操作">
                                 <template slot-scope="{row}">
-                                    <el-button @click="showDialogPanel(row.case_bh,row.case_id,row.bmsah,row.case_name)" class="highlight-btn" size="small">多案并案</el-button>
+                                    <el-button @click="showDialogPanel(row.case_bh,row.case_id,row.bmsah,row.case_name)" class="highlight-btn" size="small">多案并卷</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -48,7 +48,7 @@
                 </el-table-column>
                 <el-table-column align="center" label="操作">
                     <template slot-scope="{row}">
-                        <el-button @click="mergeCase(row.case_id)" class="highlight-btn" type="operation" size="small">并卷</el-button>
+                        <el-button v-if="submiteDataInfo.weigui_case_id==row.case_id?false:true" @click="mergeCase(row.case_id)" class="highlight-btn" type="operation" size="small">并卷</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -237,7 +237,7 @@
             // 获取已入库案件信息
             async getWasInHouseList(dataInfo){
                 this.loadingTable_merge = true;
-                dataInfo ['dangan_accept_status'] = '1'; 
+                // dataInfo ['dangan_accept_status'] = '1'; 
                 const resultData = await this.$api.getConfirmedByPage(dataInfo);
                 const pagination = { ...this.pagination_merge };
                 this.showModel.gridData = resultData.data.list;

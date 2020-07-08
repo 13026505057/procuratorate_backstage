@@ -102,7 +102,7 @@
                     </el-select>
                 </div> -->
                 <div class="checkboxSelect">
-                    <el-checkbox v-model="submitDataInfo.print_code">同时打印案件条形码</el-checkbox>
+                    <el-checkbox v-model="submitDataInfo.print_code" >同时打印案件条形码</el-checkbox>
                     <el-checkbox v-model="submitDataInfo.print_accept">同时打印收卷回执单</el-checkbox>
                 </div>
             </el-form>
@@ -191,8 +191,8 @@
                     ay:'',
                     case_type_id:'30',
                     cbr:'',
-                    print_code: 1,
-                    print_accept: 0
+                    print_code: true,
+                    print_accept: false
                 },
                 rules: {
                     nd: [
@@ -307,9 +307,7 @@
                 this.showModel.dialogReceivedVisible = true;
             },
             async confirmAddCase(){
-                console.log(this.pagination)
-                console.log(this.submitDataInfo.case_type_id)
-               
+                ['print_code','print_accept'].map(item=> this.submitDataInfo[item] = Number(this.submitDataInfo[item])) || 0
                 this.submitDataInfo ['province_id'] = this.pagination.province_id;
                 this.submitDataInfo ['city_id'] = this.pagination.city_id;
                 this.submitDataInfo ['area_id'] = this.pagination.area_id;
@@ -340,7 +338,7 @@
             //重置表单
             resetSubmitInfo(){
                 for( let key in this.submitDataInfo){ this.submitDataInfo[key] = '' }
-                this.submitDataInfo.print_code = 1;
+                this.submitDataInfo.print_code = true;
                 this.submitDataInfo.exhibit_type = localStorage.getItem('yr_exhibit_type');
                 this.submitDataInfo.bgqx = localStorage.getItem('yr_bgqx')
                 this.submitDataInfo.nd = localStorage.getItem('yr_nd') || new Date().getFullYear()

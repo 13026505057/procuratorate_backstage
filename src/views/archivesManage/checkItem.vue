@@ -97,7 +97,7 @@
     export default {
         components: { Search,DialogPagin },
         computed: {
-            ...mapGetters(['base_url'])
+            ...mapGetters(['base_url','print_id'])
         },
         filters: {
             mapStatus(status){
@@ -270,7 +270,10 @@
             },
             // 补打条形码
             async printQrCodeAgain(exhibit_id){
-                let resultData = await this.$api.printAgain({exhibit_id})
+                const sendData = {};
+                sendData ['print_id'] = this.print_id;
+                sendData ['exhibit_id'] = exhibit_id;
+                let resultData = await this.$api.printAgain(sendData)
                 if(resultData && resultData.code == '0') this.$message.success('已发送打印请求')
             },
             // 作废

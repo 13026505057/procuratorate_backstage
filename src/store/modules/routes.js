@@ -46,11 +46,11 @@ const asyncDataRoutes = [
             },
             {   "path": "exhibitDoubt", "component": "views/archivesManage/exhibitDoubt/index", 
                 "redirect": "/archivesManage/exhibitDoubt/mergeRequest",
-                "name": "问题处理 - ExhibitDoubt", "meta":{ "title":"问题处理","icon": "icon-zhiliangpingcha" },
+                "name": "其他情况 - ExhibitDoubt", "meta":{ "title":"其他情况","icon": "icon-zhiliangpingcha" },
                 "children": [
-                    {"path": "finishStatus", "component": "views/archivesManage/exhibitDoubt/finishStatus", "name": "办结情况查询 - FinishStatus", "meta":{ "title":"办结情况查询","icon": "icon-zhiliangpingcha" }},
-                    {"path": "mergeRequest", "component": "views/archivesManage/exhibitDoubt/mergeRequest", "name": "多案并卷 - MergeRequest", "meta":{ "title":"多案并卷","icon": "icon-zhiliangpingcha" }},
-                    {"path": "matterExhibit", "component": "views/archivesManage/exhibitDoubt/matterExhibit", "name": "问题卷记录 - MatterExhibit", "meta":{ "title":"问题卷记录","icon": "icon-zhiliangpingcha" }}
+                    // {"path": "finishStatus", "component": "views/archivesManage/exhibitDoubt/finishStatus", "name": "办结情况查询 - FinishStatus", "meta":{ "title":"办结情况查询","icon": "icon-zhiliangpingcha" }},
+                    {"path": "mergeRequest", "component": "views/archivesManage/exhibitDoubt/mergeRequest", "name": "多案并卷 - MergeRequest", "meta":{ "title":"多案并卷","icon": "icon-zhiliangpingcha" }}
+                    // {"path": "matterExhibit", "component": "views/archivesManage/exhibitDoubt/matterExhibit", "name": "问题卷记录 - MatterExhibit", "meta":{ "title":"问题卷记录","icon": "icon-zhiliangpingcha" }}
                 ]
             },
             {"path": "checkItem", "component": "views/archivesManage/checkItem", "name": "档案审查 - CheckItem", "meta":{ "title":"档案审查","icon": "icon-jinduchaxun" }},

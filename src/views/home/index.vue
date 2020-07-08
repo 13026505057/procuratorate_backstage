@@ -1,6 +1,7 @@
 <template>
    <div class="homePage">
-      <div class="table" style="width: 100%;height:400px;">
+     <iframe class="iframe_class" src="http://141.113.80.27:9000/share/04a97ecb-db6c-4334-9997-6e01d11d283d" frameborder="0"></iframe>
+      <!-- <div class="table" style="width: 100%;height:400px;">
         <div class="tableTop">入库案件按部门统计</div>
         <Statistics ref="inCaseDep" :id="'inDepStatistics'" :option="StatisticsOption.inCaseDep" height="100%" width="100%"/>
       </div>
@@ -15,7 +16,7 @@
       <div class="table" style="width: 100%;height:400px;">
         <div class="tableTop">出库案件按时间统计</div>
         <Statistics ref="outCaseTime" :id="'outTimeStatistics'" :option="StatisticsOption.outCaseTime" height="100%" width="100%"/>
-      </div>
+      </div> -->
    </div>
 </template>
 
@@ -130,6 +131,10 @@ export default {
       .tableTop{
         padding: 20px;
       }
+    }
+    .iframe_class{
+      width: 100%;
+      height: 100%;
     }
   }
 </style>

@@ -133,8 +133,10 @@ const actions = {
         if(data.list.map.length>0){
           if(localStorage.getItem('print_id')){
             print_id = localStorage.getItem('print_id');
+            console.log(print_id)
           }else{
             print_id = data.list[0].print_id
+            console.log(print_id)
           }
         }else{
 

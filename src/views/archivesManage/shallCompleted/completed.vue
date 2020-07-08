@@ -68,7 +68,7 @@
     export default {
         components: { Search,DialogPagin },
         computed: {
-            ...mapGetters(['base_url'])
+            ...mapGetters(['base_url','print_id'])
         },
         filters: {
             mapStatus(status){
@@ -127,6 +127,7 @@
                 // table表头
                 columns: [
                     { title: 'case_bh', dataIndex: '统一受案号', itemId: 1 },
+                    { title: 'bmsah', dataIndex: '部门受案号', overflow: false, itemId: 8 },
                     { title: 'case_name', dataIndex: '案件名称', itemId: 10 },
                     { title: 'case_type_name', dataIndex: '案件类型', itemId: 2 },
                     { title: 'case_desc', dataIndex: '案件描述', overflow: true, itemId: 11 },
@@ -225,7 +226,10 @@
             },
             // 补打条形码
             async printQrCodeAgain(exhibit_id){
-                let resultData = await this.$api.printAgain({exhibit_id})
+                const sendData = {};
+                sendData ['print_id'] = this.print_id;
+                sendData ['exhibit_id'] = exhibit_id;
+                let resultData = await this.$api.printAgain(sendData)
                 if(resultData && resultData.code == '0') this.$message.success('已发送打印请求')
             },
             // 打印回执单

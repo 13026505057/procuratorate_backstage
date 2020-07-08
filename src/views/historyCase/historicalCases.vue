@@ -2,7 +2,7 @@
     <div class="historicalCasesPage">
         <!-- <DynamicSearch  @comfirmSearch="comfirmSearch"/> -->
         <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch"
-            :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun" @exportExcelFun="openExportExcelFun" :exportExcelBtn="true"/>
+            :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun" @exportExcelFun="openExportExcelFun" />
         <div class="head-tab">
             <div class="table-dataList" >
                 <el-table :data="showModel.tableData" border style="width: 100%" v-loading="loadingTable">

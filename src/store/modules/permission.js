@@ -115,7 +115,6 @@ const actions = {
       accessedRoutes = filterAsyncRoutes(accessedRoute,true)
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
-      
     })
   }
 }

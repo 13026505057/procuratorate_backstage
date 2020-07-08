@@ -1,6 +1,7 @@
 <template>
   <div class="editRoutesPage">
     <el-button @click="addRole" type="search">新增</el-button>
+    <el-button @click="editUpdateRoleFun(updateRole_temp)" type="search">更新路由表</el-button>
     <el-table :data="rolesList" style="width: 100%;margin-top:30px;" border :header-cell-style="headerRowStyle">
         <el-table-column align="center" type="index" label="#"></el-table-column>
       <el-table-column align="center" label="权限组名称" prop="group_name"></el-table-column>
@@ -38,36 +39,40 @@ import { mapGetters } from 'vuex'
 import { deepClone } from '@/utils'
 import { getToken } from '@/utils/auth'
 import { filterAsyncRoutes_respones,checkedNullInfo_respones } from '@/store/modules/permission'
+import UpdateRole from '@/store/modules/routes'
 
 export default {
-    data() {
-        return {
-        role: {
-            vue_role_id: '',
-            group_name: '',
-            routes: []
-        },
-        routes: [],
-        rolesList: [],
-        dialogVisible: false,
-        showModel: {
-          dialogTitle: '',
-          modelType: false, // true为修改 false为新增
-        },
-        checkStrictly: false,
-        defaultProps: {
-            children: 'children',
-            label: "name"
-        },
-        headStyle:{
-            backgroundColor: '#eaf5ff',
-            borderTop: '1px solid #97cfff',
-            borderBottom: '1px solid #97cfff',
-            fontSize: '18px',
-            color: '#2c2c2c'
-        },
-        }
-    },
+  data() {
+    return {
+      role: {
+        vue_role_id: '',
+        group_name: '',
+        routes: []
+      },
+      routes: [],
+      rolesList: [],
+      dialogVisible: false,
+      showModel: {
+        dialogTitle: '',
+        modelType: false, // true为修改 false为新增
+      },
+      checkStrictly: false,
+      defaultProps: {
+          children: 'children',
+          label: "name"
+      },
+      headStyle:{
+          backgroundColor: '#eaf5ff',
+          borderTop: '1px solid #97cfff',
+          borderBottom: '1px solid #97cfff',
+          fontSize: '18px',
+          color: '#2c2c2c'
+      },
+      // 更新路由表
+      dialogVisible_role: false,
+      updateRole_temp: UpdateRole
+    }
+  },
   computed: {
     ...mapGetters(['base_url']),
     routesData() {
@@ -79,6 +84,20 @@ export default {
     this.getRoutesGroup()
   },
   methods: {
+    // 更新路由表信息
+    editUpdateRoleFun(params){
+      return new Promise((resolve, reject) => {
+        axios({
+          method: 'post',
+          url: this.base_url+'/vueDefaultRouteAddList',
+          data: params,
+          headers: { 'kf-token': getToken() },
+        }).then(res=>{
+          if(res.code == '0') this.$message.success('更新完成')
+          resolve(res.data)
+        }).catch(error => reject(error) )
+      })
+    },
     async addRole(){
       this.dialogVisible = true;
       this.showModel.modelType = false;
@@ -132,6 +151,7 @@ export default {
     // 默认Tree树
     resetRoutes(){
       this.getDefaultRoutes()
+      this.updateRole_temp = ''
     },
     // 权限组信息更改
     editRouteFun(params){

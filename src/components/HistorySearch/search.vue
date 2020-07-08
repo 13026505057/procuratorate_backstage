@@ -37,7 +37,7 @@
         </div>
         <div class="searchItem settingBtn">
             <el-button type="search" @click="comfirmSearch">查询</el-button>
-            <el-button type="search" @click="importCaseBtn">导入</el-button>
+            <!-- <el-button type="search" @click="importCaseBtn">导入</el-button> -->
             <el-button type="search" @click="exportCaseBtn">导出</el-button>
         </div>
         <!-- 案件导入 -->
@@ -130,8 +130,20 @@ export default {
             this.searchList.map(item=>{
                 dataInfo[item.dom] = item.value
             })
-            window.open(this.base_url+'/exhibit/exhibit/exoprtExhibits?exhibit_name='+dataInfo.exhibit_name+'&tysah='+
-                dataInfo.tysah+'&nd='+dataInfo.nd+'&stock_status='+dataInfo.stock_status+'&out_exhibit_id='+dataInfo.out_exhibit_id)
+            if(this.selectOrgId && this.selectOrgId.length > 0){
+                this.$nextTick(()=>{
+                    const { data } = this.$refs.treeOrg.getCheckedNodes()[0];
+                    ['province_id','city_id','area_id'].map(keys=> dataInfo[keys] = data[keys] )
+                })
+            } else{
+                // console.log(this.address_id)
+                this.$nextTick(()=>{ ['province_id','city_id','area_id'].map(keys=> dataInfo[keys] = this.address_id[keys] ) })
+            } 
+            this.$nextTick(()=> {
+                window.open(this.base_url+'/exhibit/exhibit/exoprtExhibits?exhibit_name='+dataInfo.exhibit_name+'&tysah='+
+                dataInfo.tysah+'&nd='+dataInfo.nd+'&stock_status='+dataInfo.stock_status+'&out_exhibit_id='+dataInfo.out_exhibit_id+'&province_id='+dataInfo.province_id+'&city_id='+dataInfo.city_id+'&area_id='+dataInfo.area_id)
+            })
+            
         },
         getDataList(){
             let dataArr = [

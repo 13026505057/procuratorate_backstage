@@ -1,6 +1,7 @@
 import variables from '@/styles/element-variables.scss'
 import defaultSettings from '@/settings'
 import api from '@/api'
+import userInfo from './user'
 
 const { showSettings, tagsView, fixedHeader, sidebarLogo } = defaultSettings
 
@@ -18,7 +19,8 @@ const state = {
   case_type_origin: [],
   stock_status: [],
   temporary_nd: '',
-  print_id:''
+  print_id:'',
+  chart_iframe: []
 }
 
 const mutations = {
@@ -45,9 +47,12 @@ const mutations = {
   },
   SET_TEMPORARY_ND(state,temporary_nd){
     state.temporary_nd = temporary_nd
-  },
+  }, 
   SET_PRINT_ID(state,print_id){
     state.print_id = print_id
+  },
+  SET_CHART_IFRAME(state,chart_iframe){
+    state.chart_iframe = chart_iframe
   },
 }
 
@@ -128,19 +133,13 @@ const actions = {
       sendData ['pageSize'] = '10';
       api.getPrintList(sendData).then(response => {
         const { data } = response;
-        console.log(data)
         let print_id = '';
-        if(data.list.map.length>0){
+        if(data.list.length>0){
           if(localStorage.getItem('print_id')){
             print_id = localStorage.getItem('print_id');
             console.log(print_id)
-          }else{
-            print_id = data.list[0].print_id
-            console.log(print_id)
-          }
-        }else{
-
-        }
+          } else print_id = data.list[0].print_id 
+        } else print_id = userInfo.state.org_id
         commit('SET_PRINT_ID', print_id)
         resolve(print_id)
       }).catch(error => reject(error) )
@@ -148,7 +147,17 @@ const actions = {
   },
   changPrintId({commit},data){
     commit('SET_PRINT_ID', data)
-  }
+  },
+  // 获取首页iframe列表
+  sysIframeGet({ commit }){
+    return new Promise((resolve, reject) => {
+      api.sysIframeGet().then(response => {
+        const { data } = response
+        commit('SET_CHART_IFRAME', data)
+        resolve(data)
+      }).catch(error => reject(error) )
+    })
+  },
 }
 
 export default {

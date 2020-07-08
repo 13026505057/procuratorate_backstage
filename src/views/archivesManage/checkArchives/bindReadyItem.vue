@@ -60,7 +60,7 @@
             <!-- 分页 -->
             <el-pagination small background
                 style="text-align: center;margin-top: 20px;padding-bottom:20px;"
-                @current-change="handleCurrentChange" :current-page.sync="pagination_merge.pageNum"
+                @current-change="handleCurrentChange_merge" :current-page.sync="pagination_merge.pageNum"
                 :page-size="pagination_merge.pageSize" layout="prev, pager, next, jumper"
                 :total="pagination_merge.total">
             </el-pagination>
@@ -83,7 +83,8 @@
                     case_name: '',
                     case_bh: '',
                     nd: '',
-                    case_take_user_name: '',
+                    cbr: '',
+                    bgr: '',
                     case_none_status: '',
                     case_type_id: '',
                 },
@@ -91,9 +92,9 @@
                 addSearch: [
                     { dom: 'tysah', value: '',placeholder: '统一受案号', itemId: 1, name: 'input' },
                     { dom: 'case_name', value: '',placeholder: '案件名称', itemId: 2, name: 'input' },
-                    { dom: 'case_zm', value: '',placeholder: '罪名', itemId: 5, name: 'input' },
+                    { dom: 'bgr', value: '',placeholder: '被告人', itemId: 5, name: 'input' },
                     { dom: 'nd', value: '',placeholder: '选择年份', itemId: 3, name: 'dataPicker' },
-                    { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 4, name: 'input' },
+                    { dom: 'cbr', value: '',placeholder: '请输入承办人', itemId: 4, name: 'input' },
                     { dom: 'stock_status', value: '',placeholder: '是否已交卷', itemId: 6, name: 'select' },
                 ],
                 selectOption: {
@@ -145,7 +146,7 @@
                     addSearch: [
                         { dom: 'tysah', value: '',placeholder: '统一受案号', itemId: 1, name: 'input' },
                         { dom: 'case_name', value: '',placeholder: '案件名称', itemId: 2, name: 'input' },
-                        { dom: 'case_take_user_name', value: '',placeholder: '承办人', itemId: 3, name: 'input' },
+                        { dom: 'cbr', value: '',placeholder: '承办人', itemId: 3, name: 'input' },
                         { dom: 'bgr', value: '',placeholder: '嫌疑人', itemId: 4, name: 'input' },
                         // { dom: 'case_zm', value: '',placeholder: '', itemId: 4, name: 'select' },
                     ],
@@ -157,7 +158,7 @@
                     pageSize: 10,
                     tysah: '',
                     case_name: '',
-                    case_take_user_name: '',
+                    cbr: '',
                     bgr:''
                 },
                 bindCaseData: {
@@ -179,8 +180,12 @@
             // 分页
             handleCurrentChange(val) {
                 this.pagination['pageNum'] = val;
-                console.log(this.pagination)
                 this.getTableList(this.pagination)
+            },
+            // 分页_弹窗
+            handleCurrentChange_merge(val) {
+                this.pagination_merge['pageNum'] = val;
+                this.getWasInHouseList(this.pagination_merge)
             },
             // 获取案件列表
             async getTableList(dataInfo){
@@ -205,7 +210,6 @@
             // 确认搜索
             comfirmSearch(data){
                 this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] } })
-                // this.getCaseType()
                 this.getTableList(this.pagination)
             },
             // 确认搜索
@@ -216,11 +220,8 @@
             showDialogPanel(dataInfo,exhibit_id){
                 this.showModel.dialogTableVisible = true;
                 this.bindCaseData.exhibit_id = exhibit_id;
-                // console.log(dataInfo['bgr'])
                 ['tysah','case_name','case_take_user_name'].map((item,index)=>{
-                    // console.log(this.mergeData.addSearch[index].value)
                     this.mergeData.addSearch[index].value = dataInfo[item];
-                    // console.log(this.mergeData.addSearch)
                     this.pagination_merge[item] = dataInfo[item];
                 })
                 this.mergeData.addSearch[3].value = dataInfo['bgr'];

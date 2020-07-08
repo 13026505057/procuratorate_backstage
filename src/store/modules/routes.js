@@ -39,7 +39,7 @@ const asyncDataRoutes = [
                 "name": "案卷接收 - CheckArchives", "meta":{ "title":"案卷接收","icon": "icon-zhiliangpingcha" },
                 "children": [
                     {"path": "readyItem", "component": "views/archivesManage/checkArchives/readyItem", "name": "案卷预入库 - ReadyItem", "meta":{ "title":"案卷预入库","icon": "icon-zhiliangpingcha" }},
-                    {"path": "bindReadyItem", "component": "views/archivesManage/exhibitDoubt/bindReadyItem", "name": "预入库绑定 - BindReadyItem", "meta":{ "title":"预入库绑定","icon": "icon-zhiliangpingcha" }},
+                    {"path": "bindReadyItem", "component": "views/archivesManage/checkArchives/bindReadyItem", "name": "预入库绑定 - BindReadyItem", "meta":{ "title":"预入库绑定","icon": "icon-zhiliangpingcha" }},
                     {"path": "receiveItem", "component": "views/archivesManage/checkArchives/receiveItem", "name": "案卷接收 - ReceiveItem", "meta":{ "title":"案卷接收","icon": "icon-zhiliangpingcha" }},
                     {"path": "allCaseMaterials", "component": "views/archivesManage/checkArchives/allCaseMaterials", "name": "所有案卷 - AllCaseMaterials", "meta":{ "title":"所有案卷","icon": "icon-zhiliangpingcha" }}
                 ]
@@ -48,9 +48,7 @@ const asyncDataRoutes = [
                 "redirect": "/archivesManage/exhibitDoubt/mergeRequest",
                 "name": "其他情况 - ExhibitDoubt", "meta":{ "title":"其他情况","icon": "icon-zhiliangpingcha" },
                 "children": [
-                    // {"path": "finishStatus", "component": "views/archivesManage/exhibitDoubt/finishStatus", "name": "办结情况查询 - FinishStatus", "meta":{ "title":"办结情况查询","icon": "icon-zhiliangpingcha" }},
                     {"path": "mergeRequest", "component": "views/archivesManage/exhibitDoubt/mergeRequest", "name": "多案并卷 - MergeRequest", "meta":{ "title":"多案并卷","icon": "icon-zhiliangpingcha" }}
-                    // {"path": "matterExhibit", "component": "views/archivesManage/exhibitDoubt/matterExhibit", "name": "问题卷记录 - MatterExhibit", "meta":{ "title":"问题卷记录","icon": "icon-zhiliangpingcha" }}
                 ]
             },
             {"path": "checkItem", "component": "views/archivesManage/checkItem", "name": "档案审查 - CheckItem", "meta":{ "title":"档案审查","icon": "icon-jinduchaxun" }},
@@ -67,10 +65,8 @@ const asyncDataRoutes = [
                 "redirect": "/archivesManage/PutStorage/uncompleted",
                 "children": [
                     {"path": "uncompleted", "component": "views/archivesManage/putStorage/uncompleted", "name": "进行入库上架 - UncompletedPut", "meta":{ "title":"进行入库上架","icon": "icon-zhiliangpingcha" }},
-                    // {"path": "completed", "component": "views/archivesManage/putStorage/completed", "name": "已入库上架案件 - CompletedPut", "meta":{ "title":"已入库上架案件","icon": "icon-zhiliangpingcha" }},
                     {"path": "uncompletedExhibit", "component": "views/archivesManage/putStorage/uncompletedExhibit", "name": "待入库上架案卷 - UnCompletedPutExhibit", "meta":{ "title":"待入库上架案卷","icon": "icon-zhiliangpingcha" }},
-                    {"path": "completedExhibit", "component": "views/archivesManage/putStorage/completedExhibit", "name": "已入库上架案卷 - CompletedPutExhibit", "meta":{ "title":"已入库上架案卷","icon": "icon-zhiliangpingcha" }},
-                    // {"path": "temporary", "component": "views/archivesManage/putStorage/temporary", "name": "卷宗暂存 - Temporary", "meta":{ "title":"卷宗暂存","icon": "icon-zhiliangpingcha" }}
+                    {"path": "completedExhibit", "component": "views/archivesManage/putStorage/completedExhibit", "name": "已入库上架案卷 - CompletedPutExhibit", "meta":{ "title":"已入库上架案卷","icon": "icon-zhiliangpingcha" }}
                 ]
             }
         ]
@@ -83,8 +79,7 @@ const asyncDataRoutes = [
         "redirect": "/utilizeArchives/outWarehouse",
         "children": [
             {"path": "outWarehouse", "component": "views/utilizeArchives/outWarehouse", "name": "档案借阅 - OutWarehouse", "meta":{ "title":"档案借阅","icon": "icon-zhiliangpingcha" }},
-            {"path": "inWarehouse", "component": "views/utilizeArchives/inWarehouse", "name": "档案归还 - InWarehouse", "meta":{ "title":"档案归还","icon": "icon-zhiliangpingcha" }},
-            // {"path": "historyWarehouse", "component": "views/utilizeArchives/historyWarehouse", "name": "出入库记录 - HistoryWarehouse", "meta":{ "title":"出入库记录","icon": "icon-zhiliangpingcha" }}
+            {"path": "inWarehouse", "component": "views/utilizeArchives/inWarehouse", "name": "档案归还 - InWarehouse", "meta":{ "title":"档案归还","icon": "icon-zhiliangpingcha" }}
         ]
     },
     {
@@ -124,7 +119,6 @@ const asyncDataRoutes = [
                 "name": "案件归档情况 - ArchivesSituation", "meta":{ "title":"案件归档情况","icon": "icon-zhiliangpingcha" },
                 "redirect": "/byPersonal/archivesSituation/caseShallCompleted",
                 "children": [
-                    // {"path": "caseNum", "component": "views/byPersonal/archivesSituation/caseNum", "name": "受理案件数量 - CaseNum", "meta":{ "title":"受理案件数量" }},
                     {"path": "caseShallCompleted", "component": "views/byPersonal/archivesSituation/caseShallCompleted", "name": "应归档案件 - CaseShallCompleted", "meta":{ "title":"应归档案件","icon": "icon-zhiliangpingcha" }},
                     {"path": "waitAssessment", "component": "views/byPersonal/archivesSituation/waitAssessment", "name": "等待质量评查 - WaitAssessmentArchives", "meta":{ "title":"等待质量评查","icon": "icon-zhiliangpingcha" }},
                     {"path": "unTransfer", "component": "views/byPersonal/archivesSituation/unTransfer", "name": "未移交归档案件 - UnTransfer", "meta":{ "title":"未移交归档案件","icon": "icon-zhiliangpingcha" }},

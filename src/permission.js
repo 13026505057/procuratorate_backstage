@@ -41,8 +41,9 @@ router.beforeEach(async(to, from, next) => {
           await store.dispatch('settings/exhibitTypeGet')
           await store.dispatch('settings/exhibitTimeBGGet')
           await store.dispatch('settings/getCaseType')
-          await store.dispatch('settings/getCaseStatus')
+          await store.dispatch('settings/getCaseStatus') 
           await store.dispatch('settings/getPrintId')
+          await store.dispatch('settings/sysIframeGet')
           
           // generate accessible routes map based on roles
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)

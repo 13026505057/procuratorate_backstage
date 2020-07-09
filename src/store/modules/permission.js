@@ -31,11 +31,13 @@ export function checkedNullInfo(arr){
   arr.map(itemParen=>{
     const tmp = { ...itemParen }
     let arrList = { ...tmp }
-    Object.keys(arrList['meta']).map(keys=>{
-      ['affix','create_time','create_user_id','is_del','roles','vueDefaultMetaRoleList','vue_meta_id','vue_role_id','vue_route_id'].map(item=>{
-        if(keys == item) delete tmp['meta'][item]
+    if(arrList['meta']) {
+      Object.keys(arrList['meta']).map(keys=>{
+        ['affix','create_time','create_user_id','is_del','roles','vueDefaultMetaRoleList','vue_meta_id','vue_role_id','vue_route_id'].map(item=>{
+          if(keys == item) delete tmp['meta'][item]
+        })
       })
-    })
+    }
     if(tmp.children && tmp.children.length>0) tmp.children = checkedNullInfo(tmp.children)
   })
   return arr
@@ -65,11 +67,13 @@ export function checkedNullInfo_respones(arr){
   arr.map(itemParen=>{
     const tmp = { ...itemParen }
     let arrList = { ...tmp }
-    Object.keys(arrList['meta']).map(keys=>{
-      ['affix','create_time','create_user_id','is_del','roles','vueDefaultMetaRoleList','vue_meta_id','vue_role_id','vue_route_id'].map(item=>{
-        if(keys == item) delete tmp['meta'][item]
+    if(arrList['meta']) {
+      Object.keys(arrList['meta']).map(keys=>{
+        ['affix','create_time','create_user_id','is_del','roles','vueDefaultMetaRoleList','vue_meta_id','vue_role_id','vue_route_id'].map(item=>{
+          if(keys == item) delete tmp['meta'][item]
+        })
       })
-    })
+    }
     if(tmp.children && tmp.children.length>0) tmp.children = checkedNullInfo_respones(tmp.children)
   })
   return arr

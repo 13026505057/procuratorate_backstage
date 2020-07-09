@@ -7,7 +7,7 @@
       <el-table-column align="center" label="权限组名称" prop="group_name"></el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="{ row }">
-          <el-button type="primary" size="small" @click="handleEdit(row.group_name)">修改</el-button>
+          <el-button type="primary" size="small" @click="handleEdit(row)">修改</el-button>
           <el-button type="danger" size="small" @click="deleItem(row.vue_role_id)">删除</el-button>
         </template>
       </el-table-column>
@@ -69,8 +69,7 @@ export default {
           color: '#2c2c2c'
       },
       // 更新路由表
-      dialogVisible_role: false,
-      updateRole_temp: UpdateRole
+      updateRole_temp: []
     }
   },
   computed: {
@@ -80,12 +79,16 @@ export default {
     }
   },
   created() {
+    if(UpdateRole[UpdateRole.length-1].path == '*') UpdateRole.pop()
+    this.updateRole_temp = UpdateRole
+    console.log(UpdateRole)
     this.getDefaultRoutes()
     this.getRoutesGroup()
   },
   methods: {
     // 更新路由表信息
     editUpdateRoleFun(params){
+      let _that = this
       return new Promise((resolve, reject) => {
         axios({
           method: 'post',
@@ -93,8 +96,8 @@ export default {
           data: params,
           headers: { 'kf-token': getToken() },
         }).then(res=>{
-          if(res.code == '0') this.$message.success('更新完成')
-          resolve(res.data)
+          if(res.data.code == '0') _that.$message.success('更新完成')
+          resolve(res.data.data)
         }).catch(error => reject(error) )
       })
     },
@@ -130,18 +133,17 @@ export default {
       })
       return data
     },
-    async handleEdit(group_name) {
+    async handleEdit(routeData) {
       this.dialogVisible = true
       this.checkStrictly = true
       this.showModel.modelType = true
       this.showModel.dialogTitle = '修改权限配置'
-      let resultData = await this.$api.getRoutesData({group_name})
       let accessedRoutes = []
-      if(resultData.data.length>0) {
-        const accessedRoute = checkedNullInfo_respones(resultData.data[0].routes)
+      if(routeData.routes.length>0) {
+        const accessedRoute = checkedNullInfo_respones(routeData.routes)
         accessedRoutes = filterAsyncRoutes_respones(accessedRoute,true)
-        this.role.vue_role_id = resultData.data[0].vue_role_id
-        this.role.group_name = resultData.data[0].group_name
+        this.role.vue_role_id = routeData.vue_role_id
+        this.role.group_name = routeData.group_name
       }
       this.$nextTick(() => {
         this.$refs.tree.setCheckedNodes(this.generateArr(accessedRoutes))
@@ -151,7 +153,6 @@ export default {
     // 默认Tree树
     resetRoutes(){
       this.getDefaultRoutes()
-      this.updateRole_temp = ''
     },
     // 权限组信息更改
     editRouteFun(params){

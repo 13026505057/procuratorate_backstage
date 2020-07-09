@@ -12,7 +12,7 @@
                     <span v-else>{{ row[item.title] }}</span>
                 </template>
             </el-table-column>
-            <el-table-column align="center" label="操作">
+            <el-table-column align="center" label="操作" width="150">
                 <template slot-scope="{row}">
                     <el-button @click="deleteItem(row.exhibit_id)" class="highlight-btn" size="small" type="danger">作废</el-button>
                 </template>
@@ -80,10 +80,7 @@ export default {
   },
   methods: {
     comfirmSearch(data){
-        // console.log(data)
         this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] }  })
-        // for(let key in data){ this.pagination[key] = data[key] }
-        // console.log(this.pagination)
         this.getTableList(this.pagination)
     },
 
@@ -93,9 +90,8 @@ export default {
     // 获取案件列表
     async getTableList(dataInfo){
         this.loadingTable = true;
-        let sendData = dataInfo;
+        let sendData = { ...dataInfo };
         sendData.exhibit_status = '1';
-        console.log(sendData)
         let resultData = await this.$api.historyExhibitList(sendData)
 
         const pagination = { ...this.pagination };
@@ -107,7 +103,7 @@ export default {
     // 分页
     handleCurrentChange(val) {
         this.pagination['pageNum'] = val;
-        this.getTableList()
+        this.getTableList(this.pagination)
     },
     // 作废
     async deleteItem(exhibit_id){

@@ -196,18 +196,21 @@
                     console.log(this.base_url+'/?nd='+data.nd+'&exhibit_name='+ data.exhibit_name+'&bgr='+ data.bgr+
                         '&out_exhibit_id='+ data.out_exhibit_id+'&province_id='+data.province_id+ 
                         '&city_id='+data.city_id+ '&area_id='+data.area_id)
-                    // window.open(this.base_url+'/?nd='+data.nd+'&exhibit_name='+ data.exhibit_name+'&bgr='+ data.bgr+
-                        // '&out_exhibit_id='+ data.out_exhibit_id+'&province_id='+data.province_id+ 
-                        // '&city_id='+data.city_id+ '&area_id='+data.area_id)
                 })
             },
             async selectCellItem(cellData){
                 this.loading_right_top = true;
                 this.exhibitTemporaryId = cellData.exhibit_id;
-                let resultData = await this.$api.getExhibitLikeCases({exhibit_id:cellData.exhibit_id})
+                const dataInfo = {
+                    exhibit_id:cellData.exhibit_id,
+                    province_id: this.pagination_left.province_id,
+                    city_id: this.pagination_left.city_id,
+                    area_id: this.pagination_left.area_id
+                }
+                let resultData = await this.$api.getExhibitLikeCases(dataInfo)
                 if(resultData && resultData.code == '0'){
-                    this.loading_right_top = false;
                     this.showModel_right.tableData_top = resultData.data
+                    this.loading_right_top = false;
                 }
             },
             async bindCaseForExhibit(case_id){

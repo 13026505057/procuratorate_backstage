@@ -108,7 +108,7 @@
                         { title: 'case_desc', dataIndex: '案件描述', itemId: 4, overflow: true },
                         { title: 'case_take_user_name', dataIndex: '承办人', itemId: 5 },
                         { title: 'bgr', dataIndex: '嫌疑人', itemId: 6 },
-                        { title: 'case_type_name', dataIndex: '案件类型', itemId: 6 },
+                        { title: 'case_type_name', dataIndex: '案件类型', itemId: 7 },
                     ],
                 },
                 // table表头
@@ -130,8 +130,6 @@
                         { dom: 'case_name', value: '',placeholder: '案件名称', itemId: 2, name: 'input' },
                         { dom: 'case_take_user_name', value: '',placeholder: '承办人', itemId: 5, name: 'input' },
                         { dom: 'out_exhibit_id', value: '',placeholder: '扫描条形码', itemId: 3, name: 'input' },
-                        
-                        
                         // { dom: 'case_zm', value: '',placeholder: '', itemId: 4, name: 'select' },
                     ],
                     selectOption: {},
@@ -222,14 +220,10 @@
                 this.getWasInHouseList(this.pagination_merge)
             },
             showDialogPanel(case_bh,case_id,bmsah,case_name){
-                console.log(case_bh,case_id,bmsah,case_name)
                 this.showModel.dialogTableVisible = true;
                 this.mergeData.addSearch[0].value = case_bh;
-                // this.mergeData.addSearch[1].value = bmsah;
                 this.mergeData.addSearch[2].value = case_name;
                 this.pagination_merge.case_bh = case_bh;
-                this.pagination_merge.tysah = case_bh;
-                // this.pagination_merge.bmsah = bmsah;
                 this.pagination_merge.case_name = case_name;
                 this.submiteDataInfo.weigui_case_id = case_id;
                 this.getWasInHouseList(this.pagination_merge)

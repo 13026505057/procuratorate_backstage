@@ -10,7 +10,7 @@
                         v-for="item in columns" :key="item.itemId" align="center">
                         <template slot-scope="{row}">
                             <span v-if="item.itemId == 4">{{ row[item.title] | mapStatus }}</span>
-                            <span v-else-if="item.itemId == 8">{{ row[item.title]=='1'?'评查中':'待入库' }}</span>
+                            <span v-else-if="item.itemId == 8">{{ row[item.title]?'已办结':'未办结' }}</span>
                             <span v-else>{{ row[item.title] }}</span>
                         </template>
                     </el-table-column>
@@ -82,13 +82,11 @@
                     { title: 'bmsah', dataIndex: '部门受案号', itemId: 12 },
                     { title: 'case_name', dataIndex: '案件名称', itemId: 10 },
                     { title: 'ajlb_mc', dataIndex: '案件类型', itemId: 13 },
-                    { title: 'case_none_status', dataIndex: '案件状态', itemId: 8 },
                     { title: 'case_desc', dataIndex: '案件描述', overflow: true, itemId: 11 },
                     { title: 'slrq', dataIndex: '受理日期', itemId: 4 },
                     { title: 'case_take_user_name', dataIndex: '承办人', itemId: 3 },
-                    { title: 'total_quantity', dataIndex: '总案卷数', itemId: 5 },
-                    { title: 'in_quantity', dataIndex: '在库案卷数', itemId: 6 },
-                    { title: 'wait_quantity', dataIndex: '待入库案卷数', itemId: 7 },
+                    { title: 'over_time', dataIndex: '是否办结', itemId: 8 },
+                    { title: 'over_time', dataIndex: '办结时间', itemId: 9 },
                 ],
             }
            

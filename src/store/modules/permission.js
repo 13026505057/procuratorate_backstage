@@ -31,11 +31,13 @@ export function checkedNullInfo(arr){
   arr.map(itemParen=>{
     const tmp = { ...itemParen }
     let arrList = { ...tmp }
-    Object.keys(arrList['meta']).map(keys=>{
-      ['affix','create_time','create_user_id','is_del','roles','vueDefaultMetaRoleList','vue_meta_id','vue_role_id','vue_route_id'].map(item=>{
-        if(keys == item) delete tmp['meta'][item]
+    if(arrList['meta']) {
+      Object.keys(arrList['meta']).map(keys=>{
+        ['affix','create_time','create_user_id','is_del','roles','vueDefaultMetaRoleList','vue_meta_id','vue_role_id','vue_route_id'].map(item=>{
+          if(keys == item) delete tmp['meta'][item]
+        })
       })
-    })
+    }
     if(tmp.children && tmp.children.length>0) tmp.children = checkedNullInfo(tmp.children)
   })
   return arr
@@ -65,11 +67,13 @@ export function checkedNullInfo_respones(arr){
   arr.map(itemParen=>{
     const tmp = { ...itemParen }
     let arrList = { ...tmp }
-    Object.keys(arrList['meta']).map(keys=>{
-      ['affix','create_time','create_user_id','is_del','roles','vueDefaultMetaRoleList','vue_meta_id','vue_role_id','vue_route_id'].map(item=>{
-        if(keys == item) delete tmp['meta'][item]
+    if(arrList['meta']) {
+      Object.keys(arrList['meta']).map(keys=>{
+        ['affix','create_time','create_user_id','is_del','roles','vueDefaultMetaRoleList','vue_meta_id','vue_role_id','vue_route_id'].map(item=>{
+          if(keys == item) delete tmp['meta'][item]
+        })
       })
-    })
+    }
     if(tmp.children && tmp.children.length>0) tmp.children = checkedNullInfo_respones(tmp.children)
   })
   return arr
@@ -99,23 +103,22 @@ const actions = {
   generateRoutes({ commit }, userInfo) {
     return new Promise(resolve => {
       // 动态角色配置路由
-      if(userInfo.username == 'admin') addRoute(commit,resolve,asyncDataRoutes)
-        else {
-          if(!userInfo.group_name.includes('defalut')) {
-            api.getRoutesData({group_name:userInfo.group_name[0]}).then((result) => {
-              addRoute(commit, resolve, checkedNullInfo(result.data[0].routes))
-            })
-          } else addRoute(commit, resolve, [])
-        }
+      // if(userInfo.username == 'admin') addRoute(commit,resolve,asyncDataRoutes)
+      //   else {
+      //     if(!userInfo.group_name.includes('defalut')) {
+      //       api.getRoutesData({group_name:userInfo.group_name[0]}).then((result) => {
+      //         addRoute(commit, resolve, checkedNullInfo(result.data[0].routes))
+      //       })
+      //     } else addRoute(commit, resolve, [])
+      //   }
 
       // 定义角色配置路由
-      // let accessedRoutes,accessedRoute = [];
-      // accessedRoute = asyncDataRoutes
-      // accessedRoute.push({ path: '*', redirect: '/404', hidden: true })
-      // accessedRoutes = filterAsyncRoutes(accessedRoute,true)
-      // commit('SET_ROUTES', accessedRoutes)
-      // resolve(accessedRoutes)
-      
+      let accessedRoutes,accessedRoute = [];
+      accessedRoute = asyncDataRoutes
+      accessedRoute.push({ path: '*', redirect: '/404', hidden: true })
+      accessedRoutes = filterAsyncRoutes(accessedRoute,true)
+      commit('SET_ROUTES', accessedRoutes)
+      resolve(accessedRoutes)
     })
   }
 }

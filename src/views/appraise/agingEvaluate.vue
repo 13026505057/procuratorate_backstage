@@ -40,8 +40,12 @@
 </template>
 <script>
     import Search from '@/components/Search'
+    import { mapGetters } from 'vuex'
     export default {
         components: { Search },
+        computed: {
+            ...mapGetters(['caseTimeStatus'])
+        },
         filters: {
             mapStatus(status){
                 const statusMap = {
@@ -83,21 +87,11 @@
                     { dom: 'case_name', value: '', placeholder: '请输入案卷名称', itemId: 1, name: 'input' },
                     { dom: 'timeYear', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
                     { dom: 'case_take_user_name', value: '', placeholder: '请输入承办人', itemId: 4, name: 'input' },
-                    { dom: 'time_status', value: '', placeholder: '归档情况', itemId: 5, name: 'select' },
+                    { dom: 'time_status', value: null, placeholder: '归档情况', itemId: 5, name: 'selectTimeStatus' },
                     { dom: 'anguan_pingcha_chaoqi', value: '', placeholder: '评查是否超期', itemId: 6, name: 'select' },
                 ],
                 selectOption: {
-                    time_status: [
-                        { value:'', label:'归档情况', },
-                        { value:'none', label:'未归档（未超期）', },
-                        { value:'none_jj_out', label:'未归档（交卷超期）', },
-                        { value:'none_rk_out', label:'未归档（入库超期）', },
-                        { value:'none_all_out', label:'未归档（双超期）', },
-                        { value:'in', label:'已归档（未超期）', },
-                        { value:'in_jj_out', label:'已归档（交卷超期）', },
-                        { value:'in_rk_out', label:'已归档（入库超期）', },
-                        { value:'in_all_out', label:'已归档（双超期）', }
-                    ],
+                    time_status: [],
                     anguan_pingcha_chaoqi:[
                         {value: '',label: '评查是否超期'}, 
                         {value: '1',label: '评查超期'}, 
@@ -117,6 +111,7 @@
                     { title: 'case_desc', dataIndex: '案件描述', overflow: true, itemId: 11 },
                     { title: 'time_status', dataIndex: '是否双归档', itemId: 4 },
                     { title: 'case_take_user_name', dataIndex: '承办人', itemId: 3 },
+                    { title: 'bjrq', dataIndex: '办结日期', itemId: 9 },
                     { title: 'case_none_confirm', dataIndex: '评查状态', itemId: 5 },
                     { title: 'anguan_pingcha_chaoqi', dataIndex: '案管是否评查超期', itemId: 6 },
                     { title: 'anguan_confirm_day', dataIndex: '办案人交卷剩余时间', itemId: 7 },
@@ -125,11 +120,19 @@
             }
         },
         mounted(){
+            this.getTypeList()
             this.getCaseType();
         },
         methods: {
             receivedAddress(data){
                 Object.keys(data).map(item=> this.pagination[item] = data[item] )
+            },
+            getTypeList(){
+                let dataArr = [
+                    { showModel: 'time_status', store: 'caseTimeStatus' },
+                ]
+                dataArr.map(item=> this.selectOption[item.showModel] = this[item.store] )
+                console.log(this.selectOption)
             },
             // 分页
             handleCurrentChange(val) {

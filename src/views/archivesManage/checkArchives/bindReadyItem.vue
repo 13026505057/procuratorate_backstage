@@ -21,7 +21,7 @@
                             </el-table-column>
                             <el-table-column align="center" label="操作">
                                 <template slot-scope="{row}">
-                                    <el-button @click="showDialogPanel({ tysah: row.tysah, case_name: row.case_name, case_take_user_name: row.case_take_user_name },row.exhibit_id)" class="highlight-btn" size="small">绑定案件</el-button>
+                                    <el-button @click="showDialogPanel({ tysah: row.tysah, case_name: row.exhibit_name, cbr: row.cbr, bgr:row.bgr },row.exhibit_id)" class="highlight-btn" size="small">绑定案件</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -60,7 +60,7 @@
             <!-- 分页 -->
             <el-pagination small background
                 style="text-align: center;margin-top: 20px;padding-bottom:20px;"
-                @current-change="handleCurrentChange" :current-page.sync="pagination_merge.pageNum"
+                @current-change="handleCurrentChange_merge" :current-page.sync="pagination_merge.pageNum"
                 :page-size="pagination_merge.pageSize" layout="prev, pager, next, jumper"
                 :total="pagination_merge.total">
             </el-pagination>
@@ -82,8 +82,9 @@
                     pageSize: 10,
                     case_name: '',
                     case_bh: '',
-                    timeYear: '',
-                    case_take_user_name: '',
+                    nd: '',
+                    cbr: '',
+                    bgr: '',
                     case_none_status: '',
                     case_type_id: '',
                 },
@@ -91,9 +92,9 @@
                 addSearch: [
                     { dom: 'tysah', value: '',placeholder: '统一受案号', itemId: 1, name: 'input' },
                     { dom: 'case_name', value: '',placeholder: '案件名称', itemId: 2, name: 'input' },
-                    { dom: 'case_zm', value: '',placeholder: '罪名', itemId: 5, name: 'input' },
+                    { dom: 'bgr', value: '',placeholder: '被告人', itemId: 5, name: 'input' },
                     { dom: 'nd', value: '',placeholder: '选择年份', itemId: 3, name: 'dataPicker' },
-                    { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 4, name: 'input' },
+                    { dom: 'cbr', value: '',placeholder: '请输入承办人', itemId: 4, name: 'input' },
                     { dom: 'stock_status', value: '',placeholder: '是否已交卷', itemId: 6, name: 'select' },
                 ],
                 selectOption: {
@@ -127,6 +128,8 @@
                 columns: [
                     { title: 'tysah', dataIndex: '统一受案号', itemId: 1 },
                     { title: 'exhibit_name', dataIndex: '案卷名称', itemId: 12 },
+                    { title: 'yr_cese_type_name', dataIndex: '案件类型', itemId: 16 },
+                    { title: 'ay', dataIndex: '案由', itemId: 7 },
                     { title: 'bgr', dataIndex: '嫌疑人', itemId: 15 },
                     { title: 'bgqx', dataIndex: '保管期限', itemId: 13 },
                     { title: 'exhibit_type', dataIndex: '案卷类型', itemId: 14 },
@@ -143,8 +146,8 @@
                     addSearch: [
                         { dom: 'tysah', value: '',placeholder: '统一受案号', itemId: 1, name: 'input' },
                         { dom: 'case_name', value: '',placeholder: '案件名称', itemId: 2, name: 'input' },
-                        { dom: 'case_take_user_name', value: '',placeholder: '承办人', itemId: 3, name: 'input' },
-                        // { dom: 'case_zm', value: '',placeholder: '', itemId: 4, name: 'select' },
+                        { dom: 'cbr', value: '',placeholder: '承办人', itemId: 3, name: 'input' },
+                        { dom: 'bgr', value: '',placeholder: '嫌疑人', itemId: 4, name: 'input' },
                     ],
                     selectOption: {},
                 },
@@ -154,7 +157,8 @@
                     pageSize: 10,
                     tysah: '',
                     case_name: '',
-                    case_take_user_name: ''
+                    cbr: '',
+                    bgr:''
                 },
                 bindCaseData: {
                     exhibit_id: '',
@@ -177,6 +181,11 @@
                 this.pagination['pageNum'] = val;
                 this.getTableList(this.pagination)
             },
+            // 分页_弹窗
+            handleCurrentChange_merge(val) {
+                this.pagination_merge['pageNum'] = val;
+                this.getWasInHouseList(this.pagination_merge)
+            },
             // 获取案件列表
             async getTableList(dataInfo){
                 this.loadingTable = true;
@@ -184,8 +193,7 @@
                 this.showModel.dialogReceivedVisible = false; 
                 this.$nextTick()
                 const sendData = dataInfo;
-                sendData ['nd'] =  dataInfo.timeYear;
-                console.log(sendData)
+                sendData ['nd'] =  dataInfo.nd;
                 const resultData = await this.$api.yrExhibitGetByPage(sendData);
                 const pagination = { ...this.pagination };
                 let resultData_table = [];
@@ -200,7 +208,6 @@
             // 确认搜索
             comfirmSearch(data){
                 this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] } })
-                // this.getCaseType()
                 this.getTableList(this.pagination)
             },
             // 确认搜索
@@ -211,7 +218,7 @@
             showDialogPanel(dataInfo,exhibit_id){
                 this.showModel.dialogTableVisible = true;
                 this.bindCaseData.exhibit_id = exhibit_id;
-                ['tysah','case_name','case_take_user_name'].map((item,index)=>{
+                ['tysah','cbr'].map((item,index)=>{
                     this.mergeData.addSearch[index].value = dataInfo[item];
                     this.pagination_merge[item] = dataInfo[item];
                 })

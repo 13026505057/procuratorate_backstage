@@ -1,12 +1,13 @@
 <template>
   <div class="editRoutesPage">
     <el-button @click="addRole" type="search">新增</el-button>
+    <el-button @click="editUpdateRoleFun(updateRole_temp)" type="search">更新路由表</el-button>
     <el-table :data="rolesList" style="width: 100%;margin-top:30px;" border :header-cell-style="headerRowStyle">
         <el-table-column align="center" type="index" label="#"></el-table-column>
       <el-table-column align="center" label="权限组名称" prop="group_name"></el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="{ row }">
-          <el-button type="primary" size="small" @click="handleEdit(row.group_name)">修改</el-button>
+          <el-button type="primary" size="small" @click="handleEdit(row)">修改</el-button>
           <el-button type="danger" size="small" @click="deleItem(row.vue_role_id)">删除</el-button>
         </template>
       </el-table-column>
@@ -38,36 +39,39 @@ import { mapGetters } from 'vuex'
 import { deepClone } from '@/utils'
 import { getToken } from '@/utils/auth'
 import { filterAsyncRoutes_respones,checkedNullInfo_respones } from '@/store/modules/permission'
+import UpdateRole from '@/store/modules/routes'
 
 export default {
-    data() {
-        return {
-        role: {
-            vue_role_id: '',
-            group_name: '',
-            routes: []
-        },
-        routes: [],
-        rolesList: [],
-        dialogVisible: false,
-        showModel: {
-          dialogTitle: '',
-          modelType: false, // true为修改 false为新增
-        },
-        checkStrictly: false,
-        defaultProps: {
-            children: 'children',
-            label: "name"
-        },
-        headStyle:{
-            backgroundColor: '#eaf5ff',
-            borderTop: '1px solid #97cfff',
-            borderBottom: '1px solid #97cfff',
-            fontSize: '18px',
-            color: '#2c2c2c'
-        },
-        }
-    },
+  data() {
+    return {
+      role: {
+        vue_role_id: '',
+        group_name: '',
+        routes: []
+      },
+      routes: [],
+      rolesList: [],
+      dialogVisible: false,
+      showModel: {
+        dialogTitle: '',
+        modelType: false, // true为修改 false为新增
+      },
+      checkStrictly: false,
+      defaultProps: {
+          children: 'children',
+          label: "name"
+      },
+      headStyle:{
+          backgroundColor: '#eaf5ff',
+          borderTop: '1px solid #97cfff',
+          borderBottom: '1px solid #97cfff',
+          fontSize: '18px',
+          color: '#2c2c2c'
+      },
+      // 更新路由表
+      updateRole_temp: []
+    }
+  },
   computed: {
     ...mapGetters(['base_url']),
     routesData() {
@@ -75,10 +79,28 @@ export default {
     }
   },
   created() {
+    if(UpdateRole[UpdateRole.length-1].path == '*') UpdateRole.pop()
+    this.updateRole_temp = UpdateRole
+    console.log(UpdateRole)
     this.getDefaultRoutes()
     this.getRoutesGroup()
   },
   methods: {
+    // 更新路由表信息
+    editUpdateRoleFun(params){
+      let _that = this
+      return new Promise((resolve, reject) => {
+        axios({
+          method: 'post',
+          url: this.base_url+'/vueDefaultRouteAddList',
+          data: params,
+          headers: { 'kf-token': getToken() },
+        }).then(res=>{
+          if(res.data.code == '0') _that.$message.success('更新完成')
+          resolve(res.data.data)
+        }).catch(error => reject(error) )
+      })
+    },
     async addRole(){
       this.dialogVisible = true;
       this.showModel.modelType = false;
@@ -111,18 +133,17 @@ export default {
       })
       return data
     },
-    async handleEdit(group_name) {
+    async handleEdit(routeData) {
       this.dialogVisible = true
       this.checkStrictly = true
       this.showModel.modelType = true
       this.showModel.dialogTitle = '修改权限配置'
-      let resultData = await this.$api.getRoutesData({group_name})
       let accessedRoutes = []
-      if(resultData.data.length>0) {
-        const accessedRoute = checkedNullInfo_respones(resultData.data[0].routes)
+      if(routeData.routes.length>0) {
+        const accessedRoute = checkedNullInfo_respones(routeData.routes)
         accessedRoutes = filterAsyncRoutes_respones(accessedRoute,true)
-        this.role.vue_role_id = resultData.data[0].vue_role_id
-        this.role.group_name = resultData.data[0].group_name
+        this.role.vue_role_id = routeData.vue_role_id
+        this.role.group_name = routeData.group_name
       }
       this.$nextTick(() => {
         this.$refs.tree.setCheckedNodes(this.generateArr(accessedRoutes))

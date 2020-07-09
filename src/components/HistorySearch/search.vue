@@ -29,9 +29,15 @@
                 </el-select>
             </template>
         </div>
+        <div class="searchItem" v-if="hiddenAdress">
+            <template v-if="org_list[0].level !== 'area'">
+                <el-cascader ref="treeOrg" placeholder="试试搜索：青岛市" v-model="selectOrgId" :options="org_list" 
+                    :props="{ checkStrictly: true }" filterable clearable></el-cascader>
+            </template>
+        </div>
         <div class="searchItem settingBtn">
             <el-button type="search" @click="comfirmSearch">查询</el-button>
-            <el-button type="search" @click="importCaseBtn">导入</el-button>
+            <!-- <el-button type="search" @click="importCaseBtn">导入</el-button> -->
             <el-button type="search" @click="exportCaseBtn">导出</el-button>
         </div>
         <!-- 案件导入 -->
@@ -50,18 +56,25 @@
 import { mapGetters } from 'vuex'
 import { getToken } from '@/utils/auth'
 export default {
+    props: {
+        hiddenAdress: {
+            type: Boolean,
+            default: true
+        }
+    },
     computed: {
-        ...mapGetters(['base_url','case_type','stock_status'])
+        ...mapGetters(['base_url','case_type','stock_status','org_list','address_id'])
     },
     data(){
         return{
+            selectOrgId:'',
             searchList: [
                 { dom: 'tysah', value: '', placeholder: '请输入统一受案号', itemId: 0, name: 'input' },
                 { dom: 'out_exhibit_id', value: '', placeholder: '请扫描案卷条码', itemId: 1, name: 'input' },
                 { dom: 'exhibit_name', value: '', placeholder: '请输入案件名', itemId: 2, name: 'input' },
                 { dom: 'nd', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
-                { dom: 'case_type_id', value: '0', placeholder: '请选择案件类型', itemId: 4, name: 'select' },
-                { dom: 'stock_status', value: null, placeholder: '请选择案件状态', itemId: 5, name: 'select' },
+                { dom: 'case_type_id', value: '', placeholder: '请选择案件类型', itemId: 4, name: 'select' },
+                { dom: 'stock_status', value: '', placeholder: '请选择案卷状态', itemId: 5, name: 'select' },
             ],
             selectOption: {
                 case_type_id: [],
@@ -73,6 +86,12 @@ export default {
             }
         }
     },
+    created(){
+        this.$emit('receivedAddress',this.address_id)
+        if(this.resetData) this.searchList = this.addSearch
+            else if(this.addSearch && this.addSearch.length>0) this.searchList.push(...this.addSearch)
+        
+    },
     mounted(){
         this.comfirmSearch();
         this.getDataList();
@@ -82,7 +101,14 @@ export default {
             let dataInfo = {}
             this.searchList.map(item=>{
                 dataInfo[item.dom] = item.value
+                if(this.selectOrgId && this.selectOrgId.length > 0){
+                    this.$nextTick(()=>{
+                        const { data } = this.$refs.treeOrg.getCheckedNodes()[0];
+                        ['province_id','city_id','area_id'].map(keys=> dataInfo[keys] = data[keys] )
+                    })
+                } else this.$nextTick(()=>{ ['province_id','city_id','area_id'].map(keys=> dataInfo[keys] = this.address_id[keys] ) })
             })
+            console.log(dataInfo)
             this.$emit('comfirmSearch',dataInfo)
         },
         // 导入
@@ -104,8 +130,20 @@ export default {
             this.searchList.map(item=>{
                 dataInfo[item.dom] = item.value
             })
-            window.open(this.base_url+'/exhibit/exhibit/exoprtExhibits?exhibit_name='+dataInfo.exhibit_name+'&tysah='+
-                dataInfo.tysah+'&nd='+dataInfo.nd+'&stock_status='+dataInfo.stock_status+'&out_exhibit_id='+dataInfo.out_exhibit_id)
+            if(this.selectOrgId && this.selectOrgId.length > 0){
+                this.$nextTick(()=>{
+                    const { data } = this.$refs.treeOrg.getCheckedNodes()[0];
+                    ['province_id','city_id','area_id'].map(keys=> dataInfo[keys] = data[keys] )
+                })
+            } else{
+                // console.log(this.address_id)
+                this.$nextTick(()=>{ ['province_id','city_id','area_id'].map(keys=> dataInfo[keys] = this.address_id[keys] ) })
+            } 
+            this.$nextTick(()=> {
+                window.open(this.base_url+'/exhibit/exhibit/exoprtExhibits?exhibit_name='+dataInfo.exhibit_name+'&tysah='+
+                dataInfo.tysah+'&nd='+dataInfo.nd+'&stock_status='+dataInfo.stock_status+'&out_exhibit_id='+dataInfo.out_exhibit_id+'&province_id='+dataInfo.province_id+'&city_id='+dataInfo.city_id+'&area_id='+dataInfo.area_id)
+            })
+            
         },
         getDataList(){
             let dataArr = [

@@ -53,7 +53,7 @@
                 </el-table-column>
                 <el-table-column align="center" label="操作" width="350">
                     <template slot-scope="{row}">
-                        <el-button @click="editExhibitData(row)" class="highlight-btn" type="operation" size="small">编辑</el-button>
+                        <!-- <el-button @click="editExhibitData(row)" class="highlight-btn" type="operation" size="small">编辑</el-button> -->
                         <el-button @click="printQrCodeAgain(row.exhibit_id)" class="highlight-btn" type="operation" size="small">补打条码</el-button>
                         <el-button @click="printReceipt(row.exhibit_id)" class="highlight-btn" type="operation" size="small">打印回执单</el-button>
                         <el-button @click="deleteCancel(row.exhibit_id)" class="highlight-btn" type="operation" size="small">作废</el-button>
@@ -238,6 +238,7 @@
                 // table表头
                 columns: [
                     { title: 'case_bh', dataIndex: '统一受案号', itemId: 1 },
+                    { title: 'bmsah', dataIndex: '部门受案号', overflow: false, itemId: 8 },
                     { title: 'case_name', dataIndex: '案件名称', itemId: 10 },
                     { title: 'case_type_name', dataIndex: '案件类型', itemId: 2 },
                     { title: 'case_desc', dataIndex: '案件描述', overflow: true, itemId: 11 },

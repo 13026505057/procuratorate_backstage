@@ -80,7 +80,8 @@
                     { dom: 'out_exhibit_id', value: '',placeholder: '扫描条形码', itemId: 8, name: 'input' },
                     { dom: 'cbr', value: '',placeholder: '承办人', itemId: 9, name: 'input' },
                     { dom: 'bgr', value: '',placeholder: '嫌疑人', itemId: 10, name: 'input' },
-                    { dom: 'stock_status', value: '',placeholder: '是否交卷', itemId: 11, name: 'select' },
+                    { dom: 'nd', value: '',placeholder: '选择年度', itemId: 12, name: 'dataPicker' },
+                    { dom: 'stock_status', value: '',placeholder: '是否入库', itemId: 11, name: 'select' },
                 ],
                 selectOption: {
                     stock_status: [

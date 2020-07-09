@@ -1,6 +1,6 @@
 <template>
   <div class="historyCasePage">
-    <HistorySearch @comfirmSearch="comfirmSearch"/>
+    <HistorySearch @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
     <div class="table-dataList" >
         <el-table :data="showModel.tableData" border style="width: 100%" v-loading="loadingTable">
             <el-table-column align="center" type="index"></el-table-column>
@@ -80,15 +80,23 @@ export default {
   },
   methods: {
     comfirmSearch(data){
-        for(let key in data){ this.pagination[key] = data[key] }
-        this.getTableList()
+        // console.log(data)
+        this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] }  })
+        // for(let key in data){ this.pagination[key] = data[key] }
+        // console.log(this.pagination)
+        this.getTableList(this.pagination)
+    },
+
+    receivedAddress(data){
+        Object.keys(data).map(item=> this.pagination[item] = data[item] )
     },
     // 获取案件列表
-    async getTableList(){
+    async getTableList(dataInfo){
         this.loadingTable = true;
-        let dataInfo = { ...this.pagination }
-        dataInfo.exhibit_status = '1';
-        let resultData = await this.$api.historyExhibitList(dataInfo)
+        let sendData = dataInfo;
+        sendData.exhibit_status = '1';
+        console.log(sendData)
+        let resultData = await this.$api.historyExhibitList(sendData)
 
         const pagination = { ...this.pagination };
         this.showModel.tableData = resultData.data.list;

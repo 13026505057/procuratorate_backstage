@@ -50,9 +50,10 @@ const mutations = {
 const filtersOrgData = (list,resData,byself) =>{
   if(Array.isArray(list) && list.length>0){
     list.forEach((v,i)=>{
-      resData[i]={};
+      resData[i]={}; 
       resData[i].value=v['org_id'];
       resData[i].label=v['org_name'];
+      resData[i].level=v['org_level'];
       resData[i].province_id=v['province_id'];
       resData[i].city_id=v['city_id'];
       resData[i].area_id=v['area_id'];

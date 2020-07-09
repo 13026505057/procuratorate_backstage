@@ -24,5 +24,6 @@ const getters = {
   stock_status: state => state.settings.stock_status,
   temporary_nd: state => state.settings.temporary_nd,
   print_id: state => state.settings.print_id,
+  chart_iframe: state => state.settings.chart_iframe,
 }
 export default getters

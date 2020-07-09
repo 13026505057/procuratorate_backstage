@@ -138,6 +138,7 @@
                     { title: 'case_desc', dataIndex: '案件描述', overflow: true, itemId: 11 },
                     { title: 'time_status', dataIndex: '是否归档', itemId: 4 },
                     { title: 'case_take_user_name', dataIndex: '承办人', itemId: 3 },
+                    { title: 'bjrq', dataIndex: '办结日期', itemId: 9 },
                     { title: 'total_quantity', dataIndex: '总案卷数', itemId: 5 },
                     { title: 'in_quantity', dataIndex: '在库案卷数', itemId: 6 },
                     { title: 'wait_quantity', dataIndex: '待入库案卷数', itemId: 7 },

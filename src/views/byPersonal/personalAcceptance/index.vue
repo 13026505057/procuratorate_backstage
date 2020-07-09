@@ -79,11 +79,12 @@
                 // table表头
                 columns: [
                     { title: 'case_bh', dataIndex: '案件编号', itemId: 1 },
+                    { title: 'bmsah', dataIndex: '部门受案号', itemId: 12 },
                     { title: 'case_name', dataIndex: '案件名称', itemId: 10 },
-                    { title: 'case_type_name', dataIndex: '案件类型', itemId: 2 },
+                    { title: 'ajlb_mc', dataIndex: '案件类型', itemId: 13 },
                     { title: 'case_none_status', dataIndex: '案件状态', itemId: 8 },
                     { title: 'case_desc', dataIndex: '案件描述', overflow: true, itemId: 11 },
-                    { title: 'time_status', dataIndex: '是否归档', itemId: 4 },
+                    { title: 'slrq', dataIndex: '受理日期', itemId: 4 },
                     { title: 'case_take_user_name', dataIndex: '承办人', itemId: 3 },
                     { title: 'total_quantity', dataIndex: '总案卷数', itemId: 5 },
                     { title: 'in_quantity', dataIndex: '在库案卷数', itemId: 6 },

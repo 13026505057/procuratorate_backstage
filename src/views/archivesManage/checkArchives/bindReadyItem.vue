@@ -21,7 +21,7 @@
                             </el-table-column>
                             <el-table-column align="center" label="操作">
                                 <template slot-scope="{row}">
-                                    <el-button @click="showDialogPanel({ tysah: row.tysah, case_name: row.exhibit_name, case_take_user_name: row.cbr, bgr:row.bgr },row.exhibit_id)" class="highlight-btn" size="small">绑定案件</el-button>
+                                    <el-button @click="showDialogPanel({ tysah: row.tysah, case_name: row.exhibit_name, cbr: row.cbr, bgr:row.bgr },row.exhibit_id)" class="highlight-btn" size="small">绑定案件</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -148,7 +148,6 @@
                         { dom: 'case_name', value: '',placeholder: '案件名称', itemId: 2, name: 'input' },
                         { dom: 'cbr', value: '',placeholder: '承办人', itemId: 3, name: 'input' },
                         { dom: 'bgr', value: '',placeholder: '嫌疑人', itemId: 4, name: 'input' },
-                        // { dom: 'case_zm', value: '',placeholder: '', itemId: 4, name: 'select' },
                     ],
                     selectOption: {},
                 },
@@ -195,7 +194,6 @@
                 this.$nextTick()
                 const sendData = dataInfo;
                 sendData ['nd'] =  dataInfo.nd;
-                console.log(sendData)
                 const resultData = await this.$api.yrExhibitGetByPage(sendData);
                 const pagination = { ...this.pagination };
                 let resultData_table = [];
@@ -220,15 +218,10 @@
             showDialogPanel(dataInfo,exhibit_id){
                 this.showModel.dialogTableVisible = true;
                 this.bindCaseData.exhibit_id = exhibit_id;
-                ['tysah','case_name','case_take_user_name'].map((item,index)=>{
+                ['tysah','cbr'].map((item,index)=>{
                     this.mergeData.addSearch[index].value = dataInfo[item];
                     this.pagination_merge[item] = dataInfo[item];
                 })
-                this.mergeData.addSearch[3].value = dataInfo['bgr'];
-                this.mergeData.addSearch[1].value = '';
-                this.pagination_merge['bgr'] = dataInfo['bgr'];
-                this.pagination_merge['case_name'] = '';
-                console.log(this.pagination_merge)
                 this.getWasInHouseList(this.pagination_merge)
             },
             // 获取已入库案件信息

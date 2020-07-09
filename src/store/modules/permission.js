@@ -99,22 +99,22 @@ const actions = {
   generateRoutes({ commit }, userInfo) {
     return new Promise(resolve => {
       // 动态角色配置路由
-      // if(userInfo.username == 'admin') addRoute(commit,resolve,asyncDataRoutes)
-      //   else {
-      //     if(!userInfo.group_name.includes('defalut')) {
-      //       api.getRoutesData({group_name:userInfo.group_name[0]}).then((result) => {
-      //         addRoute(commit, resolve, checkedNullInfo(result.data[0].routes))
-      //       })
-      //     } else addRoute(commit, resolve, [])
-      //   }
+      if(userInfo.username == 'admin') addRoute(commit,resolve,asyncDataRoutes)
+        else {
+          if(!userInfo.group_name.includes('defalut')) {
+            api.getRoutesData({group_name:userInfo.group_name[0]}).then((result) => {
+              addRoute(commit, resolve, checkedNullInfo(result.data[0].routes))
+            })
+          } else addRoute(commit, resolve, [])
+        }
 
       // 定义角色配置路由
-      let accessedRoutes,accessedRoute = [];
-      accessedRoute = asyncDataRoutes
-      accessedRoute.push({ path: '*', redirect: '/404', hidden: true })
-      accessedRoutes = filterAsyncRoutes(accessedRoute,true)
-      commit('SET_ROUTES', accessedRoutes)
-      resolve(accessedRoutes)
+      // let accessedRoutes,accessedRoute = [];
+      // accessedRoute = asyncDataRoutes
+      // accessedRoute.push({ path: '*', redirect: '/404', hidden: true })
+      // accessedRoutes = filterAsyncRoutes(accessedRoute,true)
+      // commit('SET_ROUTES', accessedRoutes)
+      // resolve(accessedRoutes)
       
     })
   }

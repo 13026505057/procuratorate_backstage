@@ -10,7 +10,7 @@
                     type="year" class="item" value-format="yyyy" clearable></el-date-picker>
             </template>
             <template v-else-if="item.name == 'select'">
-                <el-select v-model="item.value" :placeholder="item.placeholder" clearable>
+                <el-select v-model="item.value" :placeholder="item.placeholder" clearable filterable>
                     <el-option v-for="itemChild in selectOption[item.dom]"
                         :key="itemChild.value" :label="itemChild.label" :value="itemChild.value">
                     </el-option>
@@ -22,7 +22,7 @@
                 </el-date-picker>
             </template>
             <template v-else-if="item.name == 'selectTimeStatus'">
-                <el-select v-model="item.value" :placeholder="item.placeholder" clearable>
+                <el-select v-model="item.value" :placeholder="item.placeholder" clearable filterable>
                     <el-option v-for="itemChild in selectOption[item.dom]"
                         :key="itemChild.case_time_status" :label="itemChild.case_time_status_name" :value="itemChild.case_time_status">
                     </el-option>

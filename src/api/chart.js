@@ -5,5 +5,9 @@ const chart = {
   sysIframeGet(data) {
     return request({ url: '/sysIframeGet', method: 'post', data })
   },
+  // 获取getShouLiJieCun
+  getShouLiJieCun(data) {
+    return request({ url: '/chart/getShouLiJieCun', method: 'post', data })
+  },
 }
 export default chart

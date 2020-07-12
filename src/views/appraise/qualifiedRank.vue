@@ -1,5 +1,5 @@
 <template>
-    <div class="progress-content">
+    <div class="qualifiedRankPage">
         <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" 
             @receivedAddress="receivedAddress" />
         <div class="head-tab">
@@ -31,48 +31,21 @@
             return  {
                 addSearch: [
                     { dom: 'timeYear', value: '',placeholder: '请选择年份', itemId: 6, name: 'dataPicker' },
-                    { dom: 'status_case', value: [],placeholder: '请选择查询状态', itemId: 7, name: 'cascader' },
+                    { dom: 'status_case', value: ['sl'],placeholder: '请选择查询状态', itemId: 7, name: 'cascader' },
                 ],
                 selectOption:{ 
-                    status_case: []
-                },
-                showModel: {
-                    status_case_city: [
-                        {   value: 'sl', label: '按受理年度',
-                            children: [
-                                { value: 'all', label: '全市' },
-                                { value: 'area', label: '区院' },
-                            ]
-                        },
-                        {   value: 'bj', label: '按办结年度',
-                            children: [
-                                { value: 'all', label: '全市' },
-                                { value: 'area', label: '区院' },
-                            ]
-                        },
-                    ],
-                    status_case_area: [
-                        {  value: 'sl', label: '按受理年度' },
-                        {  value: 'bj', label: '按办结年度' },
-                    ],
+                    status_case: [
+                        { value: 'sl', label: '按受理年度' },
+                        { value: 'bj', label: '按办结年度' },
+                    ]
                 },
                 tableData:[],
-                tableItems:[],
-                tableItemsCity:[
+                tableItems:[
                     {label: "单位名称", prop: "org_name", tableId:1},
                     {label: "应交卷数量", prop: "", tableId:2},
                     {label: "实交卷数量", prop: "in_count", tableId:3},
                     {label: "超期未交卷数量", prop: "chaoqi_count", tableId:4},
                     {label: "交卷率", prop: "persent", tableId:5},
-                ],
-                tableItemsArea:[
-                    {label: "办案人姓名", prop: "case_take_user_name", tableId:1},
-                    {label: "单位名称", prop: "org_name", tableId:3},
-                    {label: "部门名称", prop: "dept_name", tableId:4},
-                    {label: "应交卷数量", prop: "", tableId:2},
-                    {label: "实交卷数量", prop: "in_count", tableId:6},
-                    {label: "未交卷数量", prop: "chaoqi_count", tableId:22},
-                    {label: "交卷率", prop: "persent", tableId:7},
                 ],
                 headStyle:{
                     backgroundColor: '#eaf5ff',
@@ -86,29 +59,15 @@
                     case_name:'',
                     case_bh:'', //统一受案号
                     case_take_user_name:'',
-                    status_case: ''
+                    status_case: JSON.stringify(['sl'])
                 },
                 isLoading:false,
             }
         },
         mounted(){
-            this.initLevelData()
             this.getDataList(this.seatchData)
         },
         methods: {
-            initLevelData(){
-                if(this.org_list && this.org_list[0].level !== 'area') {
-                    this.selectOption.status_case = this.showModel.status_case_city
-                    let dataArr = ['sl','all']
-                    this.addSearch[1].value = dataArr
-                    this.seatchData.status_case = JSON.stringify(dataArr)
-                } else {
-                    this.selectOption.status_case = this.showModel.status_case_area
-                    let dataArr = ['sl']
-                    this.addSearch[1].value = dataArr
-                    this.seatchData.status_case = JSON.stringify(dataArr)
-                }
-            },
             receivedAddress(data){
                 Object.keys(data).map(item=> this.seatchData[item] = data[item] )
             },
@@ -117,12 +76,8 @@
                 // 受理和办结
                 let status = dataInfo.status_case
                 let dataList = [
-                    { dom: ["sl","all"], fun: "caseJaugeAllSlrq" },
-                    { dom: ["sl","area"], fun: "caseJaugeSlrq" },
-                    { dom: ["bj","all"], fun: "caseJaugeAll" },
-                    { dom: ["bj","area"], fun: "caseJauge" },
-                    { dom: ["sl"], fun: "caseJaugeSlrq" },
-                    { dom: ["bj"], fun: "caseJauge" },
+                    { dom: ["sl"], fun: "caseJaugeAllSlrq" },
+                    { dom: ["bj"], fun: "caseJaugeAll" },
                 ]
                 dataList.map(item=>{
                     if(status == JSON.stringify(item.dom)) {
@@ -136,21 +91,7 @@
                 this.isLoading = true;
                 dataInfo ['nd'] = this.seatchData.timeYear;
                 dataInfo ['area_id'] = '';
-                this.tableItems = this.tableItemsCity;
                 const resultData = await this.$api.caseJaugeAllSlrq(dataInfo);
-                if(resultData && resultData.code == '0') {
-                    this.tableData = resultData.data;
-                    this.isLoading = false
-                }
-            },
-            //查询基层院的归档率 - 受理
-            async caseJaugeSlrq(dataInfo){
-                this.isLoading = true;
-                this.tableItems = this.tableItemsArea;
-                // dataInfo ['area_id'] = this.org_id;
-                dataInfo ['nd'] = this.seatchData.timeYear;
-                dataInfo ['city_id'] = '';
-                const resultData = await this.$api.caseJaugeSlrq(dataInfo);
                 if(resultData && resultData.code == '0') {
                     this.tableData = resultData.data;
                     this.isLoading = false
@@ -161,21 +102,7 @@
                 this.isLoading = true;
                 dataInfo ['nd'] = this.seatchData.timeYear;
                 dataInfo ['area_id'] = '';
-                this.tableItems = this.tableItemsCity;
                 const resultData = await this.$api.caseJaugeAll(dataInfo);
-                if(resultData && resultData.code == '0') {
-                    this.tableData = resultData.data;
-                    this.isLoading = false
-                }
-            },
-            //查询基层院的归档率 - 办结
-            async caseJauge(dataInfo){
-                this.isLoading = true;
-                this.tableItems = this.tableItemsArea;
-                // dataInfo ['area_id'] = this.org_id;
-                dataInfo ['nd'] = this.seatchData.timeYear;
-                dataInfo ['city_id'] = '';
-                const resultData = await this.$api.caseJauge(dataInfo);
                 if(resultData && resultData.code == '0') {
                     this.tableData = resultData.data;
                     this.isLoading = false
@@ -195,7 +122,7 @@
     }
 </script>
 <style lang="scss">
-    .progress-content{
+    .qualifiedRankPage{
         margin: 20px;
         .head-tab{
             margin-top: 30px;
@@ -233,7 +160,4 @@
             }
         }
     }
-    
- 
-    
 </style>

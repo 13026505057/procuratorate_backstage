@@ -1,17 +1,13 @@
 <template>
     <div class="finishStatusPage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" 
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" 
             @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun" />
         <div class="head-tab">
             <div class="table-dataList" >
                 <el-table :data="showModel.tableData" border style="width: 100%" v-loading="loadingTable">
                     <el-table-column align="center" type="index"></el-table-column>
-                    <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
+                    <el-table-column :prop="item.title" :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
                         v-for="item in columns" :key="item.itemId" align="center">
-                        <template slot-scope="{row}">
-                            <span v-if="item.itemId == 8">{{ row[item.title]?'已办结':'未办结' }}</span>
-                            <span v-else>{{ row[item.title] }}</span>
-                        </template>
                     </el-table-column>
                 </el-table>
             </div>
@@ -52,6 +48,11 @@
                 ],
                 loadingTable: false,
                 addSearch: [
+                    { dom: 'case_bh', value: '', placeholder: '统一受案号', itemId: 0, name: 'input' },
+                    { dom: 'bmsah', value: '', placeholder: '部门受案号', itemId: -1, name: 'input' },
+                    { dom: 'case_name', value: '', placeholder: '请输入案卷名称', itemId: 1, name: 'input' },
+                    { dom: 'bgr', value: '', placeholder: '请输入嫌疑人', itemId: 2, name: 'input' },
+                    { dom: 'timeYear', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
                     { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
                 ],
                 selectOption: {},
@@ -69,8 +70,9 @@
                     { title: 'case_desc', dataIndex: '案件描述', overflow: true, itemId: 11 },
                     { title: 'slrq', dataIndex: '受理日期', itemId: 4 },
                     { title: 'case_take_user_name', dataIndex: '承办人', itemId: 3 },
-                    { title: 'over_time', dataIndex: '是否办结', itemId: 8 },
+                    { title: 'bj_status', dataIndex: '是否办结', itemId: 8 },
                     { title: 'over_time', dataIndex: '办结时间', itemId: 9 },
+                    { title: 'bjrq', dataIndex: '办结按钮点击日期', itemId: 5 },
                 ],
             }
            

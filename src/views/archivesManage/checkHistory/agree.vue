@@ -12,14 +12,9 @@
                     <div class="table-dataList">
                         <el-table :data="showModel.tableData" border style="width: 100%" v-loading="loadingTable">
                             <el-table-column align="center" type="index"></el-table-column>
-                            <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
-                                v-for="item in columns" :key="item.itemId" align="center">
-                                <template slot-scope="{row}">
-                                    <span v-if="item.itemId == 4">{{ row[item.title] | mapStatus }}</span>
-                                    <span v-else>{{ row[item.title] }}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column align="center" label="操作" width="350">
+                            <el-table-column :prop="item.title" :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
+                                v-for="item in columns" :key="item.itemId" align="center"></el-table-column>
+                            <el-table-column align="center" label="操作" width="300">
                                 <template slot-scope="{row}">
                                     <el-button @click="showDialogPanel(row.exhibits)" class="highlight-btn" size="small">已有案卷</el-button>
                                     <el-button v-if="row.dangan_accept_status=='0'?true:false" @click="reciveCaseAgain(row.case_id)" class="highlight-btn" size="small">重新接收</el-button>
@@ -89,14 +84,17 @@
                 <el-button type="primary" @click="confirmBtn(submitDataInfoCaseId)">确 定</el-button>
             </span>
         </el-dialog>
+        <!-- 作废 -->
+        <DeleteCancel ref="deleteCancel" />
     </div>
 </template>
 <script>
     import Search from '@/components/Search'
     import DialogPagin from '@/components/DialogPagin'
+    import DeleteCancel from '@/components/DeleteCancel'
     import { mapGetters } from 'vuex'
     export default {
-        components: { Search,DialogPagin },
+        components: { Search,DialogPagin,DeleteCancel },
         computed: {
             ...mapGetters(['base_url','print_id'])
         },
@@ -172,6 +170,7 @@
                     { title: 'case_type_name', dataIndex: '案件类型', itemId: 2 },
                     { title: 'case_desc', dataIndex: '案件描述', overflow: true, itemId: 11 },
                     { title: 'case_take_user_name', dataIndex: '承办人', itemId: 3 },
+                    { title: 'refuse_type_name', dataIndex: '退查类型', itemId: 4 },
                     { title: 'tuicha_mark', dataIndex: '退查原因', itemId: 5 },
                     { title: 'tuicha_time', dataIndex: '退查时间', itemId: 6 },
                 ],
@@ -295,12 +294,8 @@
                 if(resultData && resultData.code == '0') this.$message.success('已发送打印请求')
             },
             // 作废
-            async deleteCancel(exhibit_id){
-                let resultData = await this.$api.editCaseData({exhibit_id,exhibit_status: 0})
-                if(resultData && resultData.code == '0') {
-                    this.$message.success('操作成功')
-                    // this.getCaseType()
-                }
+            deleteCancel(exhibit_id){
+                this.$refs.deleteCancel.openDeleteDialog(exhibit_id)
             },
             // 接收案卷信息
             resultItem(case_id){

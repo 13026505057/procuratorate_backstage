@@ -17,9 +17,13 @@
                 </el-select>
             </template>
             <template v-else-if="item.name == 'daterange'">
-                <el-date-picker v-model="item.value" type="daterange" range-separator="至" clearable
+                <el-date-picker v-model="item.value" type="daterange" range-separator="至" clearable :default-time="['00:00:00', '23:59:59']"
                     start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd HH:mm:ss">
                 </el-date-picker>
+            </template>
+            <template v-else-if="item.name == 'cascader'">
+                <el-cascader :placeholder="item.placeholder" v-model="item.value" :options="selectOption[item.dom]" 
+                    filterable clearable></el-cascader>
             </template>
             <template v-else-if="item.name == 'selectTimeStatus'">
                 <el-select v-model="item.value" :placeholder="item.placeholder" clearable filterable>
@@ -30,7 +34,7 @@
             </template>
         </div>
         <div class="searchItem" v-if="hiddenAdress">
-            <template v-if="org_list[0].level !== 'area'">
+            <template v-if="org_list && org_list[0].level !== 'area'">
                 <el-cascader ref="treeOrg" placeholder="试试搜索：青岛市" v-model="selectOrgId" :options="org_list" 
                     :props="{ checkStrictly: true }" filterable clearable></el-cascader>
             </template>
@@ -110,6 +114,10 @@ export default {
                         dataInfo.over_time_begin = dataInfo.timeData[0]
                         dataInfo.over_time_end = dataInfo.timeData[1]
                     } else dataInfo.over_time_begin = dataInfo.over_time_end = ''
+                } else if(item.dom == 'status_case') {
+                    if(dataInfo.status_case && dataInfo.status_case.length>0) {
+                        dataInfo.status_case = JSON.stringify(dataInfo.status_case)
+                    }
                 }
                 delete dataInfo.timeData
             })

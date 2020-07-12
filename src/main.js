@@ -19,6 +19,8 @@ import './utils/error-log' // error log
 import './utils/directives.js';
 import * as filters from './filters' // global filters
 
+import '@/assets/icons/iconfont.css';
+import '@/assets/icons/iconfont.js';
 //config the api Info
 import api from '@/api'
 Vue.prototype.$api = api

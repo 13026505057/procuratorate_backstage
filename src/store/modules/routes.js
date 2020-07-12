@@ -38,7 +38,7 @@ const asyncDataRoutes = [
                 "redirect": "/archivesManage/CheckArchives/readyItem",
                 "name": "案卷接收 - CheckArchives", "meta":{ "title":"案卷接收","icon": "icon-zhiliangpingcha" },
                 "children": [
-                    {"path": "receiveItem", "component": "views/archivesManage/checkArchives/receiveItem", "name": "案卷接收 - ReceiveItem", "meta":{ "title":"案卷接收","icon": "icon-zhiliangpingcha" }},
+                    {"path": "receiveItem", "component": "views/archivesManage/checkArchives/receiveItem", "name": "案卷接收（入库） - ReceiveItem", "meta":{ "title":"案卷接收（入库）","icon": "icon-zhiliangpingcha" }},
                     {"path": "readyItem", "component": "views/archivesManage/checkArchives/readyItem", "name": "案卷预入库 - ReadyItem", "meta":{ "title":"案卷预入库","icon": "icon-zhiliangpingcha" }},
                     {"path": "bindReadyItem", "component": "views/archivesManage/checkArchives/bindReadyItem", "name": "预入库绑定 - BindReadyItem", "meta":{ "title":"预入库绑定","icon": "icon-zhiliangpingcha" }},
                     {"path": "allCaseMaterials", "component": "views/archivesManage/checkArchives/allCaseMaterials", "name": "所有案卷 - AllCaseMaterials", "meta":{ "title":"所有案卷","icon": "icon-zhiliangpingcha" }}
@@ -49,6 +49,7 @@ const asyncDataRoutes = [
                 "name": "问题处理 - ExhibitDoubt", "meta":{ "title":"问题处理","icon": "icon-zhiliangpingcha" },
                 "children": [
                     {"path": "finishStatus", "component": "views/archivesManage/exhibitDoubt/finishStatus", "name": "案件办结情况查询 - FinishStatus", "meta":{ "title":"案件办结情况查询","icon": "icon-zhiliangpingcha" }},
+                    {"path": "wasDeleteExhibite", "component": "views/archivesManage/exhibitDoubt/wasDeleteExhibite", "name": "已作废案卷查询 - WasDeleteExhibite", "meta":{ "title":"已作废案卷查询","icon": "icon-zhiliangpingcha" }},
                     {"path": "mergeRequest", "component": "views/archivesManage/exhibitDoubt/mergeRequest", "name": "多案并卷 - MergeRequest", "meta":{ "title":"多案并卷","icon": "icon-zhiliangpingcha" }},
                     {"path": "BySelfMatchDoubt", "component": "views/archivesManage/exhibitDoubt/bySelfMatchDoubt", "name": "人工匹配 - BySelfMatchDoubt", "meta":{ "title":"人工匹配","icon": "icon-zhiliangpingcha" }},
                 ]
@@ -59,7 +60,7 @@ const asyncDataRoutes = [
                 "redirect": "/archivesManage/checkHistory/agree",
                 "children": [
                     {"path": "agree", "component": "views/archivesManage/checkHistory/agree", "name": "退查中案件 - Agree", "meta":{ "title":"退查中案件","icon": "icon-zhiliangpingcha" }},
-                    {"path": "disagree", "component": "views/archivesManage/checkHistory/disagree", "name": "审查记录 - Disagree", "meta":{ "title":"审查记录","icon": "icon-zhiliangpingcha" }}
+                    {"path": "history", "component": "views/archivesManage/checkHistory/history", "name": "审查记录 - History", "meta":{ "title":"审查记录","icon": "icon-zhiliangpingcha" }}
                 ]
             },
             {   "path": "putStorage", "component": "views/archivesManage/putStorage/index", 
@@ -100,12 +101,12 @@ const asyncDataRoutes = [
     },
     {
         "component": "layout",
-        "meta": {"title": "档案归档评价", "icon": "lock"},
-        "name": "档案归档评价 - PerformanceEvaluation", 
+        "meta": {"title": "档案绩效评价", "icon": "lock"},
+        "name": "档案绩效评价 - PerformanceEvaluation", 
         "path": "/performanceEvaluation",
         "redirect": "/performanceEvaluation",
         "children": [
-            {"path": "performanceEvaluation", "component": "views/performanceEvaluation/index", "name": "档案归档评价 - PerformanceEvaluationItem", "meta":{ "title":"档案归档评价","icon": "icon-zhiliangpingcha" }}
+            {"path": "performanceEvaluation", "component": "views/performanceEvaluation/index", "name": "档案绩效评价 - PerformanceEvaluationItem", "meta":{ "title":"档案绩效评价","icon": "icon-zhiliangpingcha" }}
         ]
     },
     {
@@ -138,6 +139,8 @@ const asyncDataRoutes = [
         "path": "/appraise",
         "redirect": "/appraise/qualifiedType",
         "children": [
+            {"path": "qualifiedRank", "component": "views/appraise/qualifiedRank", "name": "归档率排名 - QualifiedRank", "meta":{ "title":"归档率排名","icon": "icon-zhiliangpingcha" }},
+            {"path": "litigationCase", "component": "views/appraise/litigationCase", "name": "诉讼档案归档情况 - LitigationCase", "meta":{ "title":"诉讼档案归档情况","icon": "icon-zhiliangpingcha" }},
             {"path": "qualifiedType", "component": "views/appraise/qualifiedType", "name": "各业务类型符合归档条件 - QualifiedType", "meta":{ "title":"各业务类型符合归档条件","icon": "icon-zhiliangpingcha" }},
             {"path": "completedType", "component": "views/appraise/completedType", "name": "各业务类型已归档案件 - CompletedType", "meta":{ "title":"各业务类型已归档案件","icon": "icon-zhiliangpingcha" }},
             {"path": "uncompletedType", "component": "views/appraise/uncompletedType", "name": "各业务类型未归档案件 - UncompletedType", "meta":{ "title":"各业务类型未归档案件","icon": "icon-zhiliangpingcha" }},

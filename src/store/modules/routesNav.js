@@ -33,16 +33,17 @@ import ReadyItem from '@/views/archivesManage/checkArchives/readyItem'
 import BindReadyItem from '@/views/archivesManage/checkArchives/bindReadyItem'
 import CheckHistory from '@/views/archivesManage/checkHistory/index'
 import Agree from '@/views/archivesManage/checkHistory/agree'
-import Disagree from '@/views/archivesManage/checkHistory/disagree'
+import History from '@/views/archivesManage/checkHistory/history'
 import PutStorage from '@/views/archivesManage/putStorage/index'
 import UncompletedPut from '@/views/archivesManage/putStorage/uncompleted'
 import CompletedPut from '@/views/archivesManage/putStorage/completed'
 import Temporary from '@/views/archivesManage/putStorage/temporary'
 import ExhibitDoubt from '@/views/archivesManage/exhibitDoubt/index'
 import FinishStatus from '@/views/archivesManage/exhibitDoubt/finishStatus'
+import WasDeleteExhibite from '@/views/archivesManage/exhibitDoubt/wasDeleteExhibite'
 import MergeRequest from '@/views/archivesManage/exhibitDoubt/mergeRequest' 
 import MatterExhibit from '@/views/archivesManage/exhibitDoubt/matterExhibit'
-import BySelfMatchDoubt from '@/views/archivesManage/exhibitDoubt/bySelfMatchDoubt'
+import BySelfMatchDoubt from '@/views/historyCase/bySelfMatch'
 import UnCompletedPutExhibit from '@/views/archivesManage/putStorage/uncompletedExhibit'
 import CompletedPutExhibit from '@/views/archivesManage/putStorage/completedExhibit'
 
@@ -54,6 +55,8 @@ import InWarehouse from '@/views/utilizeArchives/inWarehouse'
 import PerformanceEvaluationItem from '@/views/performanceEvaluation/index'
 
 // 分析评估
+import QualifiedRank from '@/views/appraise/qualifiedRank'
+import LitigationCase from '@/views/appraise/litigationCase'
 import QualifiedType from '@/views/appraise/qualifiedType'
 import CompletedType from '@/views/appraise/completedType'
 import UncompletedType from '@/views/appraise/uncompletedType'
@@ -112,7 +115,7 @@ let routesNav = {
     CheckItem: CheckItem,
     CheckHistory: CheckHistory,
     Agree: Agree,
-    Disagree: Disagree,
+    History: History,
     PutStorage: PutStorage,
     UncompletedPut: UncompletedPut,
     CompletedPut: CompletedPut,
@@ -120,6 +123,7 @@ let routesNav = {
     ReadyItem: ReadyItem,
     ExhibitDoubt: ExhibitDoubt,
     FinishStatus: FinishStatus,
+    WasDeleteExhibite: WasDeleteExhibite,
     MergeRequest: MergeRequest,
     BindReadyItem: BindReadyItem,
     MatterExhibit: MatterExhibit,
@@ -135,6 +139,8 @@ let routesNav = {
     PerformanceEvaluationItem:PerformanceEvaluationItem,
 
     // 分析评估
+    QualifiedRank: QualifiedRank,
+    LitigationCase: LitigationCase,
     QualifiedType: QualifiedType,
     CompletedType: CompletedType,
     UncompletedType: UncompletedType,

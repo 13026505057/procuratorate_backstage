@@ -50,7 +50,7 @@
                         <span v-else>{{ row[item.title] }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="操作" width="300">
+                <el-table-column align="center" label="操作" width="200">
                     <template slot-scope="{row}">
                         <el-button @click="printQrCodeAgain(row.exhibit_id)" class="highlight-btn" type="operation" size="small">补打条码</el-button>
                         <el-button @click="deleteCancel(row.exhibit_id)" class="highlight-btn" type="operation" size="small">作废</el-button>
@@ -59,14 +59,17 @@
             </el-table>
             <DialogPagin ref="dialogTablePagin" :tableData="showModel.gridData_temporary" @dialogTablePagin="dialogTablePagin"/>
         </el-dialog>
+        <!-- 作废 -->
+        <DeleteCancel ref="deleteCancel" />
     </div>
 </template>
 <script>
     import Search from '@/components/Search'
     import DialogPagin from '@/components/DialogPagin'
+    import DeleteCancel from '@/components/DeleteCancel'
     import { mapGetters } from 'vuex'
     export default {
-        components: { Search,DialogPagin },
+        components: { Search,DialogPagin,DeleteCancel },
         computed: {
             ...mapGetters(['base_url'])
         },
@@ -232,12 +235,8 @@
                 if(resultData && resultData.code == '0') this.$message.success('已发送打印请求')
             },
             // 作废
-            async deleteCancel(exhibit_id){
-                let resultData = await this.$api.editCaseData({exhibit_id,exhibit_status: 0})
-                if(resultData && resultData.code == '0') {
-                    this.$message.success('操作成功')
-                    this.getCaseType()
-                }
+            deleteCancel(exhibit_id){
+                this.$refs.deleteCancel.openDeleteDialog(exhibit_id)
             },
         },
     }

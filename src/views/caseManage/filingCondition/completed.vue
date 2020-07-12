@@ -105,12 +105,11 @@
                             </el-table-column>
                             
                             <el-table-column
-                                width="200"
+                                width="100"
                                 align="center"
                                 label="操作">
                                 <template slot-scope="{ row }">
                                     <el-button @click="reprintClick(row.exhibit_id)" :disabled="disabled2" :loading="disabled2" class="highlight-btn" size="small">补打条码</el-button>
-                                    <el-button @click="cancellation(row.exhibit_id)" :disabled="disabled3" :loading="disabled3" class="highlight-btn" size="small">作废</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -271,15 +270,6 @@
                 const resultData = await this.$api.printAgain({exhibit_id});
                 if(resultData && resultData.code == '0') this.$message.success('已发送打印请求');
                 this.getCaseType(this.seatchData)
-            },
-            // 作废
-            async cancellation(exhibit_id){
-                this.disabled3 = true;
-                setTimeout(()=>{ this.disabled3 = false; },2000)
-                const resultData = await this.$api.editCaseData({exhibit_id,exhibit_status:'0'});
-                if(resultData && resultData.code == '0') this.$message.success('操作成功')
-                this.getCaseType(this.seatchData)
-
             },
              // 导出
             openExportExcelFun(data){

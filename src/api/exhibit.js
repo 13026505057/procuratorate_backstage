@@ -61,6 +61,10 @@ const exhibit = {
     printTodayExhibits(data) {
         return request({ url: '/exhibit/exhibit/printTodayExhibits', method: 'post', data })
     },
+    // 批量打印回执单
+    exhibitZuofeiLogGetByPage(data) {
+        return request({ url: '/exhibitZuofeiLogGetByPage', method: 'post', data })
+    },
     //并卷操作
     isAddCase(data){
         return request({ url: '/exhibit/exhibit/isAddCase', method: 'post', data })

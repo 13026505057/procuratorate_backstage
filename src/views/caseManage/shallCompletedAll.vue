@@ -54,7 +54,6 @@
                     <template slot-scope="{row}">
                         <el-button @click="printQrCodeAgain(row.exhibit_id)" class="highlight-btn" type="operation" size="small">补打条码</el-button>
                         <el-button @click="printReceipt(row.exhibit_id)" class="highlight-btn" type="operation" size="small">打印回执单</el-button>
-                        <el-button @click="deleteCancel(row.exhibit_id)" class="highlight-btn" type="operation" size="small">作废</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -243,14 +242,6 @@
             async printReceipt(exhibit_id){
                 let resultData = await this.$api.printAcceptReturn({exhibit_id})
                 if(resultData && resultData.code == '0') this.$message.success('已发送打印请求')
-            },
-            // 作废
-            async deleteCancel(exhibit_id){
-                let resultData = await this.$api.editCaseData({exhibit_id,exhibit_status: 0})
-                if(resultData && resultData.code == '0') {
-                    this.$message.success('操作成功')
-                    this.getCaseType()
-                }
             },
             headerRowStyle({row, rowIndex}){ 
                 return this.headStyle

@@ -69,10 +69,9 @@
                                     <span v-else> {{row[tableItem.prop]}} </span>
                                 </template>
                             </el-table-column>
-                            <el-table-column width="200" align="center" label="操作">
+                            <el-table-column width="100" align="center" label="操作">
                                 <template slot-scope="{ row }">
                                     <el-button @click="reprintClick(row.exhibit_id)" :disabled="disabled2" :loading="row.exhibit_id == showModel.exhibit_id_print" class="highlight-btn" size="small">补打条码</el-button>
-                                    <el-button @click="cancellation(row.exhibit_id)" :disabled="disabled3" :loading="row.exhibit_id == showModel.exhibit_id_del" class="highlight-btn" size="small">作废</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -259,18 +258,6 @@
                     this.showModel.exhibit_id_print = ''
                     this.disabled2 = false;
                     this.$message.success('已发送打印请求');
-                }
-                this.getCaseType(this.seatchData)
-            },
-            // 作废
-            async cancellation(exhibit_id){
-                this.showModel.exhibit_id_del = exhibit_id;
-                this.disabled3 = true;
-                const resultData = await this.$api.editCaseData({exhibit_id,exhibit_status:'0'});
-                if(resultData && resultData.code == '0') {
-                    this.exhibit_id_del.exhibit_id = '';
-                    this.disabled3 = false;
-                    this.$message.success('操作成功')
                 }
                 this.getCaseType(this.seatchData)
             },

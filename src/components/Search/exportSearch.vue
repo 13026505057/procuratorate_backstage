@@ -18,7 +18,7 @@
             </template>
             <template v-else-if="item.name == 'daterange'">
                 <el-date-picker v-model="item.value" type="daterange" range-separator="至" clearable
-                    start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd">
+                    start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd HH:mm:ss">
                 </el-date-picker>
             </template>
             <template v-else-if="item.name == 'selectTimeStatus'">
@@ -56,6 +56,7 @@ export default {
             selectOrgId: '',
             searchList: [
                 { dom: 'timeYear', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
+                { dom: 'timeData', value: '',placeholder: '', itemId: 4, name: 'daterange' },
             ],
             org_dataList: [{level:'area'}],
             pickerOptions: {

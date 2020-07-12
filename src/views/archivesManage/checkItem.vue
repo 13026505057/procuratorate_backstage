@@ -71,12 +71,23 @@
                         :label="itemChild.type_name" :value="itemChild.type_value"></el-option>
                 </el-select>
             </div>
-            <div  style="display:table;width: 100%;margin-bottom: 10px" v-if="submitDataInfoType=='disagree'">
-                <span style="display:table-cell;width: 25%;text-align: right;padding-right: 20px">
-                    退查原因：
-                </span>
-                <el-input v-model="submitDataInfo['mark']" clearable placeholder="请填写退查原因" style="width: auto"></el-input>
-            </div>
+            <template v-if="submitDataInfoType=='disagree'">
+                <div style="display:table;width: 100%;margin-bottom: 10px">
+                    <span style="display:table-cell;width: 25%;text-align: right;padding-right: 20px">
+                        退查原因类型：
+                    </span>
+                    <el-select v-model="submitDataInfo['refuse_type_name']" placeholder="请选择检查类型">
+                        <el-option v-for="(itemChild,index) in showModel.refundTypeList" :key="index" 
+                            :label="itemChild.label" :value="itemChild.value"></el-option>
+                    </el-select>
+                </div>
+                <div style="display:table;width: 100%;margin-bottom: 10px">
+                    <span style="display:table-cell;width: 25%;text-align: right;padding-right: 20px">
+                        退查原因：
+                    </span>
+                    <el-input v-model="submitDataInfo['mark']" clearable placeholder="请填写退查原因" style="width: auto"></el-input>
+                </div>
+            </template>
             <!-- <div style="display:table;width: 100%;margin-bottom: 10px" v-else-if="submitDataInfoType=='flaw'">
                 <span style="display:table-cell;width: 25%;text-align: right;padding-right: 20px">
                     标识原因：
@@ -88,14 +99,17 @@
                 <el-button type="primary" @click="confirmBtn(submitDataInfoCaseId)">确 定</el-button>
             </span>
         </el-dialog>
+        <!-- 作废 -->
+        <DeleteCancel ref="deleteCancel" />
     </div>
 </template>
 <script>
     import Search from '@/components/Search'
     import DialogPagin from '@/components/DialogPagin'
+    import DeleteCancel from '@/components/DeleteCancel'
     import { mapGetters } from 'vuex'
     export default {
-        components: { Search,DialogPagin },
+        components: { Search,DialogPagin,DeleteCancel },
         computed: {
             ...mapGetters(['base_url','print_id'])
         },
@@ -160,6 +174,14 @@
                         { type_value: 'flaw', type_name: '不成卷(瑕疵卷)', type_id: 3 },
                         { type_value: 'datas', type_name: '资料', type_id: 4 },
                     ],
+                    // 退查类型 暂时写死
+                    refundTypeList: [
+                        { value: '线上未办结退回', label: '线上未办结退回' },
+                        { value: '线上未办结预收', label: '线上未办结预收' },
+                        { value: '格式错误', label: '格式错误' },
+                        { value: '缺少成卷资料', label: '缺少成卷资料' },
+                        { value: '其它', label: '其它' },
+                    ]
                 },
                 // table表头
                 columns: [
@@ -177,6 +199,7 @@
                 submitDataInfoCaseId: '',
                 submitDataInfo: {
                     mark: '',
+                    refuse_type_name: ''
                 },
             }
            
@@ -277,12 +300,8 @@
                 if(resultData && resultData.code == '0') this.$message.success('已发送打印请求')
             },
             // 作废
-            async deleteCancel(exhibit_id){
-                let resultData = await this.$api.editCaseData({exhibit_id,exhibit_status: 0})
-                if(resultData && resultData.code == '0') {
-                    this.$message.success('操作成功')
-                    this.getCaseType()
-                }
+            deleteCancel(exhibit_id){
+                this.$refs.deleteCancel.openDeleteDialog(exhibit_id)
             },
             // 接收案卷信息
             resultItem(case_id){
@@ -318,7 +337,7 @@
             },
             // 审查不通过
             async disagreeCheckFun(case_ids){
-                const dataInfo = { case_ids,mark: this.submitDataInfo.mark }
+                const dataInfo = { case_ids,...this.submitDataInfo }
                 let resultData = await this.$api.refuseConfirmNone(dataInfo)
                 if(resultData && resultData.code=='0') this.$message.success('操作成功')
                 this.getCaseType(this.pagination)

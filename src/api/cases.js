@@ -41,10 +41,6 @@ const cases = {
     },
 
     // 档案管理
-    // 档案审查记录
-    caseRefuseHistoryGetByPage(data) {
-        return request({ url: '/caseRefuseHistoryGetByPage', method: 'post', data })
-    },
     // 档案通过审查操作
     confirmNone(data) {
         return request({ url: '/cases/cases/confirmNone', method: 'post', data })

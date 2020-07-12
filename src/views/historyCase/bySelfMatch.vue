@@ -105,7 +105,8 @@
                     exhibit_name: '',
                     bgr: '',
                     out_exhibit_id: '',
-                    org_id: ''
+                    org_id: '',
+                    exhibit_status: 1
                 },
                 addSearch_left: [
                     { dom: 'nd', value: '', placeholder: '请选择年份', itemId: 1, name: 'dataPicker' },

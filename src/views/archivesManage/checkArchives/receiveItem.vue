@@ -91,6 +91,9 @@
                             :label="itemChild.label" :value="itemChild.value"></el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="接收备注" prop="mark">
+                    <el-input class="input_class" type="textarea" v-model="submitDataInfo.mark"></el-input>
+                </el-form-item>
                 <!-- <div v-for="(item,index) in eachDataInfoList" :key="index" style="display:table;width: 100%;margin-bottom: 10px">
                     <span style="display:table-cell;width: 25%;text-align: right;padding-right: 20px">
                         {{ item.captionTitle }}：
@@ -256,6 +259,7 @@
                     dh: '',
                     jh: '',
                     bgr: '',
+                    mark: '',
                     print_code: 1,
                     print_accept: 0
                 },
@@ -274,7 +278,7 @@
                         { pattern: /^\d+$|^\d+[.]?\d+$/, message: '只能输入数字', trigger: 'blur' }
                     ],
                     bgr: [
-                         { required: true, message: '请输入被告人', trigger: 'blur' },
+                        { required: true, message: '请输入被告人', trigger: 'blur' },
                     ],
                     // case_type_id:[
                     //     { required: true, message: '请选择案件类型', trigger: 'blur' },
@@ -354,7 +358,6 @@
             },
             // 查询犯罪嫌疑人
             async getCasesBgrName(dataInfo){
-
                 const sendData = {};
                 sendData ['tysah'] = dataInfo;
                 sendData ['pageNum'] = '1';
@@ -367,7 +370,6 @@
                         resultData.data.list.map( item=> bgrName=bgrName+item.xm+',' )
                         this.submitDataInfo.bgr = bgrName;
                     }
-                     
                 }
             },
             async printSelectAll(){

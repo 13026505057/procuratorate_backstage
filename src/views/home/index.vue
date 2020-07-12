@@ -1,11 +1,14 @@
 <template>
    <div class="homePage">
-     <el-tabs v-model="showModel.activeNameTab" class="tabs_chart">
-        <el-tab-pane class="tab-pane-position" v-for="(item,index) in chart_iframe" :key="item.sys_iframe_id" 
-          :name="String(index)" :label="item.sys_iframe_name">
-          <iframe class="iframe_class" :src="item.sys_iframe_url" frameborder="0"></iframe>
-        </el-tab-pane>
-      </el-tabs>
+      <div :class="showDefalutMax?'showDefalutMax':''" class="tabs_chart">
+        <svg-icon :icon-class="showDefalutMax?'exit-fullscreen':'fullscreen'" class="dialogBtn" @click="selectOpenDialog" />
+        <el-tabs v-model="showModel.activeNameTab">
+          <el-tab-pane class="tab-pane-position" v-for="(item,index) in chart_iframe" :key="item.sys_iframe_id" 
+            :name="String(index)" :label="item.sys_iframe_name">
+            <iframe class="iframe_class" :src="item.sys_iframe_url" frameborder="0"></iframe>
+          </el-tab-pane>
+        </el-tabs>
+      </div>
    </div>
 </template>
 
@@ -19,7 +22,8 @@ export default {
     return {
       showModel: {
         activeNameTab: "0",
-      }
+      },
+      showDefalutMax: false
     }
   },
   computed: {
@@ -30,6 +34,10 @@ export default {
   },
   methods: {
     ...mapActions({'setTokenData':'user/setTokenData'}),
+    selectOpenDialog(){
+      console.log(this.showDefalutMax)
+      this.showDefalutMax = !this.showDefalutMax
+    },
     async accordUrlLogin(){
       const RouteQuery = this.$route.query;
       if(Object.keys(RouteQuery).length>0) {
@@ -52,11 +60,28 @@ export default {
     .tabs_chart{
       height: 100%;
       width: 100%;
-      .el-tabs__content{
-        height: calc(100% - 55px);
-        .tab-pane-position{
-          height: 100%;
-          width: 100%;
+      &.showDefalutMax{
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1001;
+        background-color: #fff;
+      }
+      .dialogBtn{
+        position: absolute;
+        z-index: 1002;
+        right: 20px;
+        top: 10px;
+      }
+      .el-tabs--top{
+        height: 100%;
+        width: 100%;
+        .el-tabs__content{
+          height: calc(100% - 55px);
+          .tab-pane-position{
+            height: 100%;
+            width: 100%;
+          }
         }
       }
     }

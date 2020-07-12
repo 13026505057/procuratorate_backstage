@@ -105,6 +105,12 @@ const cases = {
     caseJaugeAll(data){
         return request({ url: '/chart/city/getStockPersentByCity', method: 'post', data })
     },
+    caseJaugeSlrq(data){
+        return request({ url: '/chart/area/getStockCountBySlrqArea', method: 'post', data })
+    },
+    caseJaugeAllSlrq(data){
+        return request({ url: '/chart/city/getStockPersentBySlrqCity', method: 'post', data })
+    },
     // 案件预入库
     yrExhibitGetByPage(data){
         return request({ url: '/yrExhibitGetByPage', method: 'post', data })

@@ -66,6 +66,7 @@ export default {
             selectOrgId: '',
             searchList: [
                 { dom: 'case_bh', value: '', placeholder: '统一受案号', itemId: 0, name: 'input' },
+                { dom: 'bmsah', value: '', placeholder: '部门受案号', itemId: -1, name: 'input' },
                 { dom: 'case_name', value: '', placeholder: '请输入案卷名称', itemId: 1, name: 'input' },
                 { dom: 'bgr', value: '', placeholder: '请输入嫌疑人', itemId: 2, name: 'input' },
                 { dom: 'timeYear', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },

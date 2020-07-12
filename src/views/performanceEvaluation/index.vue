@@ -55,13 +55,15 @@
         },
         data()  {
             return  {
+                slrq:'sl',
                 addSearch: [
                     { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
                     { dom: 'timeYear', value: '',placeholder: '请选择年份', itemId: 6, name: 'dataPicker' },
                 ],
                 selectOption:{},
                 setDynamicBtn: [
-                    { title: '导出', fun: 'exprotFun' }
+                    { title: '导出', fun: 'exprotFun' },
+                    { title: '按办结年度', fun: 'slrqSearch' },
                 ],
                 activeName: "0",
                 tabItems:[],
@@ -116,7 +118,7 @@
         },
         mounted(){
             // this.getCaseType(this.seatchData);
-            this.getDataList()
+            this.getDataList('sl')
         },
         methods: {
             receivedAddress(data){
@@ -142,33 +144,62 @@
                 })
             },
             // 默认数据列表
-            async getDataList(){
+            async getDataList(dataClass){
                 // console.log({...this.seatchData})
-                this.isLoading = true;
-                if(this.seatchData.area_id&&this.seatchData.area_id!=''){
-                    //查询基层院的归档率
-                    this.tableItems = this.tableItemsArea;
-                    let dataInfo = { ...this.seatchData }
-                    // dataInfo ['area_id'] = this.org_id;
-                    dataInfo ['nd'] = this.seatchData.timeYear;
-                    dataInfo ['city_id'] = '';
-                    const resultData = await this.$api.caseJauge(dataInfo);
-                    if(resultData && resultData.code == '0') {
-                        this.tableData = resultData.data;
-                        this.isLoading = false
+                if(dataClass=='sl'){
+                    this.isLoading = true;
+                    if(this.seatchData.area_id&&this.seatchData.area_id!=''){
+                        //查询基层院的归档率
+                        this.tableItems = this.tableItemsArea;
+                        let dataInfo = { ...this.seatchData }
+                        // dataInfo ['area_id'] = this.org_id;
+                        dataInfo ['nd'] = this.seatchData.timeYear;
+                        dataInfo ['city_id'] = '';
+                        const resultData = await this.$api.caseJaugeSlrq(dataInfo);
+                        if(resultData && resultData.code == '0') {
+                            this.tableData = resultData.data;
+                            this.isLoading = false
+                        }
+                    }else{
+                        //查询地级市的归档率
+                        let dataInfo = { ...this.seatchData }
+                        dataInfo ['nd'] = this.seatchData.timeYear;
+                        dataInfo ['area_id'] = '';
+                        this.tableItems = this.tableItemsCity;
+                        const resultData = await this.$api.caseJaugeAllSlrq(dataInfo);
+                        if(resultData && resultData.code == '0') {
+                            this.tableData = resultData.data;
+                            this.isLoading = false
+                        }
                     }
                 }else{
-                    //查询地级市的归档率
-                    let dataInfo = { ...this.seatchData }
-                    dataInfo ['nd'] = this.seatchData.timeYear;
-                    dataInfo ['area_id'] = '';
-                    this.tableItems = this.tableItemsCity;
-                    const resultData = await this.$api.caseJaugeAll(dataInfo);
-                    if(resultData && resultData.code == '0') {
-                        this.tableData = resultData.data;
-                        this.isLoading = false
+                    this.isLoading = true;
+                    if(this.seatchData.area_id&&this.seatchData.area_id!=''){
+                        //查询基层院的归档率
+                        this.tableItems = this.tableItemsArea;
+                        let dataInfo = { ...this.seatchData }
+                        // dataInfo ['area_id'] = this.org_id;
+                        dataInfo ['nd'] = this.seatchData.timeYear;
+                        dataInfo ['city_id'] = '';
+                        const resultData = await this.$api.caseJauge(dataInfo);
+                        if(resultData && resultData.code == '0') {
+                            this.tableData = resultData.data;
+                            this.isLoading = false
+                        }
+                    }else{
+                        //查询地级市的归档率
+                        let dataInfo = { ...this.seatchData }
+                        dataInfo ['nd'] = this.seatchData.timeYear;
+                        dataInfo ['area_id'] = '';
+                        this.tableItems = this.tableItemsCity;
+                        const resultData = await this.$api.caseJaugeAll(dataInfo);
+                        if(resultData && resultData.code == '0') {
+                            this.tableData = resultData.data;
+                            this.isLoading = false
+                        }
                     }
                 }
+                
             },
             comfirmSearch(data){
                 // console.log(data)
@@ -179,9 +210,22 @@
             },
             setDynamicBtnFun(data){
                 const statusMap = {
-                    "exprotFun": "openExportExcelFun"
+                    "exprotFun": "openExportExcelFun",
+                    "slrqSearch":"slrqSearchFun"
                 }
                 this[statusMap[data.fun]](data.dataInfo)
+            },
+            slrqSearchFun(){
+                if(this.slrq=='sl'){
+                    this.getDataList('sl')
+                    this.slrq=='bj'
+                    this.setDynamicBtn[1].title = '按办结年度'
+                }else{
+                    
+                    this.getDataList('bj')
+                    this.slrq=='sl'
+                    this.setDynamicBtn[1].title = '按受理和办结年度'
+                }
             },
             // 导出
             openExportExcelFun(data){

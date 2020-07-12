@@ -9,8 +9,7 @@
                     <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
                         v-for="item in columns" :key="item.itemId" align="center">
                         <template slot-scope="{row}">
-                            <span v-if="item.itemId == 4">{{ row[item.title] | mapStatus }}</span>
-                            <span v-else-if="item.itemId == 8">{{ row[item.title]?'已办结':'未办结' }}</span>
+                            <span v-if="item.itemId == 8">{{ row[item.title]?'已办结':'未办结' }}</span>
                             <span v-else>{{ row[item.title] }}</span>
                         </template>
                     </el-table-column>
@@ -35,21 +34,6 @@
         components: { Search },
         computed :{
             ...mapGetters(['exhibit_type','exhibit_time_bg','base_url'])
-        },
-        filters: {
-            mapStatus(status){
-                const statusMap = {
-                    "in": "已归档",
-                    "in_jj_out": "已归档（交卷超期）",
-                    "in_rk_out": "已归档（入库超期）",
-                    "in_all_out": "已归档（双超期）",
-                    "none": "未归档",
-                    "none_jj_out": "未归档（交卷超期）",
-                    "none_rk_out": "未归档（入库超期）",
-                    "none_all_out": "未归档（双超期）",
-                }
-                return statusMap[status]
-            }
         },
         data()  {
             return  {

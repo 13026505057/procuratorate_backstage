@@ -1,6 +1,7 @@
 <template>
     <div class="bindReadyItemPage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" :hiddenAdress="false"
+            @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
@@ -41,7 +42,7 @@
         <!-- 案件列表 -->
         <el-dialog v-dialogDrag title="案件列表" :visible.sync="showModel.dialogTableVisible" width="70%">
             <Search :addSearch="mergeData.addSearch" :selectOption="mergeData.selectOption" :resetData="true" 
-                @comfirmSearch="comfirmSearch_merge" :hiddenAdress="true"/>
+                @comfirmSearch="comfirmSearch_merge" :hiddenAdress="false"/>
             <el-table :data="showModel.gridData" align="center" v-loading="loadingTable_merge">
                 <el-table-column type="index" label="#"></el-table-column>
                 <el-table-column :label="item.dataIndex" :prop="item.title" :show-overflow-tooltip="item.overflow"
@@ -73,7 +74,7 @@
     export default {
         components: { Search },
         computed :{
-            ...mapGetters(['exhibit_type','exhibit_time_bg'])
+            ...mapGetters(['exhibit_type','exhibit_time_bg','org_id'])
         },
         data()  {
             return  {
@@ -158,7 +159,8 @@
                     tysah: '',
                     case_name: '',
                     cbr: '',
-                    bgr:''
+                    bgr:'',
+                    org_id: ''
                 },
                 bindCaseData: {
                     exhibit_id: '',
@@ -167,6 +169,7 @@
             }
         },
         mounted(){
+            this.pagination_merge.org_id = this.org_id
             this.getTableList(this.pagination)
         },
         methods: {
@@ -218,7 +221,7 @@
             showDialogPanel(dataInfo,exhibit_id){
                 this.showModel.dialogTableVisible = true;
                 this.bindCaseData.exhibit_id = exhibit_id;
-                ['tysah','cbr'].map((item,index)=>{
+                ['tysah','case_name','cbr','bgr'].map((item,index)=>{
                     this.mergeData.addSearch[index].value = dataInfo[item];
                     this.pagination_merge[item] = dataInfo[item];
                 })

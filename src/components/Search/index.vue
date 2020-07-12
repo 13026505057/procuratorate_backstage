@@ -18,7 +18,7 @@
             </template>
             <template v-else-if="item.name == 'daterange'">
                 <el-date-picker v-model="item.value" type="daterange" range-separator="至" clearable
-                    start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd">
+                    start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd HH:mm:ss">
                 </el-date-picker>
             </template>
             <template v-else-if="item.name == 'selectTimeStatus'">
@@ -69,6 +69,7 @@ export default {
                 { dom: 'case_name', value: '', placeholder: '请输入案卷名称', itemId: 1, name: 'input' },
                 { dom: 'bgr', value: '', placeholder: '请输入嫌疑人', itemId: 2, name: 'input' },
                 { dom: 'timeYear', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
+                { dom: 'timeData', value: '',placeholder: '', itemId: 4, name: 'daterange' },
             ],
             org_dataList: [{level:'area'}],
             pickerOptions: {
@@ -105,9 +106,9 @@ export default {
                 } else this.$nextTick(()=>{ ['province_id','city_id','area_id'].map(keys=> dataInfo[keys] = this.address_id[keys] ) })
                 if(item.dom == 'timeData') {
                     if(dataInfo.timeData && dataInfo.timeData.length>0) {
-                        dataInfo.begin_time = dataInfo.timeData[0]
-                        dataInfo.end_time = dataInfo.timeData[1]
-                    } else dataInfo.begin_time = dataInfo.end_time = ''
+                        dataInfo.over_time_begin = dataInfo.timeData[0]
+                        dataInfo.over_time_end = dataInfo.timeData[1]
+                    } else dataInfo.over_time_begin = dataInfo.over_time_end = ''
                 }
                 delete dataInfo.timeData
             })

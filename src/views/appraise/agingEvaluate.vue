@@ -40,6 +40,7 @@
 </template>
 <script>
     import Search from '@/components/Search'
+    import { exportExcelFun } from '@/utils/auth'
     import { mapGetters } from 'vuex'
     export default {
         components: { Search },
@@ -186,12 +187,7 @@
              // 导出
             openExportExcelFun(data){
                 console.log(data)
-                // console.log(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&timeYear='+
-                //     data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&case_zm='+data.case_zm+
-                //     '&city_id='+this.seatchData.city_id+'&province_id='+this.seatchData.province_id+'&area_id='+this.seatchData.area_id)
-                // window.open(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&timeYear='+
-                    // data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&case_zm='+data.case_zm+
-                    // '&city_id='+this.seatchData.city_id+'&province_id='+this.seatchData.province_id+'&area_id='+this.seatchData.area_id)
+                // window.open(this.base_url+'/cases/cases/exportYingGuiWeiGuiCases?'+exportExcelFun(data))
             },
            
         },

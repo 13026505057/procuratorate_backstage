@@ -68,6 +68,7 @@
     import DialogPagin from '@/components/DialogPagin'
     import DeleteCancel from '@/components/DeleteCancel'
     import { mapGetters } from 'vuex'
+    import { exportExcelFun } from '@/utils/auth'
     export default {
         components: { Search,DialogPagin,DeleteCancel },
         computed: {
@@ -145,10 +146,8 @@
             },
             exprotUncompleteData(data){
                 this.$nextTick(()=>{
-                    window.open(this.base_url+'/cases/cases/exportYingGuiWeiGuiCases?case_name='+data.case_name+'&case_bh='+data.case_bh+'&timeYear='+data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&dangan_accept_status='+data.dangan_accept_status+'&province_id='+data.province_id+ 
-                        '&city_id='+data.city_id+ '&area_id='+data.area_id)
+                    window.open(this.base_url+'/cases/cases/exportYingGuiWeiGuiCases?'+exportExcelFun(data))
                 })
-                
             },
             receivedAddress(data){
                 Object.keys(data).map(item=> this.pagination[item] = data[item] )

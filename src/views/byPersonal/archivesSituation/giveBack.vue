@@ -26,6 +26,7 @@
 </template>
 <script>
     import Search from '@/components/Search'
+    import { exportExcelFun } from '@/utils/auth'
     import { mapGetters } from 'vuex'
     export default {
         components: { Search },
@@ -114,12 +115,8 @@
             },
             // 导出 
             openExportExcelFun(data){
-                console.log(data)
                 this.$nextTick(()=>{
-                    console.log(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&timeYear='+data.timeYear+
-                        '&province_id='+ data.province_id+'&city_id='+data.city_id+ '&area_id='+data.area_id)
-                    // window.open(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&timeYear='+data.timeYear+
-                        // '&province_id='+ data.province_id+'&city_id='+data.city_id+ '&area_id='+data.area_id)
+                    // window.open(this.base_url+'/?'+exportExcelFun(data))
                 })
             },
             showDialogPanel(dataInfo){

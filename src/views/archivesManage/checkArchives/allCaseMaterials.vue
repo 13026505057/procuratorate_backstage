@@ -76,7 +76,6 @@
                 addSearch: [
                     { dom: 'tysah', value: '',placeholder: '请输入统一受案号', itemId: 5, name: 'input' },
                     { dom: 'case_name', value: '',placeholder: '请输入案件名称', itemId: 6, name: 'input' },
-                    // { dom: 'timeData', value: '',placeholder: '', itemId: 7, name: 'daterange' },
                     { dom: 'out_exhibit_id', value: '',placeholder: '扫描条形码', itemId: 8, name: 'input' },
                     { dom: 'cbr', value: '',placeholder: '承办人', itemId: 9, name: 'input' },
                     { dom: 'bgr', value: '',placeholder: '嫌疑人', itemId: 10, name: 'input' },

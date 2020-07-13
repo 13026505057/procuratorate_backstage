@@ -16,10 +16,11 @@
                     </el-option>
                 </el-select>
             </template>
-            <template v-else-if="item.name == 'daterange'">
-                <el-date-picker v-model="item.value" type="daterange" range-separator="至" clearable :default-time="['00:00:00', '23:59:59']"
-                    start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd HH:mm:ss">
-                </el-date-picker>
+            <template v-else-if="item.name == 'daterange_begin'">
+                <el-date-picker v-model="item.value" type="datetime" :placeholder="item.placeholder" value-format="yyyy-MM-dd HH:mm:ss" default-time="00:00:00"></el-date-picker>
+            </template>
+            <template v-else-if="item.name == 'daterange_end'">
+                <el-date-picker v-model="item.value" type="datetime" :placeholder="item.placeholder" value-format="yyyy-MM-dd HH:mm:ss" default-time="23:59:59"></el-date-picker>
             </template>
             <template v-else-if="item.name == 'cascader'">
                 <el-cascader :placeholder="item.placeholder" v-model="item.value" :options="selectOption[item.dom]" 
@@ -74,7 +75,8 @@ export default {
                 { dom: 'case_name', value: '', placeholder: '请输入案卷名称', itemId: 1, name: 'input' },
                 { dom: 'bgr', value: '', placeholder: '请输入嫌疑人', itemId: 2, name: 'input' },
                 { dom: 'timeYear', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
-                { dom: 'timeData', value: '',placeholder: '', itemId: 4, name: 'daterange' },
+                { dom: 'over_time_begin', value: '',placeholder: '开始时间', itemId: 4, name: 'daterange_begin' },
+                { dom: 'over_time_end', value: '',placeholder: '结束时间', itemId: -4, name: 'daterange_end' },
             ],
             org_dataList: [{level:'area'}],
             pickerOptions: {
@@ -109,17 +111,11 @@ export default {
                         ['province_id','city_id','area_id'].map(keys=> dataInfo[keys] = data[keys] )
                     })
                 } else this.$nextTick(()=>{ ['province_id','city_id','area_id'].map(keys=> dataInfo[keys] = this.address_id[keys] ) })
-                if(item.dom == 'timeData') {
-                    if(dataInfo.timeData && dataInfo.timeData.length>0) {
-                        dataInfo.over_time_begin = dataInfo.timeData[0]
-                        dataInfo.over_time_end = dataInfo.timeData[1]
-                    } else dataInfo.over_time_begin = dataInfo.over_time_end = ''
-                } else if(item.dom == 'status_case') {
+                if(item.dom == 'status_case') {
                     if(dataInfo.status_case && dataInfo.status_case.length>0) {
                         dataInfo.status_case = JSON.stringify(dataInfo.status_case)
                     }
                 }
-                delete dataInfo.timeData
             })
             return dataInfo
         },
@@ -147,10 +143,9 @@ export default {
                     border: 0;
                 }
             }
-            input{
-                width: 190px;
-                
-            }
+            // input{
+            //     width: 190px;
+            // }
         }
         .el-button:hover, .el-button:focus {
             color: #ffffff;

@@ -13,3 +13,10 @@ export function setToken(token) {
 export function removeToken() {
   return Cookies.remove(TokenKey)
 }
+export function exportExcelFun(arr) {
+  let _str = ""; 
+  for(var o in arr) {
+    if(arr[o] != -1) _str += o + "=" + arr[o] + "&"
+  }
+  return _str;
+}

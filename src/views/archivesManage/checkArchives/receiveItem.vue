@@ -64,8 +64,7 @@
         </el-dialog>
         <!-- 接收案卷 -->
         <el-dialog v-dialogDrag :title="showModel.dialogReceivedTitle" :visible.sync="showModel.dialogReceivedVisible">
-            <el-form  :model="submitDataInfo" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
-                
+            <el-form :model="submitDataInfo" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
                 <el-form-item label="档号" prop="dh">
                     <el-input class="input_class" v-model="submitDataInfo.dh"></el-input>
                 </el-form-item>
@@ -491,7 +490,7 @@
                     this.$message.success('添加成功')
                     localStorage.setItem('bgqx',this.submitDataInfo.bgqx)
                     localStorage.setItem('exhibit_type',this.submitDataInfo.exhibit_type)
-                    this.getCaseType()
+                    this.getTableList(this.pagination)
                     this.resetSubmitInfo()
                 }
             },

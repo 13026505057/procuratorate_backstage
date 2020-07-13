@@ -46,6 +46,7 @@
 <script>
     import Search from '@/components/Search'
     import DialogPagin from '@/components/DialogPagin'
+    import { exportExcelFun } from '@/utils/auth'
     import { mapGetters } from 'vuex'
     export default {
         components: { Search,DialogPagin },
@@ -81,7 +82,8 @@
                 addSearch: [
                     { dom: 'case_bh', value: '',placeholder: '请输入统一受案号', itemId: 5, name: 'input' },
                     { dom: 'exhibit_name', value: '',placeholder: '请输入案件名称', itemId: 6, name: 'input' },
-                    { dom: 'timeData', value: '',placeholder: '入库时间', itemId: 7, name: 'daterange' },
+                    { dom: 'over_time_begin', value: '',placeholder: '开始时间', itemId: 4, name: 'daterange_begin' },
+                    { dom: 'over_time_end', value: '',placeholder: '结束时间', itemId: -4, name: 'daterange_end' },
                     { dom: 'nd', value: '',placeholder: '选择案件年度', itemId: 11, name: 'dataPicker' },
                     { dom: 'out_exhibit_id', value: '',placeholder: '扫描条形码', itemId: 8, name: 'input' },
                     { dom: 'cbr', value: '',placeholder: '承办人', itemId: 9, name: 'input' },
@@ -141,9 +143,7 @@
             openExportExcelFun(data){
                 // console.log(data)
                 this.$nextTick(()=>{
-                    window.open(this.base_url+'/stock/stock-log/exoprtStockLog?case_bh='+data.case_bh+'&log_type=init'+'&exhibit_name='+ data.exhibit_name+'&bgr='+ data.bgr+
-                        '&nd='+ data.nd+'&cbr='+data.cbr+'&province_id='+data.province_id+ 
-                        '&city_id='+data.city_id+ '&area_id='+data.area_id)
+                    window.open(this.base_url+'/stock/stock-log/exoprtStockLog?'+exportExcelFun(data))
                 })
             },
             //查询卷宗类别如：诉讼 文书 技术

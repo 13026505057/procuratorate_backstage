@@ -87,7 +87,7 @@
     import DialogPagin from '@/components/DialogPagin'
     import { mapGetters } from "vuex";
     import { setTimeout } from 'timers';
-
+    import { exportExcelFun } from '@/utils/auth'
     export default {
         components: { Search,DialogPagin },
         computed: {
@@ -264,14 +264,8 @@
              // 导出
             openExportExcelFun(data){
                 this.$nextTick(()=>{
-                    console.log(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&case_zm='+ data.case_zm+
-                        '&timeYear='+ data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&anguan_pingcha_chaoqi='+
-                        data.anguan_pingcha_chaoqi+'&province_id='+data.province_id+ '&city_id='+data.city_id+'&area_id='+data.area_id)
-                    // window.open(this.base_url+'/?case_bh='+data.case_bh+'&case_name='+ data.case_name+'&case_zm='+ data.case_zm+
-                        // '&timeYear='+ data.timeYear+'&case_take_user_name='+data.case_take_user_name+'&anguan_pingcha_chaoqi='+
-                        // data.anguan_pingcha_chaoqi+'&province_id='+data.province_id+ '&city_id='+data.city_id+'&area_id='+data.area_id)
+                    window.open(this.base_url+'/cases/cases/exportYingGuiWeiGuiCases?'+exportExcelFun(data))
                 })
-                
             },
             headerRowStyle({row, rowIndex}){ 
                 return this.headStyle

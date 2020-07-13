@@ -23,7 +23,8 @@
         data()  {
             return  {
                 addSearch: [
-                    { dom: 'timeData', value: '',placeholder: '', itemId: 4, name: 'daterange' },
+                    { dom: 'over_time_begin', value: '',placeholder: '开始时间', itemId: 4, name: 'daterange_begin' },
+                    { dom: 'over_time_end', value: '',placeholder: '结束时间', itemId: -4, name: 'daterange_end' },
                 ],
                 selectOption:{},
                 tableData:[],

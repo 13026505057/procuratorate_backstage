@@ -16,10 +16,11 @@
                     </el-option>
                 </el-select>
             </template>
-            <template v-else-if="item.name == 'daterange'">
-                <el-date-picker v-model="item.value" type="daterange" range-separator="至" clearable
-                    start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd HH:mm:ss">
-                </el-date-picker>
+            <template v-else-if="item.name == 'daterange_begin'">
+                <el-date-picker v-model="item.value" type="datetime" :placeholder="item.placeholder" value-format="yyyy-MM-dd HH:mm:ss" default-time="00:00:00"></el-date-picker>
+            </template>
+            <template v-else-if="item.name == 'daterange_end'">
+                <el-date-picker v-model="item.value" type="datetime" :placeholder="item.placeholder" value-format="yyyy-MM-dd HH:mm:ss" default-time="23:59:59"></el-date-picker>
             </template>
             <template v-else-if="item.name == 'selectTimeStatus'">
                 <el-select v-model="item.value" :placeholder="item.placeholder" clearable>
@@ -56,7 +57,8 @@ export default {
             selectOrgId: '',
             searchList: [
                 { dom: 'timeYear', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
-                { dom: 'timeData', value: '',placeholder: '', itemId: 4, name: 'daterange' },
+                { dom: 'over_time_begin', value: '',placeholder: '开始时间', itemId: 4, name: 'daterange_begin' },
+                { dom: 'over_time_end', value: '',placeholder: '结束时间', itemId: -4, name: 'daterange_end' },
             ],
             org_dataList: [{level:'area'}],
             pickerOptions: {
@@ -90,13 +92,6 @@ export default {
                         ['province_id','city_id','area_id'].map(keys=> dataInfo[keys] = data[keys] )
                     })
                 } else this.$nextTick(()=>{ ['province_id','city_id','area_id'].map(keys=> dataInfo[keys] = this.address_id[keys] ) })
-                if(item.dom == 'timeData') {
-                    if(dataInfo.timeData && dataInfo.timeData.length>0) {
-                        dataInfo.begin_time = dataInfo.timeData[0]
-                        dataInfo.end_time = dataInfo.timeData[1]
-                    } else dataInfo.begin_time = dataInfo.end_time = ''
-                }
-                delete dataInfo.timeData
             })
             return dataInfo
         }

@@ -37,6 +37,7 @@
 <script>
     import Search from '@/components/Search'
     import DialogPagin from '@/components/DialogPagin'
+    import { exportExcelFun } from '@/utils/auth'
     import { mapGetters } from 'vuex'
     export default {
         components: { Search,DialogPagin },
@@ -157,11 +158,8 @@
             },
             // 导出
             openExportExcelFun(data){
-                // console.log(data)
                 this.$nextTick(()=>{
-                    window.open(this.base_url+'/exhibit/exhibit/exoprtExhibits?tysah='+data.tysah+'&stock_status=none'+'&exhibit_name='+ data.exhibit_name+'&bgr='+ data.bgr+
-                        '&nd='+ data.nd+'&cbr='+data.cbr+'&province_id='+data.province_id+ 
-                        '&city_id='+data.city_id+ '&area_id='+data.area_id)
+                    window.open(this.base_url+'/exhibit/exhibit/exoprtExhibits?'+exportExcelFun(data))
                 })
             },
             //自动获取焦点

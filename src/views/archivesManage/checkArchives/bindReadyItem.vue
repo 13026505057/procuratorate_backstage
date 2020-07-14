@@ -1,6 +1,6 @@
 <template>
     <div class="bindReadyItemPage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" :hiddenAdress="false"
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" :hiddenAdress="true"
             @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab">
@@ -92,11 +92,11 @@
                 loadingTable: false,
                 addSearch: [
                     { dom: 'tysah', value: '',placeholder: '统一受案号', itemId: 1, name: 'input' },
-                    { dom: 'case_name', value: '',placeholder: '案件名称', itemId: 2, name: 'input' },
+                    { dom: 'exhibit_name', value: '',placeholder: '案件名称', itemId: 2, name: 'input' },
                     { dom: 'bgr', value: '',placeholder: '被告人', itemId: 5, name: 'input' },
                     { dom: 'nd', value: '',placeholder: '选择年份', itemId: 3, name: 'dataPicker' },
                     { dom: 'cbr', value: '',placeholder: '请输入承办人', itemId: 4, name: 'input' },
-                    { dom: 'stock_status', value: '',placeholder: '是否已交卷', itemId: 6, name: 'select' },
+                    { dom: 'stock_status', value: '',placeholder: '是否已入库', itemId: 6, name: 'select' },
                 ],
                 selectOption: {
                     stock_status: [

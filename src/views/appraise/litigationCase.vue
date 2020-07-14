@@ -30,7 +30,7 @@
                 tableData:[],
                 tableItems:[
                     {label: "单位", prop: "org_name", tableId:1},
-                    {label: "受理与结存案件数(件)", prop: "shouli_jiecun", tableId:2},
+                    {label: "应归案件数(件)", prop: "yingguidang", tableId:2},
                     {label: "已办结案件数(件)", prop: "yibanjie", tableId:3},
                     {label: "未办结案件数(件)", prop: "weibanjie", tableId:4},
                     {label: "已归档案件数(件)", prop: "yiguidang", tableId:5},

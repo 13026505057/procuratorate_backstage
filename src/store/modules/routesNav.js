@@ -40,6 +40,7 @@ import CompletedPut from '@/views/archivesManage/putStorage/completed'
 import Temporary from '@/views/archivesManage/putStorage/temporary'
 import ExhibitDoubt from '@/views/archivesManage/exhibitDoubt/index'
 import FinishStatus from '@/views/archivesManage/exhibitDoubt/finishStatus'
+import UnStandard from '@/views/archivesManage/exhibitDoubt/unStandard'
 import WasDeleteExhibite from '@/views/archivesManage/exhibitDoubt/wasDeleteExhibite'
 import MergeRequest from '@/views/archivesManage/exhibitDoubt/mergeRequest' 
 import MatterExhibit from '@/views/archivesManage/exhibitDoubt/matterExhibit'
@@ -123,6 +124,7 @@ let routesNav = {
     ReadyItem: ReadyItem,
     ExhibitDoubt: ExhibitDoubt,
     FinishStatus: FinishStatus,
+    UnStandard: UnStandard,
     WasDeleteExhibite: WasDeleteExhibite,
     MergeRequest: MergeRequest,
     BindReadyItem: BindReadyItem,

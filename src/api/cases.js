@@ -119,6 +119,10 @@ const cases = {
     casesShouliGetByPage(data){
         return request({ url: '/casesShouliGetByPage', method: 'post', data })
     },
+    // 获取不规范结案列表
+    casesShouliBuGuiFanJieAnGetByPage(data){
+        return request({ url: '/casesShouliBuGuiFanJieAnGetByPage', method: 'post', data })
+    },
     //档案绩效评价
     //基层院查询归档率
     // caseJauge(data){

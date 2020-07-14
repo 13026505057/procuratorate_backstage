@@ -48,6 +48,7 @@ const asyncDataRoutes = [
                 "redirect": "/archivesManage/exhibitDoubt/mergeRequest",
                 "name": "问题处理 - ExhibitDoubt", "meta":{ "title":"问题处理","icon": "icon-zhiliangpingcha" },
                 "children": [
+                    {"path": "unStandard", "component": "views/archivesManage/exhibitDoubt/unStandard", "name": "不规范办结 - UnStandard", "meta":{ "title":"不规范办结","icon": "icon-zhiliangpingcha" }},
                     {"path": "finishStatus", "component": "views/archivesManage/exhibitDoubt/finishStatus", "name": "案件办结情况查询 - FinishStatus", "meta":{ "title":"案件办结情况查询","icon": "icon-zhiliangpingcha" }},
                     {"path": "wasDeleteExhibite", "component": "views/archivesManage/exhibitDoubt/wasDeleteExhibite", "name": "已作废案卷查询 - WasDeleteExhibite", "meta":{ "title":"已作废案卷查询","icon": "icon-zhiliangpingcha" }},
                     {"path": "mergeRequest", "component": "views/archivesManage/exhibitDoubt/mergeRequest", "name": "多案并卷 - MergeRequest", "meta":{ "title":"多案并卷","icon": "icon-zhiliangpingcha" }},

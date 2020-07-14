@@ -6,8 +6,14 @@
             <div class="table-dataList" >
                 <el-table :data="showModel.tableData" border style="width: 100%" v-loading="loadingTable">
                     <el-table-column align="center" type="index"></el-table-column>
-                    <el-table-column :prop="item.title" :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
+                    <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
                         v-for="item in columns" :key="item.itemId" align="center">
+                        <template slot-scope="{ row }">
+                            <div>
+                                <span v-if="item.itemId == 8">未实质办结，但点击了办结按钮</span>
+                                <span v-else>{{ row[item.title] }}</span>
+                            </div>
+                        </template>
                     </el-table-column>
                 </el-table>
             </div>

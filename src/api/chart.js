@@ -7,7 +7,7 @@ const chart = {
   },
   // 获取getShouLiJieCun
   getShouLiJieCun(data) {
-    return request({ url: '/chart/getShouLiJieCun', method: 'post', data })
+    return request({ url: '/chart/getShouLiJieCun2', method: 'post', data })
   },
 }
 export default chart

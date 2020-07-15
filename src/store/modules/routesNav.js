@@ -26,11 +26,13 @@ import UncompletedArchives from '@/views/archivesManage/shallCompleted/uncomplet
 import CompletedArchives from '@/views/archivesManage/shallCompleted/completed'
 import CheckArchives from '@/views/archivesManage/checkArchives/index'
 import ReceiveItem from '@/views/archivesManage/checkArchives/receiveItem'
+import ReceiveItemYear from '@/views/archivesManage/checkArchives/receiveItemYear'
 import AllCaseMaterials from '@/views/archivesManage/checkArchives/allCaseMaterials'
 
 import CheckItem from '@/views/archivesManage/checkItem'
 import ReadyItem from '@/views/archivesManage/checkArchives/readyItem'
 import BindReadyItem from '@/views/archivesManage/checkArchives/bindReadyItem'
+import MergeRequestCheck from '@/views/archivesManage/exhibitDoubt/mergeRequest' 
 import CheckHistory from '@/views/archivesManage/checkHistory/index'
 import Agree from '@/views/archivesManage/checkHistory/agree'
 import History from '@/views/archivesManage/checkHistory/history'
@@ -112,6 +114,8 @@ let routesNav = {
     CompletedArchives: CompletedArchives,
     CheckArchives: CheckArchives,
     ReceiveItem: ReceiveItem,
+    ReceiveItemYear: ReceiveItemYear,
+    MergeRequestCheck: MergeRequestCheck,
     AllCaseMaterials: AllCaseMaterials,
     CheckItem: CheckItem,
     CheckHistory: CheckHistory,

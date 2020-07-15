@@ -57,6 +57,10 @@ const cases = {
     reciveCaseAgain(data) {
         return request({ url: '/cases/cases/retryAcceptCase', method: 'post', data })
     },
+    // 13-18年度案件列表
+    casesShouliBefore2019GetByPage(data) {
+        return request({ url: '/casesShouliBefore2019GetByPage', method: 'post', data })
+    },
 
     // 分析评估
     // 各业务类型符合归档条件

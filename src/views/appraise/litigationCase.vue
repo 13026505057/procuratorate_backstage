@@ -9,6 +9,8 @@
                     <el-table-column align="center" label="序号" width="60" type="index"></el-table-column>
                     <el-table-column align="center" v-for="tableItem in tableItems" :prop="tableItem.prop"
                         :label="tableItem.label" :key="tableItem.label">
+                        <el-table-column :prop="itemChild.prop" :label="itemChild.label"
+                            align="center" v-for="itemChild in tableItem.children" :key="itemChild.label"></el-table-column>
                     </el-table-column>
                 </el-table>
             </div>
@@ -29,13 +31,23 @@
                 selectOption:{},
                 tableData:[],
                 tableItems:[
-                    {label: "单位", prop: "org_name", tableId:1},
-                    {label: "应归案件数(件)", prop: "yingguidang", tableId:2},
-                    {label: "已办结案件数(件)", prop: "yibanjie", tableId:3},
-                    {label: "未办结案件数(件)", prop: "weibanjie", tableId:4},
-                    {label: "已归档案件数(件)", prop: "yiguidang", tableId:5},
-                    {label: "未归档案件数(件)", prop: "weiguidang", tableId:5},
-                    {label: "归档率(%)", prop: "guidanglv", tableId:5},
+                    {label: "单位", prop: "org_name"},
+                    {   label: "受理的案件", prop: "propTemporary",
+                        children: [
+                            { label: "应归档案件数(件)", prop: "yingguidang" },
+                            { label: "已办结案件数(件) A1", prop: "shouli_banjie" },
+                            { label: "未办结案件数(件)", prop: "shouli_weibanjie" },
+                            { label: "已归档案件数(件) B1", prop: "shouli_yiguidang" },
+                            { label: "未归档案件数(件)", prop: "shouli_weiguidang" },
+                        ]
+                    },
+                    {   label: "历史案件数(之前受理，于当前时间段办结)", prop: "propTemporary",
+                        children: [
+                            { label: "已办结案件数(件) A2", prop: "lishi_yibanjie" },
+                            { label: "已归档案件数(件) B2", prop: "lishi_yiguidang" },
+                        ]
+                    },
+                    { label: "归档率(%) (B1+B2)/(A1+A2)", prop: "guidanglv" },
                 ],
                 headStyle:{
                     backgroundColor: '#eaf5ff',

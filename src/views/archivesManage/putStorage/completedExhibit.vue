@@ -69,7 +69,6 @@
                 exhibit_type:'SS',
                 stockNum:'',
                 exhibitNum:'',
-                exhibitType:[],
                 addSearch: [
                     { dom: 'case_bh', value: '',placeholder: '请输入统一受案号', itemId: 5, name: 'input' },
                     { dom: 'exhibit_name', value: '',placeholder: '请输入案件名称', itemId: 6, name: 'input' },
@@ -90,10 +89,6 @@
                         contNum: 0
                     }],   // 类型
                     tableData:[],   // 数据信息
-                    // 案卷详情
-                    dialogTableVisible: false,
-                    gridData: [],
-                    gridData_temporary: [],
                 },
                 // table表头
                 columns: [
@@ -115,30 +110,11 @@
            
         },
         mounted(){
-            // this.getCaseType();
-            // this.getFocus();
-            // this.getExhibitType();
             this.getExhibitUncomplete(this.pagination);
         },
         methods: {
-            //查询卷宗类别如：诉讼 文书 技术
-            async getExhibitType(){
-                // console.log({...this.seatchData})
-                // let dataInfo = { ...this.seatchData }
-                // dataInfo ['pageNum'] = this.currentPage1;
-                // dataInfo ['pageSize'] = this.pageSize;
-                // dataInfo ['case_type_id'] = this.activeName;
-                
-                const resultData = await this.$api.getExhibitType();
-                if(resultData && resultData.code == '0') {
-                    this.exhibitType = resultData.data
-                    // console.log(this.exhibitType)
-                    // this.total1 = resultData.data.total
-                }
-            },
             //查询已入库卷宗记录
             async getExhibitUncomplete(data){
-                // console.log({...this.seatchData})
                 let dataInfo = data;
                 this.tableLoading = true;
                 dataInfo ['stock_status'] = 'unnone';
@@ -147,8 +123,6 @@
                     this.showModel.tableData = resultData.data.list;
                     this.showModel.tableList[0].contNum = Number(resultData.data.total);
                     this.tableLoading = false;
-                    // console.log(this.exhibitType)
-                    // this.total1 = resultData.data.total
                 }
             },
             setDynamicBtnFun(data){
@@ -163,69 +137,34 @@
                     window.open(this.base_url+'/exhibit/exhibit/exoprtExhibits?'+exportExcelFun(data))
                 })
             },
-            //自动获取焦点
-            getFocus(){
-                this.$refs.stockNumRef.focus();
-            },
-            getFocus2(){
-                this.$refs.exhibitNumRef.focus();
-            },
-            //货架号扫码枪扫描后处理
-            stockNumChange(data){
-                this.stockNum = data;
-                this.getFocus2();
-            },
-            //卷宗号扫码枪扫描后处理
-            exhibitNumChange(data){
-                this.exhibitNum = data;
-                // 默认数据列表
-                this.getIds();
-                
-
-            },
             async getIds(){
-                    // console.log({...this.seatchData})
-                    let dataInfo = {}
-                    dataInfo ['exhibit_type'] = this.exhibit_type;
-                    dataInfo ['code'] = this.exhibitNum;
-                    
-                    const resultData = await this.$api.getIds(dataInfo);
-                    if(resultData && resultData.code == '0') {
-                        console.log(resultData)
-                        console.log(resultData.data)
-                        console.log(resultData.data.type)
-                        if(resultData.data.type=="exhibit"){
-                            this.exhibit_id = resultData.data.exhibit.exhibit_id;
-                            // self.Warehousing()
-                            this.exhibitIn();
-                        }else if(resultData.data.type=="cell"){
-                            
-                        }
-                        // this.getDataList();
-                        // this.$message({
-                        //     message: '入库成功',
-                        //     type: 'success'
-                        // });
-                        // this.exhibitNum = "";
-                        // this.getFocus('exhibitNumRef');
+                // console.log({...this.seatchData})
+                let dataInfo = {}
+                dataInfo ['exhibit_type'] = this.exhibit_type;
+                dataInfo ['code'] = this.exhibitNum;
+                
+                const resultData = await this.$api.getIds(dataInfo);
+                if(resultData && resultData.code == '0') {
+                    if(resultData.data.type=="exhibit"){
+                        this.exhibit_id = resultData.data.exhibit.exhibit_id;
+                        this.exhibitIn();
+                    }else if(resultData.data.type=="cell"){
+                        
                     }
+                }
             },
             async exhibitIn(){
-                    // console.log({...this.seatchData})
-                    let dataInfo = {}
-                    dataInfo ['cell_id'] = this.stockNum;
-                    dataInfo ['exhibit_id'] = this.exhibit_id;
-                    
-                    const resultData = await this.$api.exhibitIn(dataInfo);
-                    if(resultData && resultData.code == '0') {
-                        this.$message({
-                            message: '入库成功',
-                            type: 'success'
-                        });
-                        this.getExhibitUncomplete(this.pagination);
-                        this.exhibitNum = "";
-                        this.getFocus('exhibitNumRef');
-                    }
+                let dataInfo = {}
+                dataInfo ['cell_id'] = this.stockNum;
+                dataInfo ['exhibit_id'] = this.exhibit_id;
+                
+                const resultData = await this.$api.exhibitIn(dataInfo);
+                if(resultData && resultData.code == '0') {
+                    this.$message({ message: '入库成功', type: 'success' });
+                    this.getExhibitUncomplete(this.pagination);
+                    this.exhibitNum = "";
+                    this.getFocus('exhibitNumRef');
+                }
             },
             receivedAddress(data){
                 Object.keys(data).map(item=> this.pagination[item] = data[item] )
@@ -233,54 +172,7 @@
             // 分页
             handleCurrentChange(val) {
                 this.pagination['pageNum'] = val;
-                this.getTableList(this.pagination)
-            },
-            // DialogPagin
-            dialogTablePagin(data){
-                this.showModel.gridData = data
-            },
-            // handleClickTab(e){
-            //     this.pagination.case_type_id = e.paneName
-            //     this.getTableList(this.pagination)
-            // },
-            // 类型分类
-            getCaseType(){
-                this.$api.getCaseType().then(async (res)=>{
-                    this.showModel.tableList = res.data.list;
-                    if(this.showModel.activeNameTab !== '0') this.pagination.case_type_id = this.showModel.activeNameTab
-                        else this.pagination.case_type_id = this.showModel.activeNameTab = res.data.list[0].case_type_id
-                    this.getTableList(this.pagination)
-                    // 角标
-                    let dataInfo = {...this.pagination};
-                    // 每个页面字段不同(cout_for)
-                    dataInfo.cout_for = 'dangAnJianChaTongGuo';
-
-                    ['pageNum','pageSize','case_type_id'].map(item=> delete dataInfo[item])
-                    const resultData = await this.$api.getCornerMarkType(dataInfo);
-                    Object.keys(resultData.data).map(item=>{
-                        res.data.list.map((itemChild,index)=>{
-                            if("_"+itemChild.case_type_id == item) {
-                                itemChild.contNum = resultData.data[item]
-                                this.$set(this.showModel.tableList[index],index,itemChild)
-                            }
-                        })
-                    })
-                })
-            },
-            // 获取案件列表
-            async getTableList(dataInfo){
-                this.tableLoading = true;
-                this.showModel.dialogTableVisible = false;
-                const resultData = await this.$api.getDangAnConfirmByPage(dataInfo);
-                const pagination = { ...this.pagination };
-                let resultData_table = [];
-                resultData.data.list.map(item=>{
-                    resultData_table.push({...item,wait_quantity: item.total_quantity - item.in_quantity})
-                })
-                this.showModel.tableData = resultData_table;
-                pagination.total = resultData.data.total;
-                this.pagination = pagination;
-                this.tableLoading = false;
+                this.getExhibitUncomplete(this.pagination)
             },
             // 确认搜索
             comfirmSearch(data){

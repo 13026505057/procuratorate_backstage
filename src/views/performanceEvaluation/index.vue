@@ -5,7 +5,7 @@
         <div class="head-tab">
             <div class="table-dataList" >
                 <el-table v-loading="isLoading" :data="tableData" :header-cell-style="headerRowStyle"
-                    border style="width: 100%">
+                    border style="width: 100%" @cell-click="showUserDetail">
                     <el-table-column align="center" label="序号" width="60" type="index"></el-table-column>
                     <el-table-column align="center" v-for="tableItem in tableItems" :prop="tableItem.prop"
                         :label="tableItem.label" :key="tableItem.label">
@@ -108,6 +108,10 @@
                     this.addSearch[1].value = dataArr
                     this.seatchData.status_case = JSON.stringify(dataArr)
                 }
+            },
+            // 展示个人统计数
+            showUserDetail(row, column, cell, event){
+                console.log(row, column, cell, event)
             },
             receivedAddress(data){
                 Object.keys(data).map(item=> this.seatchData[item] = data[item] )

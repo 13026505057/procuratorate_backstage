@@ -140,7 +140,7 @@
         <!-- 作废 -->
         <DeleteCancel ref="deleteCancel" />
         <!-- 警告提示 -->
-        <WarningInfo ref="warningInfo" />
+        <WarningInfo ref="warningInfo" :warningType="'addItem'"/>
     </div>
 </template>
 <script>
@@ -270,12 +270,6 @@
                     bgr: [
                         { required: true, message: '请输入被告人', trigger: 'blur' },
                     ],
-                    // case_type_id:[
-                    //     { required: true, message: '请选择案件类型', trigger: 'blur' },
-                    // ],
-                    // exhibit_name:[
-                    //     { required: true, message: '请输入a', trigger: 'blur' },
-                    // ]
                 },
                 submitDataInfo_temporary: {},
                 eachDataInfoList: [

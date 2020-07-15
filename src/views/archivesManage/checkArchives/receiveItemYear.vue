@@ -6,7 +6,7 @@
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
                     <span slot="label">
                         {{item.case_type_name}}
-                        <el-badge :value="item.contNum" v-if="item.contNum == '0'?false:true" class="item tab-badge-num"></el-badge>
+                        <el-badge :value="pagination.total" v-if="pagination.total == '0'?false:true" class="item tab-badge-num"></el-badge>
                     </span>
                     <div class="table-dataList" >
                         <el-table :data="showModel.tableData" border style="width: 100%" v-loading="loadingTable">
@@ -115,7 +115,7 @@
         <!-- 作废 -->
         <DeleteCancel ref="deleteCancel" />
         <!-- 警告提示 -->
-        <WarningInfo ref="warningInfo" />
+        <WarningInfo ref="warningInfo" :warningType="'addItem'"/>
     </div>
 </template>
 <script>

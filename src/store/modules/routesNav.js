@@ -31,6 +31,7 @@ import AllCaseMaterials from '@/views/archivesManage/checkArchives/allCaseMateri
 
 import CheckItem from '@/views/archivesManage/checkItem'
 import ReadyItem from '@/views/archivesManage/checkArchives/readyItem'
+import BeforehandItem from '@/views/archivesManage/checkArchives/beforehandItem'
 import BindReadyItem from '@/views/archivesManage/checkArchives/bindReadyItem'
 import MergeRequestCheck from '@/views/archivesManage/exhibitDoubt/mergeRequest' 
 import CheckHistory from '@/views/archivesManage/checkHistory/index'
@@ -114,6 +115,7 @@ let routesNav = {
     CompletedArchives: CompletedArchives,
     CheckArchives: CheckArchives,
     ReceiveItem: ReceiveItem,
+    BeforehandItem: BeforehandItem,
     ReceiveItemYear: ReceiveItemYear,
     MergeRequestCheck: MergeRequestCheck,
     AllCaseMaterials: AllCaseMaterials,

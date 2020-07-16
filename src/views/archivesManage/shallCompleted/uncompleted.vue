@@ -91,6 +91,7 @@
                 addSearch: [
                     { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
                     { dom: 'dangan_accept_status', value: '',placeholder: '是否已交卷', itemId: 6, name: 'select' },
+                    { dom: 'bjrq', value: '',placeholder: '是否点击办结按钮', itemId: 7, name: 'select' },
                 ],
                 setDynamicBtn: [
                     { title: '导出', fun: 'exprotFun' }
@@ -99,6 +100,10 @@
                     dangan_accept_status: [
                         { value: 0, label: '未交卷' },
                         { value: 1, label: '已交卷(未上架)' },
+                    ],
+                    bjrq: [
+                        { value: 'NOTNULL', label: '已点击' },
+                        { value: 'NULL', label: '未点击' },
                     ]
                 },
                 showModel: {

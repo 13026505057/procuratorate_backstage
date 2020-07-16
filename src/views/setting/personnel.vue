@@ -88,14 +88,19 @@
                         <el-form-item label="角色">
                             <el-select v-model="unit_form.role_ids" multiple clearable placeholder="请选择" style="width:100%">
                                 <el-option
-                                    v-for="item in groupOptions"
+                                    v-for="item in roleOptions"
                                     :key="item.role_id"
                                     :label="item.role_name"
                                     :value="item.role_id">
                                 </el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="权限设置">
+                        <el-form-item label="权限组设置">
+                            <el-select v-model="unit_form.group_ids" multiple clearable placeholder="请选择" style="width:100%">
+                                <el-option v-for="item in groupOptions" :key="item.group_id" :label="item.group_name" :value="item.group_id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="路由设置">
                             <el-select v-model="unit_form.vue_role_ids" clearable placeholder="请选择" style="width:100%">
                                 <el-option
                                     v-for="item in routesGroupsArr"
@@ -145,7 +150,7 @@
             return  {
                 addSearch: [
                     { dom: 'dept_id', value: '',placeholder: '请选择部门', itemId: 1, name: 'select' },
-                    { dom: 'user_true_name', value: '',placeholder: '请输入姓名', itemId: 2, name: 'select' },
+                    { dom: 'user_true_name', value: '',placeholder: '请输入姓名', itemId: 2, name: 'autocomplete' },
                 ], 
                 selectOption:{
                     dept_id: [],
@@ -183,6 +188,7 @@
                     password:'',
                     user_true_name: '',
                     role_ids:[], 
+                    group_ids:[], 
                     position_ids:[], 
                     dept_ids:[],
                     vue_role_ids: ''
@@ -193,6 +199,7 @@
                     { name:'真实姓名', inp:'user_true_name', formId:'2' }
                 ],
                 deptOptions:[],
+                roleOptions:[],
                 groupOptions:[],
                 positionData:[],
                 type:'',
@@ -251,15 +258,15 @@
             async getDeptList(){
                 const dataInfo = {pageNum:1,pageSize:1000}
                 const resultData = await this.$api.getDepartmentList(dataInfo);
-                let resultData_user = await this.$api.getByPage(dataInfo);
+                let resultData_user = await this.$api.getUserList();
                 if(resultData&&resultData.code == 0){
                     this.deptOptions = resultData.data.list;
                     let dept = { label: 'dept_name', value: 'dept_id' }
                     this.selectOption.dept_id = this.refeshArr(resultData.data.list,dept)
                 }
                 if(resultData_user&&resultData_user.code == 0){
-                    let user = { label: 'user_true_name', value: 'user_id' }
-                    this.selectOption.user_true_name = this.refeshArr(resultData_user.data.list,user)
+                    let user = { label: 'user_true_name', value: 'user_true_name' }
+                    this.selectOption.user_true_name = this.refeshArr(resultData_user.data,user)
                 }
             },
             refeshArr(arr,dataInfo){
@@ -285,12 +292,16 @@
                     this.routesGroupsArr = resultData.data;
                 }
             },
-            // 查角色
+            // 查角色/权限组
             async getGroupList(){
                 const dataInfo = {pageNum:1,pageSize:2000};
                 const resultData = await this.$api.getRoleList(dataInfo);
+                const resultData_group = await this.$api.getGroupList();
                 if(resultData&&resultData.code == 0){
-                    this.groupOptions = resultData.data.list;
+                    this.roleOptions = resultData.data.list;
+                }
+                if(resultData_group&&resultData_group.code == 0){
+                    this.groupOptions = resultData_group.data;
                 }
             },
             headerRowStyle({row, rowIndex}){ 
@@ -298,10 +309,6 @@
             },
            
             handleCurrentChange1(val) {
-                console.log(`当前页: ${val}`);
-                this.getDataList();
-            },
-            searchClick(){
                 this.getDataList();
             },
             // 新增
@@ -317,6 +324,7 @@
                 this.unit_form.role_ids = [];
                 this.unit_form.position_ids = [];
                 this.unit_form.dept_ids = [];
+                this.unit_form.group_ids = [];
                 if(type == "add"){
                     this.dialogTitle = "新增人员";
                 }else{
@@ -339,7 +347,9 @@
                     row_user_id.userRoleList.map(item=>{
                         this.unit_form.role_ids.push(item.role_id)
                     })
-                    
+                    row_user_id.userGroups.map(item=>{
+                        this.unit_form.group_ids.push(item.group_id)
+                    })
                 }
             },
             // 新增&&修改
@@ -355,6 +365,7 @@
                 this.unit_form.dept_ids = this.unit_form.dept_ids.join(',');
                 this.unit_form.position_ids = this.unit_form.position_ids.join(',');
                 this.unit_form.role_ids = this.unit_form.role_ids.join(',');
+                this.unit_form.group_ids = this.unit_form.group_ids.join(',');
                 const dataInfo = { ...this.unit_form };
                 if(this.type == "add"){
                     dataInfo.password = md5.hex(this.unit_form.password)

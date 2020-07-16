@@ -1,7 +1,9 @@
 <template>
   <div class="editRoutesPage">
     <el-button @click="addRole" type="search">新增</el-button>
-    <el-button @click="editUpdateRoleFun(updateRole_temp)" type="search">更新路由表</el-button>
+    <el-popconfirm icon="el-icon-info" iconColor="red" title="确定更新路由表吗？" @onConfirm="editUpdateRoleFun(updateRole_temp)">
+      <el-button slot="reference" class="highlight-btn" size="small" type="search">更新路由表</el-button>
+    </el-popconfirm>
     <el-table :data="rolesList" style="width: 100%;margin-top:30px;" border :header-cell-style="headerRowStyle">
         <el-table-column align="center" type="index" label="#"></el-table-column>
       <el-table-column align="center" label="权限组名称" prop="group_name"></el-table-column>
@@ -81,7 +83,6 @@ export default {
   created() {
     if(UpdateRole[UpdateRole.length-1].path == '*') UpdateRole.pop()
     this.updateRole_temp = UpdateRole
-    console.log(UpdateRole)
     this.getDefaultRoutes()
     this.getRoutesGroup()
   },
@@ -96,7 +97,10 @@ export default {
           data: params,
           headers: { 'kf-token': getToken() },
         }).then(res=>{
-          if(res.data.code == '0') _that.$message.success('更新完成')
+          if(res.data.code == '0') {
+            _that.$message.success('更新完成')
+            _that.getDefaultRoutes()
+          }
           resolve(res.data.data)
         }).catch(error => reject(error) )
       })
@@ -139,12 +143,13 @@ export default {
       this.showModel.modelType = true
       this.showModel.dialogTitle = '修改权限配置'
       let accessedRoutes = []
-      if(routeData.routes.length>0) {
-        const accessedRoute = checkedNullInfo_respones(routeData.routes)
+      let routes = routeData.routes || []
+      // if(routeData.routes.length>0) {
+        const accessedRoute = checkedNullInfo_respones(routes)
         accessedRoutes = filterAsyncRoutes_respones(accessedRoute,true)
         this.role.vue_role_id = routeData.vue_role_id
         this.role.group_name = routeData.group_name
-      }
+      // }
       this.$nextTick(() => {
         this.$refs.tree.setCheckedNodes(this.generateArr(accessedRoutes))
         this.checkStrictly = false

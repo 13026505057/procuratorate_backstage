@@ -1,16 +1,15 @@
 <template>
-    <!-- 暂时隐藏 -->
-    <div class="readyItemCopyPage">
+    <div class="beforeHandItemPage">
         <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" 
             @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
         <div class="head-tab">
-            <el-tabs v-model="showModel.activeNameTab">
+            <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
                     <span slot="label">
                         {{item.case_type_name}}
-                        <el-badge :value="pagination.total" v-if="pagination.total == '0'?false:true" class="item tab-badge-num"></el-badge>
+                        <el-badge :value="item.couNum" v-if="item.couNum == '0'?false:true" class="item tab-badge-num"></el-badge>
                     </span>
-                    <div class="table-dataList" >
+                    <div class="table-dataList" v-if="showModel.activeNameTab == '0'">
                         <el-table :data="showModel.tableData" border style="width: 100%" v-loading="loadingTable">
                             <el-table-column align="center" type="index"></el-table-column>
                             <el-table-column :label="item.dataIndex"
@@ -27,7 +26,20 @@
                                 </template>
                             </el-table-column>
                         </el-table>
-                        
+                    </div>
+                    <div class="table-dataList" v-if="showModel.activeNameTab == '1'">
+                        <el-table :data="showModel.tableData_clickBtn" border style="width: 100%" v-loading="loadingTable">
+                            <el-table-column align="center" type="index"></el-table-column>
+                            <el-table-column :label="item.dataIndex" :prop="item.title" :show-overflow-tooltip="item.overflow"
+                                v-for="item in columns_notDone" :key="item.itemId" align="center"></el-table-column>
+                        </el-table>
+                    </div>
+                    <div class="table-dataList" v-if="showModel.activeNameTab == '2'">
+                        <el-table :data="showModel.tableData_unClickBtn" border style="width: 100%" v-loading="loadingTable">
+                            <el-table-column align="center" type="index"></el-table-column>
+                            <el-table-column :label="item.dataIndex" :prop="item.title" :show-overflow-tooltip="item.overflow"
+                                v-for="item in columns_notDone" :key="item.itemId" align="center"></el-table-column>
+                        </el-table>
                     </div>
                     <div class="pagination">
                         <!-- 分页 -->
@@ -116,6 +128,7 @@
 </template>
 <script>
     import Search from '@/components/Search'
+    import { exportExcelFun } from '@/utils/auth'
     import { mapGetters } from 'vuex'
     export default {
         components: { Search },
@@ -127,10 +140,6 @@
                 pagination: {
                     pageNum: 1,
                     pageSize: 10,
-                    tysah: '',
-                    out_exhibit_id: '',
-                    exhibit_name: '',
-                    case_type_id: '',
                 },
                 loadingTable: false,
                 addSearch: [
@@ -151,9 +160,13 @@
                 showModel: {
                     activeNameTab: "0",
                     tableList:[
-                        { case_type_id: '0', case_type_name: '案件预入库' }
+                        { case_type_id: '0', case_type_name: '案件预入库', couNum: 0 },
+                        { case_type_id: '1', case_type_name: '未办结(点击办结按钮)', couNum: 0 },
+                        { case_type_id: '2', case_type_name: '未办结(未点击办结按钮)', couNum: 0 },
                     ],
                     tableData:[],   // 数据信息
+                    tableData_clickBtn:[],   // 数据信息
+                    tableData_unClickBtn:[],   // 数据信息
                     // 新增案件
                     dialogReceivedVisible: false,
                     exhibit_type: [],
@@ -175,6 +188,16 @@
                     { title: 'nd', dataIndex: '年度', itemId: 5 },
                     { title: 'stock_status', dataIndex: '入库状态', itemId: 6 },
                     // { title: 'case_type_name', dataIndex: '隶属案件类型', itemId: 7 },
+                ],
+                // table表头（未完成）
+                columns_notDone: [
+                    { title: 'tysah', dataIndex: '统一受案号', itemId: 1 },
+                    { title: 'case_name', dataIndex: '案件名称', itemId: 11 },
+                    { title: 'ajlb_mc', dataIndex: '案件类型', itemId: 14 },
+                    { title: 'case_desc', dataIndex: '案件描述', itemId: 2, overflow: true },
+                    { title: 'bmsah', dataIndex: '部门受案号', itemId: 12 },
+                    { title: 'case_take_user_name', dataIndex: '承办人', itemId: 13 },
+                    { title: 'bjrq', dataIndex: '办结按钮点击日期', itemId: 5 },
                 ],
                 setDynamicBtn: [
                     { title: '新增案卷', fun: 'addCaseItem' },
@@ -212,12 +235,6 @@
                     bgr: [
                          { required: true, message: '请输入被告人', trigger: 'blur' },
                     ],
-                    // case_type_id:[
-                    //     { required: true, message: '请选择案件类型', trigger: 'blur' },
-                    // ],
-                    // exhibit_name:[
-                    //     { required: true, message: '请输入a', trigger: 'blur' },
-                    // ]
                 },
                 submitDataInfo_temporary: {},
                 eachDataInfoList: [
@@ -232,8 +249,9 @@
         },
         mounted(){
             this.selectOption.case_type_id = this.case_type;
-            console.log(this.selectOption.case_type_id)
             this.getTableList(this.pagination);
+            this.getTableList_clickBtn(this.pagination);
+            this.getTableList_unClickBtn(this.pagination);
             this.getTypeList();
         },
         methods: {
@@ -249,15 +267,27 @@
             },
             exportCaseItem(data){
                 this.$nextTick(()=>{
-                    window.open(this.base_url+'/exhibit/exhibit/exoprtYrExhibits?tysah='+data.tysah+'&exhibit_name='+ data.exhibit_name+'&out_exhibit_id='+ data.out_exhibit_id+
-                        '&nd='+ data.nd+'&cbr='+data.cbr+'&province_id='+data.province_id+ 
-                        '&city_id='+data.city_id+ '&area_id='+data.area_id)
+                    window.open(this.base_url+'/exhibit/exhibit/exoprtYrExhibits?'+exportExcelFun(data))
                 })
             },
             // 分页
             handleCurrentChange(val) {
                 this.pagination['pageNum'] = val;
-                this.getTableList(this.pagination)
+                let mapRequestFun = {
+                    "0": "getTableList",
+                    "1": "getTableList_clickBtn",
+                    "2": "getTableList_unClickBtn",
+                }
+                this[mapRequestFun[this.showModel.activeNameTab]](this.pagination)
+            },
+            handleClickTab(e){
+                let mapRequestFun = {
+                    "0": "getTableList",
+                    "1": "getTableList_clickBtn",
+                    "2": "getTableList_unClickBtn",
+                }
+                this.pagination.pageNum = 1;
+                this[mapRequestFun[e.paneName]](this.pagination)
             },
             // 预入库作废按钮
             deleteCancel(dataInfo){
@@ -285,7 +315,6 @@
                     this.$message.success('操作成功');
                     this.getTableList(this.pagination);
                 }
-                
             },
             // 获取案件列表
             async getTableList(dataInfo){
@@ -294,14 +323,41 @@
                 const resultData = await this.$api.yrExhibitGetByPage(dataInfo);
                 const pagination = { ...this.pagination };
                 this.showModel.tableData = resultData.data.list;
-                pagination.total = resultData.data.total;
+                this.showModel.tableList[0].couNum = pagination.total = resultData.data.total;
+                this.pagination = pagination;
+                this.loadingTable = false;
+            },
+            // 获取未办结案件列表(点击按钮)
+            async getTableList_clickBtn(dataInfo){
+                this.loadingTable = true;
+                this.showModel.dialogReceivedVisible = false;
+                const resultData = await this.$api.getFromShouliBanJieNoInCases(dataInfo);
+                const pagination = { ...this.pagination };
+                this.showModel.tableData_clickBtn = resultData.data.list;
+                this.showModel.tableList[1].couNum = pagination.total = resultData.data.total;
+                this.pagination = pagination;
+                this.loadingTable = false;
+            },
+            // 获取未办结案件列表(未点击按钮)
+            async getTableList_unClickBtn(dataInfo){
+                this.loadingTable = true;
+                this.showModel.dialogReceivedVisible = false;
+                const resultData = await this.$api.getFromShouliWeiBanJieNoInCases(dataInfo);
+                const pagination = { ...this.pagination };
+                this.showModel.tableData_unClickBtn = resultData.data.list;
+                this.showModel.tableList[2].couNum = pagination.total = resultData.data.total;
                 this.pagination = pagination;
                 this.loadingTable = false;
             },
             // 确认搜索
             comfirmSearch(data){
                 this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] }  })
-                this.getTableList(this.pagination)
+                let mapRequestFun = {
+                    "0": "getTableList",
+                    "1": "getTableList_clickBtn",
+                    "2": "getTableList_unClickBtn",
+                }
+                this[mapRequestFun[this.showModel.activeNameTab]](this.pagination)
             },
             async addCaseItem(){
                 this.resetSubmitInfo();
@@ -349,7 +405,7 @@
     }
 </script>
 <style lang="scss">
-    .readyItemCopyPage{
+    .beforeHandItemPage{
         margin: 20px;
         .head-tab{
             margin-top: 30px;

@@ -3,7 +3,7 @@
         <div class="searchInfo">
             <div class="searchItem" v-for="item in searchList" :key="item.itemId">
                 <template v-if="item.name == 'daterange_begin'">
-                    <el-date-picker v-model="seatchData[item.dom]" type="datetime" :placeholder="item.placeholder" 
+                    办结区间：  <el-date-picker v-model="seatchData[item.dom]" type="datetime" :placeholder="item.placeholder" 
                         value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptions"></el-date-picker>
                 </template>
                 <template v-else-if="item.name == 'daterange_end'">
@@ -51,11 +51,11 @@
                 tableData:[],
                 tableItems:[
                     {label: "单位", prop: "org_name"},
-                    {   label: `${new Date().getFullYear()}年之前受理的案件`, prop: "propTemporary",
+                    {   label: `${new Date().getFullYear()}年受理的案件`, prop: "propTemporary",
                         children: [
-                            { label: "应归档案件数(件)", prop: "yingguidang" },
-                            { label: "已办结案件数(件) A1", prop: "shouli_banjie" },
-                            { label: "未办结案件数(件)", prop: "shouli_weibanjie", skip: true },
+                            { label: "应归档案件数(即该年受理数)", prop: "yingguidang" },
+                            { label: "已办结案件数(即该区间办结数) A1", prop: "shouli_banjie" },
+                            { label: "未办结案件数(即该年未办结案件数)", prop: "shouli_weibanjie", skip: true },
                             { label: "已归档案件数(件) B1", prop: "shouli_yiguidang" },
                             { label: "未归档案件数(件)", prop: "shouli_weiguidang", skip: true },
                         ]

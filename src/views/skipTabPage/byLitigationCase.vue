@@ -53,7 +53,7 @@ export default {
             this.tableLoading = true;
             let subInfo = { ...dataInfo }
             delete subInfo.type
-            const resultData = await this.$api.BanJieWeiGuiDang(subInfo);
+            const resultData = await this.$api.getBanJieWeiGuiDang(subInfo);
             this.showModel.tableData = resultData.data;
             this.tableLoading = false;
         },

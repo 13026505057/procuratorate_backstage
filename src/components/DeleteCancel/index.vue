@@ -34,7 +34,7 @@ export default {
             this.deleteCancel(this.submiteDataInfo)
         },
         // 作废
-        async deleteCancel(dataInfo){
+        async deleteCancel(dataInfo){ 
             let resultData = await this.$api.editCaseData(dataInfo)
             if(resultData && resultData.code == '0') {
                 this.$message.success('操作成功')

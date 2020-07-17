@@ -93,21 +93,6 @@
                 <el-form-item label="接收备注" prop="mark">
                     <el-input class="input_class" type="textarea" v-model="submitDataInfo.mark"></el-input>
                 </el-form-item>
-                <!-- <div v-for="(item,index) in eachDataInfoList" :key="index" style="display:table;width: 100%;margin-bottom: 10px">
-                    <span style="display:table-cell;width: 25%;text-align: right;padding-right: 20px">
-                        {{ item.captionTitle }}：
-                    </span>
-                    <el-input v-model="submitDataInfo[item.dom]" v-if="item.itemId<4 || item.itemId == 5"
-                        :placeholder="item.placeholder" style="width: auto"></el-input>
-                    <el-select v-model="submitDataInfo[item.dom]" :placeholder="item.placeholder" v-else-if="item.itemId == 4">
-                        <el-option v-for="itemChild in showModel.selectOption_type" :key="itemChild.value" 
-                            :label="itemChild.label" :value="itemChild.value"></el-option>
-                    </el-select>
-                    <el-select v-model="submitDataInfo[item.dom]" :placeholder="item.placeholder" v-else-if="item.itemId == 6">
-                        <el-option v-for="itemChild in showModel.selectOption_time" :key="itemChild.value" 
-                            :label="itemChild.label" :value="itemChild.value"></el-option>
-                    </el-select>
-                </div> -->
                 <div class="checkboxSelect">
                     <el-checkbox v-model="submitDataInfo.print_code">同时打印案件条形码</el-checkbox>
                     <el-checkbox v-model="submitDataInfo.print_accept">同时打印收卷回执单</el-checkbox>
@@ -154,15 +139,18 @@
         </el-dialog>
         <!-- 作废 -->
         <DeleteCancel ref="deleteCancel" />
+        <!-- 警告提示 -->
+        <WarningInfo ref="warningInfo" :warningType="'addItem'"/>
     </div>
 </template>
 <script>
     import Search from '@/components/Search'
     import DialogPagin from '@/components/DialogPagin'
     import DeleteCancel from '@/components/DeleteCancel'
+    import WarningInfo from '@/components/WarningInfo'
     import { mapGetters,mapActions } from 'vuex'
     export default {
-        components: { Search,DialogPagin,DeleteCancel },
+        components: { Search,DialogPagin,DeleteCancel,WarningInfo },
         computed :{
             ...mapGetters(['exhibit_type','exhibit_time_bg','temporary_nd','print_id'])
         },
@@ -388,6 +376,7 @@
                     this.showModel.tableList = res.data.list;
                     if(this.showModel.activeNameTab !== '0') this.pagination.case_type_id = this.showModel.activeNameTab
                         else this.pagination.case_type_id = this.showModel.activeNameTab = res.data.list[0].case_type_id
+                    this.getTableList(this.pagination)
                     // 角标
                     let dataInfo = {...this.pagination};
                     // 每个页面字段不同(cout_for)
@@ -402,7 +391,6 @@
                             }
                         })
                     })
-                    this.getTableList(this.pagination)
                 })
             },
             // 获取案件列表
@@ -417,6 +405,7 @@
                     resultData_table.push({...item,wait_quantity: item.total_quantity - item.in_quantity})
                 })
                 this.showModel.tableData = resultData_table;
+                if(resultData_table.length == 0) this.$refs.warningInfo.openWarningDialog()
                 pagination.total = resultData.data.total;
                 this.pagination = pagination;
                 this.loadingTable = false;

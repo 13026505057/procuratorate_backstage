@@ -60,19 +60,20 @@ export const constantRoutes = [
       }
     ]
   },
-  // {
-  //   path: '/record',
-  //   component: Layout,
-  //   redirect: '/record',
-  //   children: [
-  //     {
-  //       path: 'record',
-  //       component: () => import('@/views/record/index'),
-  //       name: 'Record',
-  //       meta: { title: 'record', icon: 'record', affix: true }
-  //     }
-  //   ]
-  // },
+  {
+    path: '/skipTabPage',
+    component: Layout,
+    redirect: '/skipTabPage/byLitigationCase',
+    hidden: true,
+    children: [
+      {
+        path: 'byLitigationCase',
+        component: () => import('@/views/skipTabPage/byLitigationCase'),
+        name: 'byLitigationCase',
+        meta: { title: '详情', icon: 'icon-home' }
+      }
+    ]
+  },
 ]
 
 const createRouter = () => new Router({

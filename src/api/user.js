@@ -13,9 +13,16 @@ const user = {
   getByPage(data){
     return request({ url: '/user/getByPage', method: 'post', data })
   },
+  getUserList(data){
+    return request({ url: '/user/get', method: 'post', data })
+  },
   // 异地登录
   commonIsLogin(data){
     return request({ url: '/commonIsLogin', method: 'post', data })
+  },
+  // 获取权限组列表
+  getGroupList(data){
+    return request({ url: '/group/get', method: 'post', data })
   },
 }
 export default user

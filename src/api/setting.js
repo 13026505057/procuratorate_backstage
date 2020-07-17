@@ -74,10 +74,6 @@ const setting = {
     deleteJurisdiction(data) {
         return request({ url: '/groupDel', method: 'post', data })
     },
-    // 角色
-    getRoleList(data) {
-        return request({ url: '/roleGetByPage', method: 'post', data })
-    },
     addRole(data) {
         return request({ url: '/roleAdd', method: 'post', data })
     },

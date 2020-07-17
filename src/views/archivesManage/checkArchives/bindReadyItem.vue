@@ -20,8 +20,9 @@
                                     <span v-else>{{ row[item.title] }}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column align="center" label="操作">
+                            <el-table-column align="center" label="操作" width="200">
                                 <template slot-scope="{row}">
+                                    <el-button @click="deleteCancel(row.exhibit_id)" class="highlight-btn" type="operation" size="small">作废</el-button>
                                     <el-button @click="showDialogPanel({ tysah: row.tysah, case_name: row.exhibit_name, cbr: row.cbr, bgr:row.bgr },row.exhibit_id)" class="highlight-btn" size="small">绑定案件</el-button>
                                 </template>
                             </el-table-column>
@@ -188,6 +189,26 @@
             handleCurrentChange_merge(val) {
                 this.pagination_merge['pageNum'] = val;
                 this.getWasInHouseList(this.pagination_merge)
+            },
+            // 预入库作废按钮
+            deleteCancel(dataInfo){
+                this.$confirm('确定作废？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => { this.deleteCancelRequest(dataInfo) })
+                .catch(() => { this.$message.info('已取消') });       
+            },
+            // 预入库作废请求
+            async deleteCancelRequest(dataInfo){
+                const sendData = {};
+                sendData ['exhibit_id'] = dataInfo;
+                sendData ['exhibit_status'] = '0';
+                const resultData = await this.$api.undateYrExhibit(sendData);
+                if(resultData && resultData.code =='0') {
+                    this.$message.success('操作成功');
+                    this.getTableList(this.pagination);
+                }
             },
             // 获取案件列表
             async getTableList(dataInfo){

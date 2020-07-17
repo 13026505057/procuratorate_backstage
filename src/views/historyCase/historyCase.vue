@@ -1,6 +1,7 @@
 <template>
   <div class="historyCasePage">
-    <HistorySearch @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
+    <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch"
+        @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun" />
     <div class="table-dataList" >
         <el-table :data="showModel.tableData" border style="width: 100%" v-loading="loadingTable">
             <el-table-column align="center" type="index"></el-table-column>
@@ -28,25 +29,36 @@
             :total="pagination.total">
         </el-pagination>
     </div>
+    <!-- 案件导入 -->
+    <el-dialog v-dialogDrag title="历史案件导入" :visible.sync="showModel.importCaseModel">
+        <el-upload class="upload-demo" drag multiple :headers="showModel.headersUpload"
+            :action="base_url + '/cases/cases/addByExcel'" :on-success="uploadSuccess" accept=".xls">
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        </el-upload>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import HistorySearch from '@/components/HistorySearch/search'
-
+import Search from '@/components/Search'
+import { getToken } from '@/utils/auth'
 export default {
-  components: { HistorySearch },
-  filters: {
-      mapStatus(status){
-          const statusMap = {
-              'SS': '诉讼',
-              'JS': '技术',
-              'WS': '文书',
-          }
-          return statusMap[status]
-      }
-  },
+    components: { Search },
+    filters: {
+        mapStatus(status){
+            const statusMap = {
+                'SS': '诉讼',
+                'JS': '技术',
+                'WS': '文书',
+            }
+            return statusMap[status]
+        }
+    },
+    computed: {
+        ...mapGetters(['base_url','stock_status'])
+    },
   data() {
     return {
         pagination: {
@@ -56,13 +68,30 @@ export default {
             out_exhibit_id: '',
             exhibit_name: '',
             nd: '',
-            case_type_id: '',
-            stock_status: ''
+            stock_status: '',
+            exhibit_status: '1'
         },
         loadingTable: false,
         showModel: {
             tableData:[],   // 数据信息
+            // 导入
+            importCaseModel: false,
+            headersUpload: { 'kf-token': getToken() }
         },
+        addSearch: [
+            { dom: 'tysah', value: '', placeholder: '请输入统一受案号', itemId: 0, name: 'input' },
+            { dom: 'out_exhibit_id', value: '', placeholder: '请扫描案卷条码', itemId: 1, name: 'input' },
+            { dom: 'exhibit_name', value: '', placeholder: '请输入案卷名', itemId: 2, name: 'input' },
+            { dom: 'nd', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
+            { dom: 'stock_status', value: '', placeholder: '请选择案卷状态', itemId: 5, name: 'select' },
+        ],
+        selectOption: {
+            stock_status: []
+        },
+        setDynamicBtn: [
+            // { title: '导入', fun: 'importFun' },
+            { title: '导出', fun: 'exprotFun' }
+        ],
         // table表头
         columns: [
             { title: 'tysah', dataIndex: '统一受案号', itemId: 1 },
@@ -78,21 +107,54 @@ export default {
         ],
     }
   },
+  mounted() {
+      this.getTableList(this.pagination);
+      this.getTypeList()
+  },
   methods: {
     comfirmSearch(data){
         this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] }  })
         this.getTableList(this.pagination)
     },
-
+    setDynamicBtnFun(data){
+        const statusMap = {
+            "exprotFun": "openExportExcelFun",
+            // "importFun": "importCaseBtn",
+        }
+        this[statusMap[data.fun]](data.dataInfo)
+    },
+    // 导入
+    importCaseBtn(){
+        this.showModel.importCaseModel = true;
+    },
+    uploadSuccess(response){
+        if(response.code == '0') {
+            this.showModel.importUserModel = false;
+            this.$message.success('上传成功')
+        } else {
+            this.$message.warning(response.msg)
+            this.$refs.uploadExcel.clearFiles()
+        }
+    },
+    // 导出 
+    openExportExcelFun(data){
+        this.$nextTick(()=>{
+            window.open(this.base_url+'/exhibit/exhibit/exoprtExhibits?'+exportExcelFun(data))
+        })
+    },
     receivedAddress(data){
         Object.keys(data).map(item=> this.pagination[item] = data[item] )
+    },
+    getTypeList(){
+        let dataArr = [
+            { showModel: 'stock_status', store: 'stock_status' },
+        ]
+        dataArr.map(item=> this.selectOption[item.showModel] = this[item.store] )
     },
     // 获取案件列表
     async getTableList(dataInfo){
         this.loadingTable = true;
-        let sendData = { ...dataInfo };
-        sendData.exhibit_status = '1';
-        let resultData = await this.$api.historyExhibitList(sendData)
+        let resultData = await this.$api.historyExhibitList(dataInfo)
 
         const pagination = { ...this.pagination };
         this.showModel.tableData = resultData.data.list;

@@ -104,6 +104,10 @@ const exhibit = {
     //查询犯罪嫌疑人
     getCasesBgrName(data){
         return request({ url: '/casesFzxyrGetByPage', method: 'post', data })
+    },
+    //新增案卷信息(13-18)
+    addExhibitDataOld(data){
+        return request({ url: '/exhibit/exhibit/addOld', method: 'post', data })
     }
 }
 export default exhibit

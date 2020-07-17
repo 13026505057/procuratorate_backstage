@@ -12,8 +12,13 @@
                     <div class="table-dataList" >
                         <el-table :data="showModel.tableData" border style="width: 100%">
                             <el-table-column align="center" type="index"></el-table-column>
-                            <el-table-column :prop="item.title" :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
-                                v-for="item in columns" :key="item.itemId" align="center"></el-table-column>
+                            <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
+                                v-for="item in columns" :key="item.itemId" align="center">
+                                    <template slot-scope="{row}">
+                                        <span v-if="item.itemId == 11">{{ row[item.title] == 'yes'?'已使用':'未使用' }}</span>
+                                        <span v-else>{{ row[item.title] }}</span>
+                                    </template>
+                            </el-table-column>
                         </el-table>
                     </div>
                     <div class="pagination">
@@ -78,8 +83,9 @@
                     { title: 'jh', dataIndex: '卷号', itemId: 3 },
                     { title: 'out_exhibit_id', dataIndex: '条码号', itemId: 4 },
                     { title: 'create_time', dataIndex: '作废时间', itemId: 5 },
-                    { title: 'create_user_id', dataIndex: '作废人', itemId: 6 },
+                    { title: 'create_user_name', dataIndex: '作废人', itemId: 6 },
                     { title: 'zuofei_reason', dataIndex: '作废原因', itemId: 12 },
+                    { title: 'have_new', dataIndex: '档号是否使用', itemId: 11 },
                 ],
             }
            

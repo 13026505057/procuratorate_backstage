@@ -160,6 +160,7 @@
                     this.showModel.tableList = res.data.list;
                     if(this.showModel.activeNameTab !== '0') this.pagination.case_type_id = this.showModel.activeNameTab
                         else this.pagination.case_type_id = this.showModel.activeNameTab = res.data.list[0].case_type_id
+                    this.getTableList(this.pagination)
                     // 角标
                     let dataInfo = {...this.pagination};
                     // 每个页面字段不同(cout_for)
@@ -175,7 +176,6 @@
                             }
                         })
                     })
-                    this.getTableList(this.pagination)
                 })
             },
             // 获取案件列表

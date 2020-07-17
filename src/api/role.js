@@ -25,5 +25,9 @@ const roles = {
   orgTreeGet(data){
     return request({ url: '/orgTreeGet', method: 'post', data })
   },
+  // 角色
+  getRoleList(data) {
+    return request({ url: '/roleGetByPage', method: 'post', data })
+  },
 }
 export default roles

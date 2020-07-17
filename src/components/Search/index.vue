@@ -9,6 +9,11 @@
                 <el-date-picker v-model="item.value" :placeholder="item.placeholder" :picker-options="pickerOptions"
                     type="year" class="item" value-format="yyyy" clearable></el-date-picker>
             </template>
+            <template v-else-if="item.name == 'autocomplete'">
+                <el-autocomplete class="inline-input" clearable
+                    v-model="item.value" :fetch-suggestions="querySearch" :placeholder="item.placeholder"
+                    @focus="changeInputData(item.dom)"></el-autocomplete>
+            </template>
             <template v-else-if="item.name == 'select'">
                 <el-select v-model="item.value" :placeholder="item.placeholder" clearable filterable>
                     <el-option v-for="itemChild in selectOption[item.dom]"
@@ -84,6 +89,7 @@ export default {
                     return time.getFullYear() < 2013 || time.getFullYear() >= new Date().getFullYear()+1
                 }
             },
+            autocompleteSelect: ''
         }
     },
     created(){
@@ -93,6 +99,21 @@ export default {
         
     },
     methods: {
+        changeInputData(dom){
+            this.autocompleteSelect = dom
+        },
+        // 模糊搜索
+        querySearch(queryString, cb) {
+            const restaurants = this.selectOption[this.autocompleteSelect];
+            const results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+            // 调用 callback 返回建议列表的数据
+            cb(results);
+        },
+        createFilter(queryString) {
+            return (restaurant) => {
+            return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+            };
+        },
         setDynamicBtnFun(fun){
             let dataInfo = this.resultDataInfo()
             this.$emit('setDynamicBtnFun',{ fun,dataInfo })

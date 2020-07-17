@@ -52,6 +52,7 @@
             }
         },
         mounted(){
+            console.log(new Date().toLocaleDateString())
             this.getDataList(this.seatchData)
         },
         methods: {

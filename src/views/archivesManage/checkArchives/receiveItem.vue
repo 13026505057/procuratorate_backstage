@@ -268,26 +268,21 @@
                 rules: {
                     nd: [
                         { required: true, message: '请输入年度', trigger: 'blur' },
-                        { min: 4, max: 4, message: '年份输入错误', trigger: 'blur' },
-                        { pattern: /^\d+$|^\d+[.]?\d+$/, message: '只能输入数字', trigger: 'blur' }
+                        { pattern: /^\d+$|^\d+[.]?\d+$/, message: '只能输入数字', trigger: 'blur' },
+                        { min: 4, max: 4, message: '年份输入错误', trigger: 'blur' }
                     ],
                     dh: [
-                        // { required: true, message: '请输入档号', trigger: 'blur' },
-                        { pattern: /^\d+$|^\d+[.]?\d+$/, message: '只能输入数字', trigger: 'blur' }
+                        { pattern: /^\d+$|^\d+[.]?\d+$/, message: '只能输入数字', trigger: 'blur' },
+                        { max: 4, message: '最多只能输入四位数字', trigger: 'blur' }
                     ],
                     jh: [
                         { required: true, message: '请输入卷号', trigger: 'blur' },
-                        { pattern: /^\d+$|^\d+[.]?\d+$/, message: '只能输入数字', trigger: 'blur' }
+                        { pattern: /^\d+$|^\d+[.]?\d+$/, message: '只能输入数字', trigger: 'blur' },
+                        { max: 4, message: '最多只能输入四位数字', trigger: 'blur' }
                     ],
                     bgr: [
                         { required: true, message: '请输入被告人', trigger: 'blur' },
                     ],
-                    // case_type_id:[
-                    //     { required: true, message: '请选择案件类型', trigger: 'blur' },
-                    // ],
-                    // exhibit_name:[
-                    //     { required: true, message: '请输入a', trigger: 'blur' },
-                    // ]
                 },
                 submitDataInfo_temporary: {},
                 eachDataInfoList: [

@@ -111,9 +111,10 @@
                 },
                 addSearch_left: [
                     { dom: 'nd', value: '', placeholder: '请选择年份', itemId: 1, name: 'dataPicker' },
-                    { dom: 'exhibit_name', value: '', placeholder: '请输入卷宗关键字', itemId: 2, name: 'input' },
+                    { dom: 'exhibit_name', value: '', placeholder: '请输入案卷名称', itemId: 2, name: 'input' },
                     { dom: 'bgr', value: '', placeholder: '被告人', itemId: 3, name: 'input' },
-                    { dom: 'out_exhibit_id', value: '', placeholder: '扫码输入', itemId: 4, name: 'input' },
+                    { dom: 'cbr', value: '', placeholder: '承办人', itemId: 5, name: 'input' },
+                    { dom: 'out_exhibit_id', value: '', placeholder: '请扫描条形码号', itemId: 4, name: 'input' },
                 ],
                 dataLoading:false,
                 selectOption_left: {},
@@ -141,7 +142,7 @@
                 },
                 loading_right_top: false,
                 addSearch_right: [
-                    { dom: 'case_bh', value: '', placeholder: '请输入受案号', itemId: 1, name: 'input' },
+                    { dom: 'tysah', value: '', placeholder: '请输入统一受案号', itemId: 1, name: 'input' },
                     { dom: 'bmsah', value: '', placeholder: '请输入部门受案号', itemId: 2, name: 'input' },
                     { dom: 'case_name', value: '', placeholder: '请输入案件名', itemId: 3, name: 'input' },
                     { dom: 'case_take_user_name', value: '', placeholder: '请输入承办人', itemId: 4, name: 'input' },

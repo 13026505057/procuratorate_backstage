@@ -1,6 +1,6 @@
 <template>
     <div class="completedTypePage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" 
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'case'" @comfirmSearch="comfirmSearch" 
             @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
@@ -93,21 +93,13 @@
             return  {
                 pagination: {
                     pageNum: 1,
-                    pageSize: 10,
-                    case_name: '',
-                    case_bh: '',
-                    timeYear: '',
-                    case_type_id: '',
+                    pageSize: 10
                 },
                 setDynamicBtn: [
                     { title: '导出', fun: 'exprotFun' }
                 ],
                 tableLoading: false,
-                addSearch: [
-                    { dom: 'case_bh', value: '', placeholder: '统一受案号', itemId: 0, name: 'input' },
-                    { dom: 'case_name', value: '', placeholder: '请输入案卷名称', itemId: 1, name: 'input' },
-                    { dom: 'timeYear', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
-                ],
+                addSearch: [],
                 selectOption: {},
                 showModel: {
                     activeNameTab: "0",
@@ -131,6 +123,7 @@
                 // table表头
                 columns: [
                     { title: 'case_bh', dataIndex: '统一受案号', itemId: 1 },
+                    { title: 'bmsah', dataIndex: '部门受案号', itemId: -1 },
                     { title: 'case_name', dataIndex: '案件名称', itemId: 10 },
                     { title: 'case_type_name', dataIndex: '案件类型', itemId: 2 },
                     { title: 'case_desc', dataIndex: '案件描述', overflow: true, itemId: 11 },

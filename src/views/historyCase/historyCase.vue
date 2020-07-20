@@ -1,6 +1,6 @@
 <template>
   <div class="historyCasePage">
-    <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch"
+    <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'exhibit'" @comfirmSearch="comfirmSearch"
         @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun" />
     <div class="table-dataList" >
         <el-table :data="showModel.tableData" border style="width: 100%" v-loading="loadingTable">
@@ -64,11 +64,6 @@ export default {
         pagination: {
             pageNum: 1,
             pageSize: 10,
-            tysah: '',
-            out_exhibit_id: '',
-            exhibit_name: '',
-            nd: '',
-            stock_status: '',
             exhibit_status: '1'
         },
         loadingTable: false,
@@ -78,13 +73,7 @@ export default {
             importCaseModel: false,
             headersUpload: { 'kf-token': getToken() }
         },
-        addSearch: [
-            { dom: 'tysah', value: '', placeholder: '请输入统一受案号', itemId: 0, name: 'input' },
-            { dom: 'out_exhibit_id', value: '', placeholder: '请扫描案卷条码', itemId: 1, name: 'input' },
-            { dom: 'exhibit_name', value: '', placeholder: '请输入案卷名', itemId: 2, name: 'input' },
-            { dom: 'nd', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
-            { dom: 'stock_status', value: '', placeholder: '请选择案卷状态', itemId: 5, name: 'select' },
-        ],
+        addSearch: [],
         selectOption: {
             stock_status: []
         },

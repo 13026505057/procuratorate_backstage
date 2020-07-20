@@ -1,6 +1,6 @@
 <template>
     <div class="mergeRequestPage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'case'" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
@@ -85,7 +85,6 @@
                 },
                 loadingTable: false,
                 addSearch: [
-                    { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
                     { dom: 'case_none_status', value: '',placeholder: '是否已交卷', itemId: 6, name: 'select' },
                 ],
                 selectOption: {
@@ -129,7 +128,6 @@
                         { dom: 'bmsah', value: '',placeholder: '部门受案号', itemId: 4, name: 'input' },
                         { dom: 'case_name', value: '',placeholder: '案件名称', itemId: 2, name: 'input' },
                         { dom: 'case_take_user_name', value: '',placeholder: '承办人', itemId: 5, name: 'input' },
-                        { dom: 'out_exhibit_id', value: '',placeholder: '扫描条形码', itemId: 3, name: 'input' },
                         // { dom: 'case_zm', value: '',placeholder: '', itemId: 4, name: 'select' },
                     ],
                     selectOption: {},

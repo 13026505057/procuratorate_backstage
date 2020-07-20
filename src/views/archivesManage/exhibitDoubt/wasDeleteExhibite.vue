@@ -63,6 +63,8 @@
                 tableLoading:false,
                 addSearch: [
                     { dom: 'tysah', value: '',placeholder: '请输入统一受案号', itemId: 5, name: 'input' },
+                    { dom: 'out_exhibit_id', value: '',placeholder: '请输入条形码号', itemId: 11, name: 'input' },
+                    { dom: 'exhibit_name', value: '',placeholder: '请输入案卷名称', itemId: 6, name: 'input' },
                     { dom: 'cbr', value: '',placeholder: '请输入承办人', itemId: 9, name: 'input' },
                     { dom: 'bgr', value: '',placeholder: '请输入嫌疑人', itemId: 10, name: 'input' },
                 ],
@@ -78,6 +80,7 @@
                 },
                 // table表头
                 columns: [
+                    { title: 'tysah', dataIndex: '统一受案号', itemId: 7 },
                     { title: 'exhibit_name', dataIndex: '案卷名称', itemId: 1 },
                     { title: 'dh', dataIndex: '档号', itemId: 2 },
                     { title: 'jh', dataIndex: '卷号', itemId: 3 },

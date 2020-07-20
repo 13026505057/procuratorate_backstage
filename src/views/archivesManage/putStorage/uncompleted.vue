@@ -67,12 +67,7 @@
             return  {
                 pagination: {
                     pageNum: 1,
-                    pageSize: 10,
-                    case_name: '',
-                    case_bh: '',
-                    begin_time: '',
-                    end_time: '',
-                    stock_log_type: '',
+                    pageSize: 10
                 },
                 tableLoading:false,
                 exhibit_type:'SS',
@@ -81,13 +76,13 @@
                 exhibitType:[],
                 addSearch: [
                     { dom: 'case_bh', value: '',placeholder: '请输入统一受案号', itemId: 5, name: 'input' },
-                    { dom: 'exhibit_name', value: '',placeholder: '请输入案件名称', itemId: 6, name: 'input' },
-                    { dom: 'over_time_begin', value: '',placeholder: '开始时间', itemId: 4, name: 'daterange_begin' },
-                    { dom: 'over_time_end', value: '',placeholder: '结束时间', itemId: -4, name: 'daterange_end' },
-                    { dom: 'nd', value: '',placeholder: '选择案件年度', itemId: 11, name: 'dataPicker' },
                     { dom: 'out_exhibit_id', value: '',placeholder: '扫描条形码', itemId: 8, name: 'input' },
-                    { dom: 'cbr', value: '',placeholder: '承办人', itemId: 9, name: 'input' },
+                    { dom: 'exhibit_name', value: '',placeholder: '请输入案件名称', itemId: 6, name: 'input' },
+                    { dom: 'begin_time', value: '',placeholder: '开始时间', itemId: 4, name: 'daterange_begin' },
+                    { dom: 'end_time', value: '',placeholder: '结束时间', itemId: -4, name: 'daterange_end' },
+                    { dom: 'year', value: '',placeholder: '选择案件年度', itemId: 11, name: 'dataPicker' },
                     { dom: 'bgr', value: '',placeholder: '嫌疑人', itemId: 10, name: 'input' },
+                    { dom: 'cbr', value: '',placeholder: '承办人', itemId: 9, name: 'input' },
                 ],
                 selectOption: {},
                 setDynamicBtn: [

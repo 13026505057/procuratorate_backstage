@@ -1,6 +1,6 @@
 <template>
     <div class="giveBackPage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" 
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'case'" @comfirmSearch="comfirmSearch" 
             @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
         <div class="table-dataList" >
             <el-table :data="showModel.tableData" border style="width: 100%" v-loading="tableLoading">
@@ -38,20 +38,14 @@
                 pagination: {
                     pageNum: 1,
                     pageSize: 10,
-                    case_name: '',
-                    case_bh: '',
-                    timeYear: '',
+                    case_none_confirm:'1',
                     user_id: ''
                 },
                 setDynamicBtn: [
                     { title: '导出', fun: 'exprotFun' }
                 ],
                 tableLoading: false,
-                addSearch: [
-                    { dom: 'case_bh', value: '',placeholder: '统一受案号', itemId: 1, name: 'input' },
-                    { dom: 'case_name', value: '',placeholder: '请输入案件名', itemId: 2, name: 'input' },
-                    { dom: 'timeYear', value: '',placeholder: '选择年份', itemId: 3, name: 'dataPicker' },
-                ],
+                addSearch: [],
                 selectOption: {},
                 showModel: {
                     tableData:[],   // 数据信息
@@ -59,6 +53,7 @@
                 // table表头
                 columns: [
                     { title: 'case_bh', dataIndex: '统一受案号', itemId: 1 },
+                    { title: 'bmsah', dataIndex: '部门受案号', itemId: -1 },
                     { title: 'out_exhibit_id', dataIndex: '条形码号', itemId: 10 },
                     { title: 'case_type_name', dataIndex: '档号', itemId: 2 },
                     { title: 'jh', dataIndex: '卷号', itemId: 11 },
@@ -94,7 +89,7 @@
             async getTableList(dataInfo){
                 this.tableLoading = true;
                 dataInfo.user_id = this.user_id
-                const resultData = await this.$api.caseRefuseHistoryGetByPage(dataInfo);
+                const resultData = await this.$api.getRefuseCase(dataInfo);
                 const pagination = { ...this.pagination };
                 let resultData_table = [];
                 this.showModel.tableData = resultData.data.list;

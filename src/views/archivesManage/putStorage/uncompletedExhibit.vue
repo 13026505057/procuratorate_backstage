@@ -1,6 +1,6 @@
 <template>
     <div class="uncompletedPutPage">
-        <Search style="margin-top:10px;" :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
+        <Search style="margin-top:10px;" :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'exhibit'" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab"  v-loading="tableLoading">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
@@ -59,10 +59,6 @@
                 pagination: {
                     pageNum: 1,
                     pageSize: 10,
-                    case_name: '',
-                    case_bh: '',
-                    begin_time: '',
-                    end_time: '',
                     stock_log_type: 'init',
                 },
                 tableLoading:false,
@@ -70,14 +66,7 @@
                 stockNum:'',
                 exhibitNum:'',
                 exhibitType:[],
-                addSearch: [
-                    { dom: 'tysah', value: '',placeholder: '请输入统一受案号', itemId: 5, name: 'input' },
-                    { dom: 'exhibit_name', value: '',placeholder: '请输入案卷名称', itemId: 6, name: 'input' },
-                    { dom: 'out_exhibit_id', value: '',placeholder: '扫描条形码', itemId: 8, name: 'input' },
-                    { dom: 'nd', value: '',placeholder: '选择年度', itemId: 7, name: 'dataPicker' },
-                    { dom: 'cbr', value: '',placeholder: '承办人', itemId: 9, name: 'input' },
-                    { dom: 'bgr', value: '',placeholder: '嫌疑人', itemId: 10, name: 'input' },
-                ],
+                addSearch: [],
                 setDynamicBtn: [
                     { title: '导出', fun: 'exprotFun' }
                 ],

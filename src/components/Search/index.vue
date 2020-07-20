@@ -56,9 +56,13 @@ import { mapGetters } from 'vuex'
 export default {
     props: {
         resetData: [Boolean],
-        addSearch: [Array],
+        addSearch: {
+            type: Array,
+            default: []
+        },
         selectOption: [Object],
         setDynamicBtn: [Array],
+        type: [String],
         hiddenAdress: {
             type: Boolean,
             default: true
@@ -74,14 +78,33 @@ export default {
     data(){
         return{
             selectOrgId: '',
-            searchList: [
+            searchList: [],
+            searchList_case: [
                 { dom: 'case_bh', value: '', placeholder: '统一受案号', itemId: 0, name: 'input' },
                 { dom: 'bmsah', value: '', placeholder: '部门受案号', itemId: -1, name: 'input' },
-                { dom: 'case_name', value: '', placeholder: '请输入案卷名称', itemId: 1, name: 'input' },
+                { dom: 'case_name', value: '', placeholder: '请输入案件名称', itemId: 1, name: 'input' },
                 { dom: 'bgr', value: '', placeholder: '请输入嫌疑人', itemId: 2, name: 'input' },
+                { dom: 'case_take_user_name', value: '', placeholder: '请输入承办人', itemId: -2, name: 'input' },
                 { dom: 'timeYear', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
                 { dom: 'over_time_begin', value: '',placeholder: '开始时间', itemId: 4, name: 'daterange_begin' },
                 { dom: 'over_time_end', value: '',placeholder: '结束时间', itemId: -4, name: 'daterange_end' },
+            ],
+            searchList_case_sl: [
+                { dom: 'case_bh', value: '', placeholder: '统一受案号', itemId: 0, name: 'input' },
+                { dom: 'bmsah', value: '', placeholder: '部门受案号', itemId: -1, name: 'input' },
+                { dom: 'case_name', value: '', placeholder: '请输入案件名称', itemId: 1, name: 'input' },
+                { dom: 'case_take_user_name', value: '', placeholder: '请输入承办人', itemId: -2, name: 'input' },
+                { dom: 'timeYear', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
+                { dom: 'over_time_begin', value: '',placeholder: '开始时间', itemId: 4, name: 'daterange_begin' },
+                { dom: 'over_time_end', value: '',placeholder: '结束时间', itemId: -4, name: 'daterange_end' },
+            ],
+            searchList_exhibit: [
+                { dom: 'tysah', value: '', placeholder: '统一受案号', itemId: 0, name: 'input' },
+                { dom: 'out_exhibit_id', value: '', placeholder: '扫描条形码', itemId: -1, name: 'input' },
+                { dom: 'exhibit_name', value: '', placeholder: '请输入案卷名称', itemId: 1, name: 'input' },
+                { dom: 'bgr', value: '', placeholder: '请输入嫌疑人', itemId: 2, name: 'input' },
+                { dom: 'cbr', value: '', placeholder: '请输入承办人', itemId: -2, name: 'input' },
+                { dom: 'nd', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
             ],
             org_dataList: [{level:'area'}],
             pickerOptions: {
@@ -94,9 +117,19 @@ export default {
     },
     created(){
         this.$emit('receivedAddress',this.address_id)
+        const addSearchItem = (arrItem) => {
+            if(arrItem && arrItem.length>0) {
+                if(this.type == 'case') this.searchList.push(...this.searchList_case,...arrItem)
+                    else if(this.type == 'case_sl') this.searchList.push(...this.searchList_case_sl,...arrItem)
+                    else if(this.type == 'exhibit') this.searchList.push(...this.searchList_exhibit,...arrItem)
+            } else {
+                if(this.type == 'case') this.searchList.push(...this.searchList_case)
+                    else if(this.type == 'case_sl') this.searchList.push(...this.searchList_case_sl)
+                    else if(this.type == 'exhibit') this.searchList.push(...this.searchList_exhibit)
+            }
+        }
         if(this.resetData) this.searchList = this.addSearch
-            else if(this.addSearch && this.addSearch.length>0) this.searchList.push(...this.addSearch)
-        
+            else addSearchItem(this.addSearch)
     },
     methods: {
         changeInputData(dom){

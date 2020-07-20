@@ -1,7 +1,7 @@
 <template>
     <div class="historicalCasesPage">
         <!-- <DynamicSearch  @comfirmSearch="comfirmSearch"/> -->
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch"
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'case'" @comfirmSearch="comfirmSearch"
             :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun" @exportExcelFun="openExportExcelFun" />
         <div class="head-tab">
             <div class="table-dataList" >
@@ -83,34 +83,22 @@
         </el-dialog>
         <!-- 新增案件 -->
         <el-dialog v-dialogDrag title="新增案件" :visible.sync="showModel.dialogAddCaseVisible" @close="resetSubmitInfo">
-            <div class="addCaseBox_container">
-                <div class="addCaseBox_item">
-                    <div v-for="(item,index) in eachDataInfoList_case.slice(0,6)" :key="index" class="item">
-                        <span> {{ item.captionTitle }}：</span>
-                        <el-input v-model="submitDataInfo_case[item.dom]" v-if="item.type=='input'"
-                            :placeholder="item.placeholder" style="width: auto"></el-input>
+            <el-form :model="submitDataInfo_case" :rules="rules_addCase" ref="ruleForm" label-width="20%" class="demo-ruleForm">
+                <template v-for="item in eachDataInfoList_case">
+                    <el-form-item :label="item.captionTitle" :prop="item.dom">
+                        <el-input v-model="submitDataInfo_case[item.dom]" :placeholder="item.placeholder" v-if="item.type == 'input'"></el-input>
+                        <el-input v-model="submitDataInfo_case[item.dom]" :placeholder="item.placeholder" type="textarea" v-else-if="item.type == 'textarea'"></el-input>
                         <el-select v-model="submitDataInfo_case[item.dom]" :placeholder="item.placeholder" v-else-if="item.type == 'select'">
                             <el-option v-for="itemChild in showModel[item.dom]" :key="itemChild.value" 
                                 :label="itemChild.label" :value="itemChild.value"></el-option>
                         </el-select>
-                    </div>
-                </div>
-                <div class="addCaseBox_item">
-                    <div v-for="(item,index) in eachDataInfoList_case.slice(6,11)" :key="index" class="item">
-                        <span> {{ item.captionTitle }}：</span>
-                        <el-input v-model="submitDataInfo_case[item.dom]" v-if="item.type=='input'"
-                            :placeholder="item.placeholder" style="width: auto"></el-input>
-                        <el-select v-model="submitDataInfo_case[item.dom]" :placeholder="item.placeholder" v-else-if="item.type == 'select'">
-                            <el-option v-for="itemChild in showModel[item.dom]" :key="itemChild.value" 
-                                :label="itemChild.label" :value="itemChild.value"></el-option>
-                        </el-select>
-                    </div>
-                </div>
-            </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="showModel.dialogAddCaseVisible = false">取 消</el-button>
-                <el-button type="primary" @click="confirmAddCase">确 定</el-button>
-            </span>
+                    </el-form-item>
+                </template>
+                <el-form-item>
+                    <el-button @click="showModel.dialogAddCaseVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="confirmAddCase('ruleForm')">确 定</el-button>
+                </el-form-item>
+            </el-form>
         </el-dialog>
     </div>
 </template>
@@ -143,13 +131,7 @@
             return  {
                 pagination: {
                     pageNum: 1,
-                    pageSize: 10,
-                    case_name: '',
-                    case_zm: '',
-                    case_bh: '',
-                    timeYear: '',
-                    case_take_user_name: '',
-                    case_type_id: '',
+                    pageSize: 10
                 },
                 loadingTable: false,
                 addSearch: [],
@@ -185,6 +167,7 @@
                 // table表头
                 columns: [
                     { title: 'case_bh', dataIndex: '统一受案号', itemId: 1 },
+                    { title: 'bmsah', dataIndex: '部门受案号', itemId: -1 },
                     { title: 'case_name', dataIndex: '案件名称', itemId: 10 },
                     { title: 'case_type_name', dataIndex: '案件类型', itemId: 2 },
                     { title: 'case_none_status', dataIndex: '案件状态', itemId: 8 },
@@ -215,32 +198,29 @@
                     { captionTitle: '选择期限(必填)', placeholder: '', dom: 'bgqx', itemId: 6 },
                 ],
                 submitDataInfo_case: {
-                    exhibit_name: '',
+                    case_name: '',
+                    case_desc: '',
                     tysah: '',
-                    jh: '',
-                    cbr: '',
-                    bgqx: '',
-                    exhibit_type: '',
-                    nd: '',
-                    dh: '',
-                    ay: '',
-                    bgr: '',
-                    case_type_id: ''
+                    bmsah: '',
+                    case_type_id: '',
+                    case_take_user_name: '',
                 },
                 eachDataInfoList_case: [
-                    { captionTitle: '案件名称', placeholder: '请输入案件名称', dom: 'exhibit_name', itemId: 1, type: 'input' },
+                    { captionTitle: '案件名称', placeholder: '请输入案件名称', dom: 'case_name', itemId: 1, type: 'input' },
                     { captionTitle: '统一受案号', placeholder: '请输入统一受案号', dom: 'tysah', itemId: 2, type: 'input' },
-                    // { captionTitle: '卷号', placeholder: '请输入卷号', dom: 'jh', itemId: 3, type: 'input' },
-                    { captionTitle: '承办人', placeholder: '请输入承办人', dom: 'cbr', itemId: 4, type: 'input' },
-                    // { captionTitle: '期限', placeholder: '请选择期限', dom: 'bgqx', itemId: 5, type: 'select' },
-                    // { captionTitle: '类型', placeholder: '请选择类型', dom: 'exhibit_type', itemId: 6, type: 'select' },
-
-                    { captionTitle: '年度', placeholder: '请输入年度', dom: 'nd', itemId: 7, type: 'input' },
-                    // { captionTitle: '档号', placeholder: '请输入档号', dom: 'dh', itemId: 8, type: 'input' },
-                    { captionTitle: '案由', placeholder: '请输入案由', dom: 'ay', itemId: 9, type: 'input' },
-                    { captionTitle: '犯罪嫌疑人', placeholder: '请输入犯罪嫌疑人', dom: 'bgr', itemId:10, type: 'input' },
+                    { captionTitle: '案件描述', placeholder: '请输入案件描述', dom: 'case_desc', itemId: 3, type: 'textarea' },
+                    { captionTitle: '承办人', placeholder: '请输入承办人', dom: 'case_take_user_name', itemId: 4, type: 'input' },
+                    { captionTitle: '部门受案号', placeholder: '请输入部门受案号', dom: 'bmsah', itemId: 5, type: 'input' },
                     { captionTitle: '类型', placeholder: '请选择案件类型', dom: 'case_type_id', itemId: 11, type: 'select' },
                 ],
+                rules_addCase: {
+                    case_name: [
+                        { required: true, message: '请输入案件名称', trigger: 'blur' }
+                    ],
+                    tysah: [
+                        { required: true, message: '请输入统一受案号', trigger: 'blur' }
+                    ]
+                },
                 setDynamicBtn: [
                     { title: '新增案件', fun: 'addCaseItem' },
                     // { title: '导出', fun: 'exprotFun'}
@@ -252,8 +232,6 @@
             this.getTableList(this.pagination);
         },
         methods: {
-            
-            
             // 分页
             handleCurrentChange(val) {
                 this.pagination['pageNum'] = val;
@@ -349,12 +327,17 @@
             async addCaseItem(){
                 this.showModel.dialogAddCaseVisible = true;
             },
-            async confirmAddCase(){
-                let resultData = await this.$api.addOldExhibit(this.submitDataInfo_case)
-                if(resultData && resultData.code =='0') {
-                    this.showModel.dialogAddCaseVisible = false;
-                    this.$message.success('操作成功')
-                }
+            confirmAddCase(formName){
+                this.$refs[formName].validate(async (valid) => {
+                    if (valid) {
+                        let dataInfo = { ...this.submitDataInfo_case,case_bh: this.submitDataInfo_case.tysah }
+                        let resultData = await this.$api.addCaseItemData(dataInfo)
+                        if(resultData && resultData.code =='0') {
+                            this.showModel.dialogAddCaseVisible = false;
+                            this.$message.success('操作成功')
+                        }
+                    } else return false;
+                })
             },
         },
     }

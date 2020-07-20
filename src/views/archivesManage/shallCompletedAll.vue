@@ -1,6 +1,6 @@
 <template>
     <div class="shallCompletedAllPage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" 
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'case'" @comfirmSearch="comfirmSearch" 
             @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
@@ -105,9 +105,7 @@
                     { title: '导出', fun: 'exprotFun' }
                 ],
                 loadingTable: false,
-                addSearch: [
-                    { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
-                ],
+                addSearch: [],
                 selectOption: {},
                 showModel: {
                     activeNameTab: "0",

@@ -1,6 +1,6 @@
 <template>
     <div class="personalAcceptancePage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" 
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'case_sl'" @comfirmSearch="comfirmSearch" 
             @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun" />
         <div class="head-tab">
             <div class="table-dataList" >
@@ -40,21 +40,13 @@
             return  {
                 pagination: {
                     pageNum: 1,
-                    pageSize: 10,
-                    case_name: '',
-                    case_zm: '',
-                    case_bh: '',
-                    timeYear: '',
-                    case_take_user_name: '',
-                    case_type_id: '',
+                    pageSize: 10
                 },
                 setDynamicBtn: [
                     { title: '导出', fun: 'exprotFun' }
                 ],
                 loadingTable: false,
-                addSearch: [
-                    { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
-                ],
+                addSearch: [],
                 selectOption: {},
                 showModel: {
                     activeNameTab: "0",

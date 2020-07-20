@@ -1,6 +1,6 @@
 <template>
     <div class="progress-content">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" 
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'case'" @comfirmSearch="comfirmSearch" 
             @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
         <div class="head-tab">
             <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -89,9 +89,7 @@
         },
         data()  {
             return  {
-                addSearch: [
-                    { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
-                ],
+                addSearch: [],
                 setDynamicBtn: [
                     { title: '导出', fun: 'exprotFun' }
                 ],
@@ -103,6 +101,7 @@
                 badgeList:[],
                 tableItems:[
                     {label: "统一受案号", prop: "case_bh", tableId:1, tableWidth:"190"},
+                    {label: "部门受案号", prop: "bmsah", tableId:12},
                     {label: "案件名称", prop: "case_name", tableId:2},
                     {label: "案件类型", prop: "case_type_name", tableId:3},
                     {label: "案件描述", prop: "case_desc", overflow: true, tableId:4},

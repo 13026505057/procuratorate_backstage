@@ -1,9 +1,9 @@
 <template>
     <div class="checkedItemPage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" 
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'case'" @comfirmSearch="comfirmSearch" 
             @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
         <div class="head-tab">
-            <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
+            <el-tabs v-model="showModel.activeNameTab">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
                     <span slot="label">
                         {{item.case_type_name}}
@@ -118,18 +118,11 @@
                 pagination: {
                     pageNum: 1,
                     pageSize: 10,
-                    case_name: '',
-                    case_bh: '',
-                    timeYear: '',
-                    case_take_user_name: '',
-                    case_type_id: '',
                     case_none_confirm:'1'
                 },
                 setDynamicBtn: [],
                 loadingTable: false,
-                addSearch: [
-                    { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
-                ],
+                addSearch: [],
                 selectOption: {},
                 showModel: {
                     activeNameTab: "tuicha",
@@ -181,7 +174,6 @@
            
         },
         mounted(){
-            // this.getCaseType();
             this.getTableList(this.pagination);
         },
         methods: {
@@ -196,33 +188,6 @@
             // DialogPagin
             dialogTablePagin(data){
                 this.showModel.gridData = data
-            },
-            handleClickTab(e){
-                // this.pagination.case_type_id = e.paneName
-                // this.getTableList(this.pagination)
-            },
-            // 类型分类
-            getCaseType(){
-                this.$api.getCaseType().then(async (res)=>{
-                    this.showModel.tableList = res.data.list;
-                    if(this.showModel.activeNameTab !== '0') this.pagination.case_type_id = this.showModel.activeNameTab
-                        else this.pagination.case_type_id = this.showModel.activeNameTab = res.data.list[0].case_type_id
-                    this.getTableList(this.pagination)
-                    // 角标
-                    let dataInfo = {...this.pagination};
-                    // 每个页面字段不同(cout_for)
-                    dataInfo['cout_for'] = 'danganjieshoushencha';
-                    ['pageNum','pageSize','case_type_id'].map(item=> delete dataInfo[item])
-                    const resultData = await this.$api.getCornerMarkType(dataInfo);
-                    Object.keys(resultData.data).map(item=>{
-                        res.data.list.map((itemChild,index)=>{
-                            if("_"+itemChild.case_type_id == item) {
-                                itemChild.contNum = resultData.data[item]
-                                this.$set(this.showModel.tableList[index],index,itemChild)
-                            }
-                        })
-                    })
-                })
             },
             // 重新接受案卷
             reciveCaseAgain(dataInfo){
@@ -240,7 +205,6 @@
                     this.getTableList(this.pagination)
                 }
             },
-
             // 获取案件列表
             async getTableList(dataInfo){
                 this.loadingTable = true;

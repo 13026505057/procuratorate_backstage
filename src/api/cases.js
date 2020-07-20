@@ -9,6 +9,10 @@ const cases = {
     getCornerMarkType(data) {
         return request({ url: '/cases/cases/getCountForType', method: 'post', data })
     },
+    // 新增案件
+    addCaseItemData(data) {
+        return request({ url: '/cases/cases/add', method: 'post', data })
+    },
     getProgressCase(data) {
         return request({ url: '/cases/cases/getCaseJinDuByPage', method: 'post', data })
     },

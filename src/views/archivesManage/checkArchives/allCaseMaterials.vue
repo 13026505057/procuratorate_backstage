@@ -1,7 +1,6 @@
 <template>
     <div class="uncompletedPutPage">
-        
-        <Search style="margin-top:10px;" :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" 
+        <Search style="margin-top:10px;" :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'exhibit'" @comfirmSearch="comfirmSearch" 
             @receivedAddress="receivedAddress"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab"  v-loading="tableLoading">
@@ -64,22 +63,10 @@
                 pagination: {
                     pageNum: 1,
                     pageSize: 10,
-                    case_name: '',
-                    tysah: '',
-                    begin_time: '',
-                    end_time: '',
-                    print_id: '',
-                    //stock_log_type: 'init',
                 },
                 tableLoading:false,
                 exhibit_type:'SS',
                 addSearch: [
-                    { dom: 'tysah', value: '',placeholder: '请输入统一受案号', itemId: 5, name: 'input' },
-                    { dom: 'case_name', value: '',placeholder: '请输入案件名称', itemId: 6, name: 'input' },
-                    { dom: 'out_exhibit_id', value: '',placeholder: '扫描条形码', itemId: 8, name: 'input' },
-                    { dom: 'cbr', value: '',placeholder: '承办人', itemId: 9, name: 'input' },
-                    { dom: 'bgr', value: '',placeholder: '嫌疑人', itemId: 10, name: 'input' },
-                    { dom: 'nd', value: '',placeholder: '选择年度', itemId: 12, name: 'dataPicker' },
                     { dom: 'stock_status', value: '',placeholder: '是否入库', itemId: 11, name: 'select' },
                 ],
                 selectOption: {

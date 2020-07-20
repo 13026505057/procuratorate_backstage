@@ -9,7 +9,7 @@
             <el-input class="scan-input" v-model="exhibitNum" ref="exhibitNumRef" @change="exhibitNumChange" placeholder="扫描案卷码"></el-input>
             <span class="head-text">先扫描货架码，光标自动移动到案卷码位置后在扫描案卷码</span>
         </div>
-        <Search class="searchInfo" :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" 
+        <Search class="searchInfo" :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" 
             @receivedAddress="receivedAddress" @exportExcelFun="openExportExcelFun" :exportExcelBtn="true"/>
         <div class="head-tab">
             
@@ -95,37 +95,6 @@
                             <span>{{props.row.borrow_end_time}}</span>
                         </template>
                     </el-table-column>
-                    <!-- <el-table-column
-                        align="center"
-                        show-overflow-tooltip
-                        v-for="tableItem in tableItems"
-                        :prop="tableItem.prop"
-                        :label="tableItem.label"
-                        :key="tableItem.label"
-                        >
-                        <template slot-scope="{row}">
-                            <span v-if="tableItem.tableId == 5">{{ row[tableItem.prop] | pigeonhole }}</span>
-                            <span v-else-if="tableItem.tableId == 7">{{row[tableItem.prop]==0?'未成卷':'已成卷'}}</span>
-                            <span v-else-if="tableItem.tableId == 10">
-                            </span>
-                            <span v-else>{{row[tableItem.prop]}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        label="待入库案卷数"
-                        align="center">
-                        <template slot-scope="props">
-                            <span>{{props.row.total_quantity-props.row.in_quantity}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        width="190"
-                        align="center"
-                        label="操作">
-                        <template slot-scope="props">
-                            <el-button :disabled="disabled1" :loading="disabled1" @click="examineClick(props.row)" class="highlight-btn" size="small">查看进度</el-button>
-                        </template>
-                    </el-table-column> -->
                 </el-table>
             </div>
             <div class="pagination">
@@ -188,7 +157,9 @@
         data()  {
             return  {
                 addSearch: [
-                    { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
+                    { dom: 'case_bh', value: '',placeholder: '请输入统一受案号', itemId: 1, name: 'input' },
+                    { dom: 'bmsah', value: '',placeholder: '请输入部门受案号', itemId: 2, name: 'input' },
+                    { dom: 'case_name', value: '',placeholder: '请输入案件名称', itemId: 3, name: 'input' },
                 ],
                 exhibitType:[],
                 selectOption:{},

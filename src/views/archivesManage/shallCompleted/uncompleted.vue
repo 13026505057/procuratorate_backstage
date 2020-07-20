@@ -1,6 +1,6 @@
 <template>
     <div class="uncompletedShallPage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" 
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'case'" @comfirmSearch="comfirmSearch" 
             @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
@@ -89,7 +89,6 @@
                 },
                 loadingTable: false,
                 addSearch: [
-                    { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
                     { dom: 'dangan_accept_status', value: '',placeholder: '是否已交卷', itemId: 6, name: 'select' },
                     { dom: 'bjrq', value: '',placeholder: '是否点击办结按钮', itemId: 7, name: 'select' },
                 ],

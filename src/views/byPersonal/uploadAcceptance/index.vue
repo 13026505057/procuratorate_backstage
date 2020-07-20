@@ -1,9 +1,7 @@
 <template>
     <div class="uploadAcceptancePage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" 
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'case_sl'" @comfirmSearch="comfirmSearch" 
             @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
-            <!-- 
-            @exportExcelFun="openExportExcelFun" :exportExcelBtn="true" -->
         <div class="head-tab">
             <div class="table-dataList" >
                 <el-table :data="showModel.tableData" border style="width: 100%" v-loading="loadingTable">
@@ -67,13 +65,7 @@
             return  {
                 pagination: {
                     pageNum: 1,
-                    pageSize: 10,
-                    case_name: '',
-                    case_zm: '',
-                    case_bh: '',
-                    timeYear: '',
-                    case_take_user_name: '',
-                    case_type_id: '',
+                    pageSize: 10
                 },
                 loadingTable: false,
                 addSearch: [],
@@ -92,6 +84,7 @@
                 // table表头
                 columns: [
                     { title: 'case_bh', dataIndex: '案件编号', itemId: 1 },
+                    { title: 'bmsah', dataIndex: '部门受案号', itemId: -1 },
                     { title: 'case_name', dataIndex: '案件名称', itemId: 10 },
                     { title: 'case_type_name', dataIndex: '案件类型', itemId: 2 },
                     { title: 'case_none_status', dataIndex: '案件状态', itemId: 8 },

@@ -1,6 +1,6 @@
 <template>
     <div class="checkedItemHistoryPage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" 
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" :type="'case'" @comfirmSearch="comfirmSearch" 
             @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab">
@@ -59,24 +59,21 @@
                 pagination: {
                     pageNum: 1,
                     pageSize: 10,
-                    case_name: '',
-                    case_bh: '',
-                    timeYear: '',
-                    case_take_user_name: '',
-                    case_type_id: '',
                     case_none_confirm:'1'
                 },
                 setDynamicBtn: [],
                 loadingTable: false,
                 addSearch: [
-                    { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
+                    { dom: 'case_bh', value: '', placeholder: '统一受案号', itemId: 0, name: 'input' },
+                    { dom: 'case_name', value: '', placeholder: '请输入案件名称', itemId: 1, name: 'input' },
+                    { dom: 'case_take_user_name', value: '', placeholder: '请输入承办人', itemId: -2, name: 'input' },
                 ],
                 selectOption: {},
                 showModel: {
                     activeNameTab: "tuicha",
                     tableList:[{
                         case_type_id:'tuicha',
-                        case_type_name:'退查中案件'
+                        case_type_name:'审查记录'
                     }],   // 类型
                     tableData:[],   // 数据信息
                 },
@@ -85,7 +82,7 @@
                     { title: 'case_bh', dataIndex: '统一受案号', itemId: 1 },
                     { title: 'case_name', dataIndex: '案件名称', itemId: 10 },
                     { title: 'dh', dataIndex: '档号', itemId: 2 },
-                    { title: 'out_exhibit_id', dataIndex: '条码', overflow: true, itemId: 11 },
+                    { title: 'out_exhibit_id', dataIndex: '条形码', overflow: true, itemId: 11 },
                     { title: 'case_take_user_name', dataIndex: '承办人', itemId: 3 },
                     { title: 'refuse_type_name', dataIndex: '退查类型', itemId: 4 },
                     { title: 'mark', dataIndex: '退查原因', itemId: 5 },

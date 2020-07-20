@@ -108,6 +108,10 @@ const exhibit = {
     //新增案卷信息(13-18)
     addExhibitDataOld(data){
         return request({ url: '/exhibit/exhibit/addOld', method: 'post', data })
+    },
+    //  绑定已受理案件信息
+    attachExhibitToShouliCase(data){
+        return request({ url: '/exhibit/exhibit/attachExhibitToShouliCase', method: 'post', data })
     }
 }
 export default exhibit

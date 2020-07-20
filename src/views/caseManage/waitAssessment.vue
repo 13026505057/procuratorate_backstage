@@ -1,6 +1,6 @@
 <template>
     <div class="wait-content">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" 
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'case'" @comfirmSearch="comfirmSearch" 
             @receivedAddress="receivedAddress" @exportExcelFun="openExportExcelFun" :exportExcelBtn="true"/>
         <div class="head-tab">
             <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -64,7 +64,6 @@
         data()  {
             return  {
                 addSearch: [
-                    { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
                     { dom: 'anguan_pingcha_chaoqi', value: '',placeholder: '评查是否超期', itemId: 6, name: 'select' },
                 ],
                 selectOption:{
@@ -81,6 +80,7 @@
                 badgeList:[],
                 tableItems:[
                     {label: "统一受案号", prop: "case_bh", tableId:1},
+                    {label: "部门受案号", prop: "bmsah", tableId:9},
                     {label: "案件名称", prop: "case_name", tableId:2},
                     {label: "案件类型", prop: "case_type_name", tableId:3},
                     {label: "案件状态", prop: "stock_status", tableId:4},

@@ -1,6 +1,6 @@
 <template>
     <div class="unCompleted-content">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" 
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'case'" @comfirmSearch="comfirmSearch" 
         @receivedAddress="receivedAddress" @exportExcelFun="openExportExcelFun" :exportExcelBtn="true"/>
         <div class="head-tab">
             <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -103,15 +103,6 @@
                                     </span>
                                 </template>
                             </el-table-column>
-                            
-                            <el-table-column
-                                width="100"
-                                align="center"
-                                label="操作">
-                                <template slot-scope="{ row }">
-                                    <el-button @click="reprintClick(row.exhibit_id)" :disabled="disabled2" :loading="disabled2" class="highlight-btn" size="small">补打条码</el-button>
-                                </template>
-                            </el-table-column>
                         </el-table>
                     </div>
                     <DialogPagin ref="dialogTablePagin" :tableData="tableData1_temporary" @dialogTablePagin="dialogTablePagin"/>
@@ -133,9 +124,7 @@
         },
         data()  {
             return  {
-                addSearch: [
-                    { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
-                ],
+                addSearch: [],
                 selectOption:{
                     
                 },
@@ -145,6 +134,7 @@
                 badgeList:[],
                 tableItems:[
                     {label: "统一受案号", prop: "case_bh", tableId:1},
+                    {label: "部门受案号", prop: "bmsah", tableId:4},
                     {label: "案件名称", prop: "case_name", tableId:2},
                     {label: "案件类型", prop: "case_type_name", tableId:3},
                     {label: "案件描述", prop: "case_desc", overflow: true, tableId:6},
@@ -262,14 +252,6 @@
             comfirmSearch(data){
                 this.$nextTick(()=>{ for(let key in data) { this.seatchData[key] = data[key] } })
                 this.getCaseType(this.seatchData);
-            },
-            // 补打条码
-            async reprintClick(exhibit_id){
-                this.disabled2 = true;
-                setTimeout(()=>{ this.disabled2 = false; },2000)
-                const resultData = await this.$api.printAgain({exhibit_id});
-                if(resultData && resultData.code == '0') this.$message.success('已发送打印请求');
-                this.getCaseType(this.seatchData)
             },
              // 导出
             openExportExcelFun(data){

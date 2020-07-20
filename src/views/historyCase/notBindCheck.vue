@@ -1,7 +1,7 @@
 <template>
     <div class="notBindCheckPage">
         <div class="bindCheckBox binf_left">
-            <ExportSearch :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @exportDataInfo="exportDataInfo_left"
+            <Search :addSearch="addSearch_left" :selectOption="selectOption" :resetData="true" @exportDataInfo="exportDataInfo_left"
                 @comfirmSearch="comfirmSearch_left" @receivedAddress="receivedAddress_left"/>
             <div class="head-tab">
                 <div class="table-dataList" >
@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="bindCheckBox">
-            <ExportSearch :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @exportDataInfo="exportDataInfo_right"
+            <Search :addSearch="addSearch_right" :selectOption="selectOption" :resetData="true" @exportDataInfo="exportDataInfo_right"
                 @comfirmSearch="comfirmSearch_right" @receivedAddress="receivedAddress_right"/>
             <div class="head-tab">
                 <div class="table-dataList" >
@@ -55,22 +55,32 @@
     </div>
 </template>
 <script>
-    import ExportSearch from '@/components/Search/exportSearch'
+    import Search from '@/components/Search'
     import { mapGetters } from 'vuex'
     export default {
-        components: { ExportSearch },
+        components: { Search },
         computed :{
             ...mapGetters(['stock_status','base_url'])
         },
         data()  {
             return  {
-                addSearch: [],
+                addSearch_left: [
+                    { dom: 'nd', value: '', placeholder: '请选择年份', itemId: 1, name: 'dataPicker' },
+                    { dom: 'exhibit_name', value: '', placeholder: '请输入案卷名称', itemId: 2, name: 'input' },
+                    { dom: 'bgr', value: '', placeholder: '被告人', itemId: 3, name: 'input' },
+                    { dom: 'cbr', value: '', placeholder: '承办人', itemId: 5, name: 'input' },
+                    { dom: 'out_exhibit_id', value: '', placeholder: '请扫描条形码号', itemId: 4, name: 'input' },
+                ],
+                addSearch_right: [
+                    { dom: 'tysah', value: '', placeholder: '请输入统一受案号', itemId: 1, name: 'input' },
+                    { dom: 'bmsah', value: '', placeholder: '请输入部门受案号', itemId: 2, name: 'input' },
+                    { dom: 'case_name', value: '', placeholder: '请输入案件名', itemId: 3, name: 'input' },
+                    { dom: 'case_take_user_name', value: '', placeholder: '请输入承办人', itemId: 4, name: 'input' },
+                ],
                 selectOption: {},
-
                 pagination_left: {
                     pageNum: 1,
                     pageSize: 10,
-                    timeYear: '',
                 },
                 showModel_left: {
                     tableData:[],   // 数据信息
@@ -88,7 +98,6 @@
                 pagination_right: {
                     pageNum: 1,
                     pageSize: 10,
-                    timeYear: '',
                 },
                 showModel_right: {
                     tableData:[],   // 数据信息

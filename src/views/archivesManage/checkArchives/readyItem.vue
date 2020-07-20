@@ -1,6 +1,6 @@
 <template>
     <div class="readyItemPage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'case_sl'" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
@@ -149,16 +149,10 @@
                 pagination: {
                     pageNum: 1,
                     pageSize: 10,
-                    case_name: '',
-                    case_bh: '',
-                    timeYear: '',
-                    case_take_user_name: '',
                 },
                 loadingTable: false,
                 loadingTable_print: false,
-                addSearch: [
-                    { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
-                ],
+                addSearch: [],
                 selectOption: {},
                 showModel: {
                     activeNameTab: "0",
@@ -396,7 +390,7 @@
             receivedItem(bmsah,case_bh){
                 this.showModel.dialogReceivedVisible = true;
                 this.showModel.submiteModel = false;
-                this.showModel.dialogReceivedTitle = '接收案件'
+                this.showModel.dialogReceivedTitle = '接收案卷'
                 this.resetSubmitInfo();
                 this.submitDataInfo.bmsah = bmsah;
                 this.getCasesBgrName(case_bh)

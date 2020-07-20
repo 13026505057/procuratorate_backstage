@@ -1,6 +1,6 @@
 <template>
     <div class="beforeHandItemPage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" 
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'exhibit'" @comfirmSearch="comfirmSearch" 
             @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
@@ -143,11 +143,6 @@
                 },
                 loadingTable: false,
                 addSearch: [
-                    { dom: 'tysah', value: '',placeholder: '请输入统一受案号', itemId: 1, name: 'input' },
-                    { dom: 'out_exhibit_id', value: '',placeholder: '请扫描案卷条码', itemId: 2, name: 'input' },
-                    { dom: 'exhibit_name', value: '',placeholder: '请输入案件名', itemId: 3, name: 'input' },
-                    { dom: 'nd', value: '',placeholder: '选择年份', itemId: 4, name: 'dataPicker' },
-                    { dom: 'cbr', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
                     { dom: 'stock_status', value: '',placeholder: '是否入库', itemId: 6, name: 'select' },
                 ],
                 selectOption: {
@@ -160,9 +155,9 @@
                 showModel: {
                     activeNameTab: "0",
                     tableList:[
-                        { case_type_id: '0', case_type_name: '案件预入库', couNum: 0 },
-                        { case_type_id: '1', case_type_name: '未办结(点击办结按钮)', couNum: 0 },
-                        { case_type_id: '2', case_type_name: '未办结(未点击办结按钮)', couNum: 0 },
+                        { case_type_id: '0', case_type_name: '案卷预入库', couNum: 0 },
+                        // { case_type_id: '1', case_type_name: '未办结案件(点击办结按钮)', couNum: 0 },
+                        // { case_type_id: '2', case_type_name: '未办结案件(未点击办结按钮)', couNum: 0 },
                     ],
                     tableData:[],   // 数据信息
                     tableData_clickBtn:[],   // 数据信息
@@ -352,12 +347,8 @@
             // 确认搜索
             comfirmSearch(data){
                 this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] }  })
-                let mapRequestFun = {
-                    "0": "getTableList",
-                    "1": "getTableList_clickBtn",
-                    "2": "getTableList_unClickBtn",
-                }
-                this[mapRequestFun[this.showModel.activeNameTab]](this.pagination)
+                let mapRequestFun = ['getTableList','getTableList_clickBtn','getTableList_unClickBtn']
+                mapRequestFun.map(item=> this[item](this.pagination) )
             },
             async addCaseItem(){
                 this.resetSubmitInfo();

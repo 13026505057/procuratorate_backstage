@@ -1,6 +1,6 @@
 <template>
     <div class="unStandardPage">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" 
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'case_sl'" @comfirmSearch="comfirmSearch" 
             @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun" />
         <div class="head-tab">
             <div class="table-dataList" >
@@ -42,26 +42,13 @@
             return  {
                 pagination: {
                     pageNum: 1,
-                    pageSize: 10,
-                    case_name: '',
-                    case_zm: '',
-                    case_bh: '',
-                    timeYear: '',
-                    case_take_user_name: '',
-                    case_type_id: '',
+                    pageSize: 10
                 },
                 setDynamicBtn: [
                     { title: '导出', fun: 'exprotFun' }
                 ],
                 loadingTable: false,
-                addSearch: [
-                    { dom: 'case_bh', value: '', placeholder: '统一受案号', itemId: 0, name: 'input' },
-                    { dom: 'bmsah', value: '', placeholder: '部门受案号', itemId: -1, name: 'input' },
-                    { dom: 'case_name', value: '', placeholder: '请输入案卷名称', itemId: 1, name: 'input' },
-                    { dom: 'bgr', value: '', placeholder: '请输入嫌疑人', itemId: 2, name: 'input' },
-                    { dom: 'timeYear', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
-                    { dom: 'case_take_user_name', value: '',placeholder: '请输入承办人', itemId: 5, name: 'input' },
-                ],
+                addSearch: [],
                 selectOption: {},
                 showModel: {
                     activeNameTab: "0",
@@ -123,7 +110,7 @@
             // 导出
             openExportExcelFun(data){
                 this.$nextTick(()=>{
-                    // window.open(this.base_url+'/?'+exportExcelFun(data))
+                    window.open(this.base_url+'/cases/casesShouli/exportBuGuiFanBanJie?'+exportExcelFun(data))
                 })
             },
         },

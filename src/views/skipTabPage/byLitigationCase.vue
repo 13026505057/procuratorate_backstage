@@ -34,7 +34,7 @@ export default {
         getTableList(dataInfo){
             console.log(dataInfo)
             let dataFun = {
-                "未办结案件数(件)": "shouli_weibanjie",
+                "未办结案件数(即该年未办结案件数)": "shouli_weibanjie",
                 "未归档案件数(件)": "shouli_weiguidang",
             }
             this[dataFun[dataInfo.type]](dataInfo)

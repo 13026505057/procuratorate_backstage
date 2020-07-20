@@ -118,7 +118,7 @@
             // 跳转到指定页面
             skipDetail(row, column){
                 let skipPageData = {
-                   "未办结案件数(件)": "/skipTabPage/byLitigationCase",
+                   "未办结案件数(即该年未办结案件数)": "/skipTabPage/byLitigationCase",
                    "未归档案件数(件)": "/skipTabPage/byLitigationCase"
                 }
                 if(skipPageData[column.label]) {

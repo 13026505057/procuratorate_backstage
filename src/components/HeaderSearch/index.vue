@@ -8,7 +8,7 @@
       filterable
       default-first-option
       remote
-      placeholder="Search"
+      placeholder="请键入要访问的页面 例:首页"
       class="header-search-select"
       @change="change"
     >

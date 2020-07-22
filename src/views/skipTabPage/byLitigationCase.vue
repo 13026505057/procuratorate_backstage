@@ -33,11 +33,7 @@ export default {
         // 获取案件列表
         getTableList(dataInfo){
             console.log(dataInfo)
-            let dataFun = {
-                "未办结案件数(即该年未办结案件数)": "shouli_weibanjie",
-                "未归档案件数(件)": "shouli_weiguidang",
-            }
-            this[dataFun[dataInfo.type]](dataInfo)
+            this[dataInfo.type](dataInfo)
         },
         // 获取受理未归档案件列表
         async shouli_weibanjie(dataInfo){

@@ -3,7 +3,7 @@
         <div class="searchInfo">
             <div class="searchItem" v-for="item in searchList" :key="item.itemId">
                 <template v-if="item.name == 'daterange_begin'">
-                    办结区间：  <el-date-picker v-model="seatchData[item.dom]" type="datetime" :placeholder="item.placeholder" 
+                    <el-date-picker v-model="seatchData[item.dom]" type="datetime" :placeholder="item.placeholder" 
                         value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptions"></el-date-picker>
                 </template>
                 <template v-else-if="item.name == 'daterange_end'">
@@ -20,7 +20,7 @@
                     <el-table-column align="center" label="序号" width="60" type="index"></el-table-column>
                     <el-table-column align="center" v-for="tableItem in tableItems" :prop="tableItem.prop"
                         :label="tableItem.label" :key="tableItem.label">
-                        <el-table-column :label="itemChild.label"
+                        <el-table-column :label="itemChild.label" :prop="itemChild.prop"
                             align="center" v-for="itemChild in tableItem.children" :key="itemChild.label">
                             <template slot-scope="{ row }">
                                 <div>
@@ -31,6 +31,13 @@
                         </el-table-column>
                     </el-table-column>
                 </el-table>
+            </div>
+            <div class="noteInfo">
+                <div v-for="item in noteInfoList" :key="item.itemId" class="noteInfoBox">
+                    <span class="noteInfoCaption">{{ item.captionTiele }}</span>
+                    <li class="noteInfoItem" v-for="itemChild in item.children" 
+                        :key="itemChild.itemId">{{ itemChild.title }}</li>
+                </div>
             </div>
         </div>
     </div>
@@ -45,22 +52,22 @@
         data()  {
             return  {
                 searchList: [
-                    { dom: 'over_time_begin', placeholder: '开始时间', itemId: 4, name: 'daterange_begin' },
-                    { dom: 'over_time_end', placeholder: '结束时间', itemId: -4, name: 'daterange_end' },
+                    { dom: 'slrq_begin', placeholder: '开始时间', itemId: 4, name: 'daterange_begin' },
+                    { dom: 'slrq_end', placeholder: '结束时间', itemId: -4, name: 'daterange_end' },
                 ],
                 tableData:[],
                 tableItems:[
                     {label: "单位", prop: "org_name"},
-                    {   label: `${new Date().getFullYear()}年受理的案件`, prop: "propTemporary",
+                    {   label: '受理的案件', prop: "propTemporary",
                         children: [
-                            { label: "应归档案件数(即该年受理数)", prop: "yingguidang" },
-                            { label: "已办结案件数(即该区间办结数) A1", prop: "shouli_banjie" },
-                            { label: "未办结案件数(即该年未办结案件数)", prop: "shouli_weibanjie", skip: true },
+                            { label: "应归案件数(件)", prop: "yingguidang" },
+                            { label: "已办结案件数(件) A1", prop: "shouli_banjie" },
+                            { label: "未办结案件数(件)", prop: "shouli_weibanjie", skip: true },
                             { label: "已归档案件数(件) B1", prop: "shouli_yiguidang" },
                             { label: "未归档案件数(件)", prop: "shouli_weiguidang", skip: true },
                         ]
                     },
-                    {   label: `历史案件数(${new Date().getFullYear()}年之前受理，于当前时间段办结)`, prop: "propTemporary",
+                    {   label: '历史案件数(之前受理，于当前时间段办结)', prop: "propTemporary",
                         children: [
                             { label: "已办结案件数(件) A2", prop: "lishi_yibanjie" },
                             { label: "已归档案件数(件) B2", prop: "lishi_yiguidang" },
@@ -76,8 +83,8 @@
                     color: '#2c2c2c'
                 },
                 seatchData: {
-                    over_time_begin: '' || `${new Date().getFullYear()}-01-01 00:00:00`,
-                    over_time_end: '' || `${parseTime(new Date())}`
+                    slrq_begin: '' || `${new Date().getFullYear()}-01-01 00:00:00`,
+                    slrq_end: '' || `${parseTime(new Date())}`
                 },
                 isLoading:false,
                 pickerOptions: {
@@ -85,6 +92,25 @@
                         return time.getFullYear() >= new Date().getFullYear()+1
                     }
                 },
+                noteInfoList: [
+                    {   captionTiele: '一、受理的案件数据',
+                        children: [
+                            { title: '1、应归案件数：符合省院下发的案件归档范围的，所选定时间段内受理的案件数（含办结、未办结）.应归=已办结+未办结' },
+                            { title: '2、已办结案件数:等于受理且办结的案件总数。已办结=已归数+未归数。' },
+                            { title: '3、未办结案件数:等于受理且未办结的案件总数。' },
+                            { title: '4、归档案件数：等于受理、办结且归档的案件总数。' },
+                            { title: '5、未归档案件数：=已办结数-已归数。' },
+                        ]
+                    },
+                    {   captionTiele: '二、历史数据',
+                        children: [
+                            { title: '6、已办结案件数:等于所选定时间段内前受理，但于所选定时间段内内办结的案件总数。' },
+                            { title: '7、归档案件数：等于所选定时间段前受理，但于所选定时间段内办结且归档的案件总数。' },
+                            { title: '8、归档率（%）：等于已归档数之和/已办结数之和，小数点保留2位。' },
+                            { title: '9、排名：本地区排名。' },
+                        ]
+                    },
+                ]
             }
         },
         mounted(){
@@ -101,13 +127,13 @@
                 }
             },
             comfirmSearch(){
-                let switch_begin = Boolean(this.seatchData.over_time_begin)
-                let switch_end = Boolean(this.seatchData.over_time_end)
+                let switch_begin = Boolean(this.seatchData.slrq_begin)
+                let switch_end = Boolean(this.seatchData.slrq_end)
                 let resultData = [
-                    { dom: 'over_time_begin', search: Boolean(this.seatchData.over_time_begin), message: '开始时间不能为空' },
-                    { dom: 'over_time_end', search: Boolean(this.seatchData.over_time_end), message: '结束时间不能为空' },
+                    { dom: 'slrq_begin', search: Boolean(this.seatchData.slrq_begin), message: '开始时间不能为空' },
+                    { dom: 'slrq_end', search: Boolean(this.seatchData.slrq_end), message: '结束时间不能为空' },
                 ]
-                resultData.map(item=>{
+                resultData.map((item,index)=>{
                     if(!item.search) this.$message.info(item.message)
                 })
                 if(switch_begin && switch_end) this.getDataList(this.seatchData)
@@ -118,13 +144,13 @@
             // 跳转到指定页面
             skipDetail(row, column){
                 let skipPageData = {
-                   "未办结案件数(即该年未办结案件数)": "/skipTabPage/byLitigationCase",
-                   "未归档案件数(件)": "/skipTabPage/byLitigationCase"
+                   "shouli_weibanjie": "/skipTabPage/byLitigationCase",
+                   "shouli_weiguidang": "/skipTabPage/byLitigationCase"
                 }
-                if(skipPageData[column.label]) {
+                if(skipPageData[column.property]) {
                     const { href } = Router.resolve({
-                        path: skipPageData[column.label],
-                        query: { ...this.seatchData,org_id: row['org_id'],type: column.label }
+                        path: skipPageData[column.property],
+                        query: { ...this.seatchData,org_id: row['org_id'],type: column.property }
                     });
                     window.open(href, '_blank');
                 }
@@ -151,23 +177,18 @@
                     background-color: #d1d1d1;
                 }
             }
-            .tab-pane-position {
-                position: relative;
-            }
-            .tab-badge-num{
-                position: absolute;
-                top: -2px;
-            }
-            .customClass{
-                // background-color: #47ccff;
-            }
-            .step-flex{
-                display: flex;
-                justify-content: center;
-                overflow-y: auto;
-            }
-            .dialog-footer button{
-                margin: 0 60px;
+            .noteInfo{
+                .noteInfoBox{
+                    margin: 10px;
+                    .noteInfoCaption{
+                        margin-bottom: 5px;
+                        display: inline-block;
+                        font-weight: 600;
+                    }
+                    .noteInfoItem{
+                        list-style: none;
+                }
+                }
             }
         }
     }

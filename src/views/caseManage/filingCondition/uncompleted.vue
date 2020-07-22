@@ -54,7 +54,7 @@
                 <span>
                     <div class="table-dataList" >
                         <el-table v-loading="tableLoading1" :data="tableData1" :header-cell-style="headerRowStyle" border
-                            row-key="exhibit_id" style="width: 100%" @row-click="cellClick">
+                            row-key="exhibit_id" style="width: 100%">
                             <el-table-column align="center" type="index"></el-table-column>
                             <el-table-column
                                 :show-overflow-tooltip="tableItem.overflow" align="center"
@@ -108,7 +108,7 @@
                 badgeList:[],
                 tableItems:[
                     {label: "统一受案号", prop: "case_bh", tableId:1},
-                    {label: "部门受案号", prop: "bmsah", tableId:11},
+                    {label: "部门受案号", prop: "bmsah", tableId:12},
                     {label: "案件名称", prop: "case_name", tableId:2},
                     {label: "案件类型", prop: "case_type_name", tableId:3},
                     // {label: "案件状态", prop: "stock_status", tableId:4},
@@ -178,43 +178,27 @@
             }
         },
         mounted(){
-            // console.log(this.case_type_origin)
             this.getCaseType(this.seatchData);
         },
         methods: {
             receivedAddress(data){
                 Object.keys(data).map(item=> this.seatchData[item] = data[item] )
             },
-            // 分类&&角标
             getCaseType(seatchData){
-                this.getCaseTypeList()
-                this.getTableListInfo(this.case_type_origin,seatchData)
-            },
-            getCaseTypeList(){
-                this.tabItems = this.case_type_origin;
-                if (this.activeName2 != '') {
-                    this.activeName = this.activeName2
-                }else{
-                    this.activeName = this.case_type_origin[0].case_type_id;
-                }
-            },
-            getTableListInfo(res,seatchData){
-                return new Promise(async (resolve,reject)=>{
+                this.$api.getCaseType().then(async (res)=>{
+                    this.tabItems = res.data.list;
+                    if(this.activeName == '0') this.activeName = res.data.list[0].case_type_id;
                     this.getDataList(seatchData);
-                    this.getCornerMark(seatchData,res)
-                    resolve()
-                })
-            },
-            async getCornerMark(dataInfo,arr){
-                const resultData = await this.$api.getCornerMarkType(dataInfo);
-                this.badgeList = resultData.data;
-                Object.keys(resultData.data).map(item=>{
-                    arr.map((itemChild,index)=>{
-                        // console.log(item,"_"+itemChild.case_type_id)
-                        if("_"+itemChild.case_type_id == item) {
-                            itemChild.contNum = resultData.data[item]
-                            this.$set(this.tabItems[index],index,itemChild)
-                        }
+                    const resultData = await this.$api.getCornerMarkType(seatchData);
+                    this.badgeList = resultData.data;
+                    Object.keys(resultData.data).map(item=>{
+                        res.data.list.map((itemChild,index)=>{
+                            // console.log(item,"_"+itemChild.case_type_id)
+                            if("_"+itemChild.case_type_id == item) {
+                                itemChild.contNum = resultData.data[item]
+                                this.$set(this.tabItems[index],index,itemChild)
+                            }
+                        })
                     })
                 })
             },
@@ -252,9 +236,6 @@
             },
             headerRowStyle({row, rowIndex}){ 
                 return this.headStyle
-            },
-            cellClick(row, event, column){
-                console.log(row, event, column)
             },
             // 标签页
             handleClick(tab, event) {

@@ -41,7 +41,7 @@
         </div>
         <div class="searchItem" v-if="hiddenAdress">
             <template v-if="org_list && org_list[0].level !== 'area'">
-                <el-cascader ref="treeOrg" placeholder="试试搜索：青岛市" v-model="selectOrgId" :options="org_list" 
+                <el-cascader ref="treeOrg" class="demonstration" placeholder="试试搜索：青岛市" v-model="selectOrgId" :options="org_list" 
                     :props="{ checkStrictly: true }" filterable clearable></el-cascader>
             </template>
         </div>
@@ -86,8 +86,10 @@ export default {
                 { dom: 'bgr', value: '', placeholder: '请输入嫌疑人', itemId: 2, name: 'input' },
                 { dom: 'case_take_user_name', value: '', placeholder: '请输入承办人', itemId: -2, name: 'input' },
                 { dom: 'timeYear', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
-                { dom: 'over_time_begin', value: '',placeholder: '开始时间', itemId: 4, name: 'daterange_begin' },
-                { dom: 'over_time_end', value: '',placeholder: '结束时间', itemId: -4, name: 'daterange_end' },
+                { dom: 'over_time_begin', value: '',placeholder: '办结开始时间', itemId: 4, name: 'daterange_begin' },
+                { dom: 'over_time_end', value: '',placeholder: '办结结束时间', itemId: -4, name: 'daterange_end' },
+                { dom: 'slrq_begin', value: '',placeholder: '受理开始时间', itemId: -5, name: 'daterange_begin' },
+                { dom: 'slrq_end', value: '',placeholder: '受理结束时间', itemId: -6, name: 'daterange_end' },
             ],
             searchList_case_sl: [
                 { dom: 'case_bh', value: '', placeholder: '统一受案号', itemId: 0, name: 'input' },
@@ -95,8 +97,10 @@ export default {
                 { dom: 'case_name', value: '', placeholder: '请输入案件名称', itemId: 1, name: 'input' },
                 { dom: 'case_take_user_name', value: '', placeholder: '请输入承办人', itemId: -2, name: 'input' },
                 { dom: 'timeYear', value: '', placeholder: '请选择年份', itemId: 3, name: 'dataPicker' },
-                { dom: 'over_time_begin', value: '',placeholder: '开始时间', itemId: 4, name: 'daterange_begin' },
-                { dom: 'over_time_end', value: '',placeholder: '结束时间', itemId: -4, name: 'daterange_end' },
+                { dom: 'over_time_begin', value: '',placeholder: '办结开始时间', itemId: 4, name: 'daterange_begin' },
+                { dom: 'over_time_end', value: '',placeholder: '办结结束时间', itemId: -4, name: 'daterange_end' },
+                { dom: 'slrq_begin', value: '',placeholder: '受理开始时间', itemId: -5, name: 'daterange_begin' },
+                { dom: 'slrq_end', value: '',placeholder: '受理结束时间', itemId: -6, name: 'daterange_end' },
             ],
             searchList_exhibit: [
                 { dom: 'tysah', value: '', placeholder: '统一受案号', itemId: 0, name: 'input' },
@@ -180,7 +184,7 @@ export default {
     }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scope>
     .searchInfo{
         border: 1px solid #8fcbff;
         background-color: #eaf5ff;
@@ -197,12 +201,27 @@ export default {
                     border: 0;
                 }
             }
-            // input{
-            //     width: 190px;
-            // }
         }
         .el-button:hover, .el-button:focus {
             color: #ffffff;
         }
+        
     }
+    .el-popper.el-cascader__dropdown{
+            .el-cascader-node>.el-radio{
+                width: calc(100% - 20px);
+                /* border: 0; */
+                position: absolute;
+                flex: 1;
+                height: 100%;
+                padding: 0 10px;
+            }
+            .el-radio__inner{
+                border: 0;
+                background: transparent;
+            }
+            .el-radio__inner::after{
+                background-color: transparent;
+            }
+        }
 </style>

@@ -217,8 +217,11 @@
                     case_name: [
                         { required: true, message: '请输入案件名称', trigger: 'blur' }
                     ],
-                    tysah: [
-                        { required: true, message: '请输入统一受案号', trigger: 'blur' }
+                    case_take_user_name: [
+                        { required: true, message: '请输入承办人', trigger: 'blur' }
+                    ],
+                    case_type_id: [
+                        { required: true, message: '请选择案件类型', trigger: 'blur' }
                     ]
                 },
                 setDynamicBtn: [

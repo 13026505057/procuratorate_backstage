@@ -5,8 +5,8 @@
             <el-radio-group v-model="exhibit_type" class="scan-select">
                 <el-radio v-for="exhibitItem in exhibitType" :key="exhibitItem.exhibit_type_id" :label="exhibitItem.exhibit_type_code">{{exhibitItem.exhibit_type_name}}</el-radio>
             </el-radio-group>
-            <el-input class="scan-input" v-model="stockNum" ref="stockNumRef" @change="stockNumChange" placeholder="扫描货架码"></el-input>
-            <el-input class="scan-input" v-model="exhibitNum" ref="exhibitNumRef" @change="exhibitNumChange" placeholder="扫描案卷码"></el-input>
+            <el-input class="scan-input" v-model="stockNum" ref="stockNumRef" @change="stockNumChange" :disabled="inpDisabled" placeholder="扫描货架码"></el-input>
+            <el-input class="scan-input" v-model="exhibitNum" ref="exhibitNumRef" @change="exhibitNumChange" :disabled="inpDisabled" placeholder="扫描案卷码"></el-input>
             <span class="head-text">先扫描货架码，光标自动移动到案卷码位置后在扫描案卷码,每次入库操作都会记录在下方</span>
         </div>
         <Search style="margin-top:10px;" :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
@@ -117,6 +117,7 @@
                     { title: 'cell_name', dataIndex: '存放位置', itemId: 10 },
                     { title: 'stock_log_time', dataIndex: '操作时间', itemId: 11 },
                 ],
+                inpDisabled:false,
             }
            
         },
@@ -183,6 +184,7 @@
             },
             //卷宗号扫码枪扫描后处理
             exhibitNumChange(data){
+                this.inpDisabled = true;
                 this.exhibitNum = data;
                 // 默认数据列表
                 this.getIds();
@@ -214,6 +216,8 @@
                         // });
                         // this.exhibitNum = "";
                         // this.getFocus('exhibitNumRef');
+                    }else{
+                        this.inpDisabled = false;
                     }
             },
             async exhibitIn(){
@@ -228,9 +232,12 @@
                             message: '入库成功',
                             type: 'success'
                         });
+                        this.inpDisabled = false;
                         this.getExhibitInLog(this.pagination);
                         this.exhibitNum = "";
                         this.getFocus2();
+                    }else{
+                        this.inpDisabled = false;
                     }
             },
             receivedAddress(data){

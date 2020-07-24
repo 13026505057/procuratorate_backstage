@@ -42,6 +42,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { exportExcelFun } from '@/utils/auth'
 import Search from '@/components/Search'
 import { getToken } from '@/utils/auth'
 export default {
@@ -127,6 +128,7 @@ export default {
     },
     // 导出 
     openExportExcelFun(data){
+        console.log(data)
         this.$nextTick(()=>{
             window.open(this.base_url+'/exhibit/exhibit/exoprtExhibits?'+exportExcelFun(data))
         })

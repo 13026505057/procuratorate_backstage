@@ -36,6 +36,9 @@ const setting = {
     getDepartmentList(data) {
         return request({ url: '/dept/getByPage', method: 'post', data })
     },
+    getDepartmentAllList(data) {
+        return request({ url: '/dept/get', method: 'post', data })
+    },
     addDepartment(data) {
         return request({ url: '/dept/add', method: 'post', data })
     },
@@ -104,10 +107,14 @@ const setting = {
     getPrintList(data){
         return request({ url: '/orgPrintGetByPage', method: 'post', data })
     },
-    //获取打印机
+    //添加打印机
     addPrint(data){
         return request({ url: '/orgPrintAdd', method: 'post', data })
-    }
+    },
+    //更新柜子存储位置
+    updateOldCellToNewCell(data){
+        return request({ url: '/stock/stock/updateOldCellToNewCell', method: 'post', data })
+    },
     
 
 }

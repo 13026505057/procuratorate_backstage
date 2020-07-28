@@ -11,7 +11,8 @@ const getDefaultState = () => {
     org_list: [],
     user_true_name: '',
     roles: [],
-    address_id: {}
+    address_id: {},
+    depList: []
   }
 }
 const state = getDefaultState()
@@ -44,7 +45,9 @@ const mutations = {
   SET_ORG_ADDRESS_ID: (state, address_id) => {
     state.address_id = address_id
   },
-  
+  SET_DEP_LIST: (state, depList) => {
+    state.depList = depList
+  },
 }
 // 递归获取机构列表
 const filtersOrgData = (list,resData,byself) =>{
@@ -77,7 +80,7 @@ const actions = {
     commit('SET_ROLES', roles)
   },
   // get user info
-  getInfo({ commit }) {
+  getInfo({ commit,dispatch }) {
     return new Promise((resolve, reject) => {
       api.getInfo().then(response => {
         const { data } = response
@@ -103,6 +106,8 @@ const actions = {
         commit('SET_USER_ID', user_id)
         commit('SET_ORG_ID', org_id)
         commit('SET_ORG_ADDRESS_ID', { province_id, city_id, area_id })
+
+        dispatch('getDeptList',org_id)
         resolve(roles)
       }).catch(error => {
         reject(error)
@@ -115,6 +120,20 @@ const actions = {
         let data = filtersOrgData(resultData.data,[])
         
         commit('SET_ORG_LIST', data)
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getDeptList({commit},org_id){
+    return new Promise((resolve, reject) =>{
+      api.getDepartmentAllList({org_id}).then(resultData=>{
+        let data = []
+        resultData.data.map(item=>{
+          data.push({ value: item.dept_id, label: item.dept_name })
+        })
+        commit('SET_DEP_LIST', data)
         resolve(data)
       }).catch(error => {
         reject(error)

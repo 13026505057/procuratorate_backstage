@@ -1,6 +1,5 @@
 <template>
     <div class="historicalCasesPage">
-        <!-- <DynamicSearch  @comfirmSearch="comfirmSearch"/> -->
         <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'case'" @comfirmSearch="comfirmSearch"
             :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun" @exportExcelFun="openExportExcelFun" />
         <div class="head-tab">
@@ -82,7 +81,7 @@
             </span>
         </el-dialog>
         <!-- 新增案件 -->
-        <el-dialog v-dialogDrag title="新增案件" :visible.sync="showModel.dialogAddCaseVisible" @close="resetSubmitInfo">
+        <el-dialog v-dialogDrag title="新增案件" :visible.sync="showModel.dialogAddCaseVisible" @close="resetSubmitInfo_case">
             <el-form :model="submitDataInfo_case" :rules="rules_addCase" ref="ruleForm" label-width="20%" class="demo-ruleForm">
                 <template v-for="item in eachDataInfoList_case">
                     <el-form-item :label="item.captionTitle" :prop="item.dom">
@@ -110,7 +109,7 @@
     export default {
         components: { Search,DialogPagin },
         computed :{
-            ...mapGetters(['exhibit_type','exhibit_time_bg','case_type','base_url'])
+            ...mapGetters(['exhibit_type','exhibit_time_bg','case_type','base_url','depList'])
         },
         filters: {
             mapStatus(status){
@@ -162,7 +161,8 @@
                     dialogAddCaseVisible: false,
                     exhibit_type: [],
                     bgqx: [],
-                    case_type_id: []
+                    case_type_id: [],
+                    dept_id: []
                 },
                 // table表头
                 columns: [
@@ -204,14 +204,16 @@
                     bmsah: '',
                     case_type_id: '',
                     case_take_user_name: '',
+                    dept_id: ''
                 },
                 eachDataInfoList_case: [
-                    { captionTitle: '案件名称', placeholder: '请输入案件名称', dom: 'case_name', itemId: 1, type: 'input' },
                     { captionTitle: '统一受案号', placeholder: '请输入统一受案号', dom: 'tysah', itemId: 2, type: 'input' },
-                    { captionTitle: '案件描述', placeholder: '请输入案件描述', dom: 'case_desc', itemId: 3, type: 'textarea' },
-                    { captionTitle: '承办人', placeholder: '请输入承办人', dom: 'case_take_user_name', itemId: 4, type: 'input' },
                     { captionTitle: '部门受案号', placeholder: '请输入部门受案号', dom: 'bmsah', itemId: 5, type: 'input' },
-                    { captionTitle: '类型', placeholder: '请选择案件类型', dom: 'case_type_id', itemId: 11, type: 'select' },
+                    { captionTitle: '案件名称', placeholder: '请输入案件名称', dom: 'case_name', itemId: 1, type: 'input' },
+                    { captionTitle: '案件描述', placeholder: '请输入案件描述', dom: 'case_desc', itemId: 3, type: 'textarea' },
+                    { captionTitle: '案件类型', placeholder: '请选择案件类型', dom: 'case_type_id', itemId: 11, type: 'select' },
+                    { captionTitle: '承办人', placeholder: '请输入承办人', dom: 'case_take_user_name', itemId: 4, type: 'input' },
+                    { captionTitle: '承办部门', placeholder: '请选择承办部门', dom: 'dept_id', itemId: 6, type: 'select' },
                 ],
                 rules_addCase: {
                     case_name: [
@@ -222,6 +224,9 @@
                     ],
                     case_type_id: [
                         { required: true, message: '请选择案件类型', trigger: 'blur' }
+                    ],
+                    dept_id: [
+                        { required: true, message: '请选择承办部门', trigger: 'blur' }
                     ]
                 },
                 setDynamicBtn: [
@@ -257,6 +262,7 @@
                     { showModel: 'bgqx', store: 'exhibit_time_bg' },
                     { showModel: 'exhibit_type', store: 'exhibit_type' },
                     { showModel: 'case_type_id', store: 'case_type' },
+                    { showModel: 'dept_id', store: 'depList' },
                 ]
                 dataArr.map(item=> this.showModel[item.showModel] = this[item.store] )
             },

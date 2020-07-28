@@ -4,6 +4,7 @@
         <div class="search-box">
             <div>存储设备列表</div>
             <el-button @click="addUnitClick('add','')">新增设备</el-button>
+            <el-button @click="updateStorageData()">更换存储位置</el-button>
         </div>
         <div class="table-list">
             <div class="table-dataList" >
@@ -118,6 +119,21 @@
                     <el-button type="primary" @click="printVisible = false">关 闭</el-button>
                 </span>
             </el-dialog>
+            <!-- 新增案件 -->
+            <el-dialog v-dialogDrag title="更换存储位置" :visible.sync="showModel.dialogLocationVisible">
+                <el-form :model="submitDataInfo" :rules="rules_update" ref="update" label-width="20%" class="demo-ruleForm">
+                    <template v-for="item in eachDataInfoList">
+                        <el-form-item :label="item.captionTitle" :prop="item.dom">
+                            <el-cascader v-model="submitDataInfo[item.dom]" :options="showModel[item.dom]" :placeholder="item.placeholder"
+                                 v-if="item.type == 'cascader'" :props="{ emitPath: false }"></el-cascader>
+                        </el-form-item>
+                    </template>
+                    <el-form-item>
+                        <el-button @click="showModel.dialogLocationVisible = false">取 消</el-button>
+                        <el-button type="primary" @click="confirmUpdateLocation('update')">确 定</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-dialog>
         </div>
     </div>
 </template>
@@ -165,7 +181,28 @@
                 type:'',
                 position_id:'',
                 popconfirmTitle:'',
-
+                // 更换存储位置
+                showModel: {
+                    dialogLocationVisible: false,
+                    old_cell_id: [],
+                    new_cell_id: []
+                },
+                submitDataInfo: {
+                    old_cell_id: '',
+                    new_cell_id: ''
+                },
+                eachDataInfoList: [
+                    { captionTitle: '更换前的格子', placeholder: '请选择更换前的格子', dom: 'old_cell_id', itemId: 1, type: 'cascader' },
+                    { captionTitle: '更换后的格子', placeholder: '请选择更换后的柜子', dom: 'new_cell_id', itemId: 2, type: 'cascader' },
+                ],
+                rules_update: {
+                    old_cell_id: [
+                        { required: true, message: '请选择更换前的格子', trigger: 'blur' }
+                    ],
+                    new_cell_id: [
+                        { required: true, message: '请选择更换后的柜子', trigger: 'blur' }
+                    ],
+                },
             }
         },
         mounted(){
@@ -173,16 +210,45 @@
             this.getDataList();
         },
         methods: {
+            updateStorageData(){
+                this.showModel.dialogLocationVisible = true
+            },
             async getDataList(){
                 const dataInfo = {pageNum:this.currentPage1,pageSize:this.pageSize,org_id:this.stockForm.org_id}
                 const resultData = await this.$api.getStock(dataInfo);
                 if(resultData&&resultData.code == 0){
                     this.tableData = resultData.data.list;
                     this.total1 = resultData.data.total;
+                    const location = () =>{
+                        let data = []
+                        resultData.data.list.map(item=>{
+                            let dataCell = []
+                            item.cellList.map(itemChild=>{
+                                dataCell.push({value:itemChild.cell_id,label:itemChild.cell_name})
+                            })
+                            data.push({
+                                value: item.shale_id,
+                                label: item.shale_name,
+                                children: dataCell
+                            })
+                        })
+                        return data
+                    }
+                    this.showModel.old_cell_id = this.showModel.new_cell_id = location()
                 }
             },
+            async confirmUpdateLocation(formName){
+                this.$refs[formName].validate(async (valid) => {
+                    if (valid) {
+                        let resultData = await this.$api.updateOldCellToNewCell(this.submitDataInfo)
+                        if(resultData && resultData.code =='0') {
+                            this.showModel.dialogLocationVisible = false;
+                            this.$message.success('更新成功')
+                        }
+                    } else return false;
+                })
+            },
             async print(){
-                
                 if(this.printType=='shale'){
                     
                     var dataInfo = {print_type:'shale',shale_id:this.printForm.shale_id,hang:'',lie:'',org_id:this.stockForm.org_id,print_id:this.print_id}

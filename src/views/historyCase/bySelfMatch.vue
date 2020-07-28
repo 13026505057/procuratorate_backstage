@@ -6,7 +6,8 @@
                 :hiddenAdress="false"/>
             <div class="head-tab">
                 <div class="table-dataList" >
-                    <el-table :data="showModel_left.tableData" border style="width: 100%" @cell-click="selectCellItem" v-loading="dataLoading">
+                    <el-table :data="showModel_left.tableData" border highlight-current-row 
+                        style="width: 100%" @cell-click="selectCellItem" v-loading="dataLoading">
                         <el-table-column align="center" type="index"></el-table-column>
                         <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
                             v-for="item in columns_left" :key="item.itemId" align="center">

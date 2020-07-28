@@ -20,10 +20,11 @@
                                     <span v-else>{{ row[item.title] }}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column align="center" label="操作" width="200">
+                            <el-table-column align="center" label="操作" width="300">
                                 <template slot-scope="{row}">
                                     <el-button @click="deleteCancel(row.exhibit_id)" class="highlight-btn" type="operation" size="small">作废</el-button>
                                     <el-button @click="showDialogPanel({ tysah: row.tysah, case_name: row.exhibit_name, cbr: row.cbr, bgr:row.bgr },row.exhibit_id)" class="highlight-btn" size="small">绑定案件</el-button>
+                                    <el-button @click="addCaseDialogPanel({ tysah: row.tysah, bmsah: row.bmsah,case_name: row.exhibit_name, case_take_user_name: row.cbr },row.exhibit_id)" class="highlight-btn" size="small">新增案件</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -93,6 +94,25 @@
                 </el-pagination>
             </template>
         </el-dialog>
+        <!-- 新增案件 -->
+        <el-dialog v-dialogDrag title="新增案件" :visible.sync="showModel.dialogAddCaseVisible" @close="resetSubmitInfo_case">
+            <el-form :model="submitDataInfo_case" :rules="rules_addCase" ref="ruleForm" label-width="20%" class="demo-ruleForm">
+                <template v-for="item in eachDataInfoList_case">
+                    <el-form-item :label="item.captionTitle" :prop="item.dom">
+                        <el-input v-model="submitDataInfo_case[item.dom]" :placeholder="item.placeholder" v-if="item.type == 'input'"></el-input>
+                        <el-input v-model="submitDataInfo_case[item.dom]" :placeholder="item.placeholder" type="textarea" v-else-if="item.type == 'textarea'"></el-input>
+                        <el-select v-model="submitDataInfo_case[item.dom]" :placeholder="item.placeholder" v-else-if="item.type == 'select'">
+                            <el-option v-for="itemChild in showModel[item.dom]" :key="itemChild.value" 
+                                :label="itemChild.label" :value="itemChild.value"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </template>
+                <el-form-item>
+                    <el-button @click="showModel.dialogAddCaseVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="confirmAddCase('ruleForm')">确 定</el-button>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -101,7 +121,7 @@
     export default {
         components: { Search },
         computed :{
-            ...mapGetters(['exhibit_type','exhibit_time_bg','org_id'])
+            ...mapGetters(['exhibit_type','exhibit_time_bg','org_id','depList','case_type'])
         },
         data()  {
             return  {
@@ -148,6 +168,41 @@
                         { title: 'ajlb_mc', dataIndex: '案件类型', itemId: 4 },
                         { title: 'case_take_user_name', dataIndex: '承办人', itemId: 3 },
                     ],
+                    // 新增案件
+                    dialogAddCaseVisible: false,
+                    dept_id: []
+                },
+                submitDataInfo_case: {
+                    case_name: '',
+                    case_desc: '',
+                    tysah: '',
+                    bmsah: '',
+                    case_type_id: '',
+                    case_take_user_name: '',
+                    dept_id: ''
+                },
+                eachDataInfoList_case: [
+                    { captionTitle: '统一受案号', placeholder: '请输入统一受案号', dom: 'tysah', itemId: 2, type: 'input' },
+                    { captionTitle: '部门受案号', placeholder: '请输入部门受案号', dom: 'bmsah', itemId: 5, type: 'input' },
+                    { captionTitle: '案件名称', placeholder: '请输入案件名称', dom: 'case_name', itemId: 1, type: 'input' },
+                    { captionTitle: '案件描述', placeholder: '请输入案件描述', dom: 'case_desc', itemId: 3, type: 'textarea' },
+                    { captionTitle: '案件类型', placeholder: '请选择案件类型', dom: 'case_type_id', itemId: 11, type: 'select' },
+                    { captionTitle: '承办人', placeholder: '请输入承办人', dom: 'case_take_user_name', itemId: 4, type: 'input' },
+                    { captionTitle: '承办部门', placeholder: '请选择承办部门', dom: 'dept_id', itemId: 6, type: 'select' },
+                ],
+                rules_addCase: {
+                    case_name: [
+                        { required: true, message: '请输入案件名称', trigger: 'blur' }
+                    ],
+                    case_take_user_name: [
+                        { required: true, message: '请输入承办人', trigger: 'blur' }
+                    ],
+                    case_type_id: [
+                        { required: true, message: '请选择案件类型', trigger: 'blur' }
+                    ],
+                    dept_id: [
+                        { required: true, message: '请选择承办部门', trigger: 'blur' }
+                    ]
                 },
                 // table表头
                 columns: [
@@ -204,6 +259,7 @@
         mounted(){
             this.pagination_merge_ysl.org_id = this.pagination_merge_yrk.org_id = this.org_id
             this.getTableList(this.pagination)
+            this.getTypeList()
         },
         methods: {
             receivedAddress(data){
@@ -334,7 +390,36 @@
                     this.$message.success('操作成功');
                     this.getTableList(this.pagination);
                 } 
-            }
+            },
+            getTypeList(){
+                let dataArr = [
+                    { showModel: 'case_type_id', store: 'case_type' },
+                    { showModel: 'dept_id', store: 'depList' },
+                ]
+                dataArr.map(item=> this.showModel[item.showModel] = this[item.store] )
+            },
+            // 新增案件
+            addCaseDialogPanel(dataInfo,exhibit_id){
+                Object.keys(this.submitDataInfo_case).map(item=> this.submitDataInfo_case[item] = dataInfo[item] )
+                this.showModel.dialogAddCaseVisible = true
+                this.bindCaseData.exhibit_id = exhibit_id
+            },
+            //重置表单
+            resetSubmitInfo_case(){
+                for( let key in this.submitDataInfo_case){ this.submitDataInfo_case[key] = '' }
+            },
+            confirmAddCase(formName){
+                this.$refs[formName].validate(async (valid) => {
+                    if (valid) {
+                        let dataInfo = { ...this.submitDataInfo_case,case_bh: this.submitDataInfo_case.tysah }
+                        let resultData = await this.$api.addCaseItemData(dataInfo)
+                        if(resultData && resultData.code =='0') {
+                            this.bindCaseDataRequest_yrk(resultData.data.case_id)
+                            this.showModel.dialogAddCaseVisible = false;
+                        }
+                    } else return false;
+                })
+            },
         }
     }
 </script>

@@ -125,7 +125,7 @@
                     <template v-for="item in eachDataInfoList">
                         <el-form-item :label="item.captionTitle" :prop="item.dom">
                             <el-cascader v-model="submitDataInfo[item.dom]" :options="showModel[item.dom]" :placeholder="item.placeholder"
-                                 v-if="item.type == 'cascader'" :props="{ emitPath: false }"></el-cascader>
+                                 v-if="item.type == 'cascader'" :props="{ emitPath: false }" clearable></el-cascader>
                         </el-form-item>
                     </template>
                     <el-form-item>

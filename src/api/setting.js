@@ -115,7 +115,5 @@ const setting = {
     updateOldCellToNewCell(data){
         return request({ url: '/stock/stock/updateOldCellToNewCell', method: 'post', data })
     },
-    
-
 }
 export default setting

@@ -55,7 +55,7 @@
                     :hiddenAdress="false"/>
                 <div class="head-tab">
                     <div class="table-dataList" >
-                        <el-table :data="showModel_right.tableData_bottom" border style="width: 100%">
+                        <el-table :data="showModel_right.tableData_bottom" height="calc(100vh - 295px)" border style="width: 100%">
                             <el-table-column align="center" type="index"></el-table-column>
                             <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
                                 v-for="item in columns_right" :key="item.itemId" align="center">
@@ -72,15 +72,6 @@
                                 </template>
                             </el-table-column>
                         </el-table>
-                    </div>
-                    <div class="pagination">
-                        <!-- 分页 -->
-                        <el-pagination small background
-                            style="text-align: center;margin-top: 20px;padding-bottom:20px;"
-                            @current-change="handleCurrentChange_right" :current-page.sync="pagination_right.pageNum"
-                            :page-size="pagination_right.pageSize" layout="prev, pager, next, jumper"
-                            :total="pagination_right.total">
-                        </el-pagination>
                     </div>
                 </div>
             </div>
@@ -223,7 +214,7 @@
             async bindCaseForExhibit(case_id){
                 let resultData = await this.$api.attachExhibitToCase({ exhibit_id:this.exhibitTemporaryId,case_id })
                 if(resultData && resultData.code == '0') this.$message.success('操作成功')
-                this.selectCellItem({exhibit_id})
+                this.selectCellItem({exhibit_id: this.exhibitTemporaryId})
             },
             // Right
             receivedAddress_right(data){
@@ -271,13 +262,12 @@
             padding: 10px;
         }
         .right_bottom{
-            height: 70%;
-            overflow-y: auto;
+            max-height: 70%;
         }
         .head-tab{
             padding-top: 30px;
             &.right_top{
-                height: 30%;
+                max-height: 30%;
                 overflow-y: auto;
             }
             .table-dataList{

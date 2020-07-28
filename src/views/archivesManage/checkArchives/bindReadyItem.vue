@@ -15,8 +15,8 @@
                             <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
                                 v-for="item in columns" :key="item.itemId" align="center">
                                 <template slot-scope="{row}">
-                                    <span v-if="item.itemId == 6">{{ row[item.title]=='none'?'未入库':'' }}{{ row[item.title]=='in'?'已入库':'' }}</span>
-                                    <span v-else-if="item.itemId == 14">{{ row[item.title]=='SS'?'诉讼':'' }}{{ row[item.title]=='WS'?'文书':'' }}{{ row[item.title]=='JS'?'技术':'' }}</span>
+                                    <span v-if="item.itemId == 6">{{ row[item.title]=='none'?'未入库':(row[item.title]=='in'?'已入库':'') }}</span>
+                                    <span v-else-if="item.itemId == 14">{{ row[item.title] | mapStatus }}</span>
                                     <span v-else>{{ row[item.title] }}</span>
                                 </template>
                             </el-table-column>
@@ -123,6 +123,16 @@
         computed :{
             ...mapGetters(['exhibit_type','exhibit_time_bg','org_id','depList','case_type'])
         },
+        filters: {
+            mapStatus(status){
+                let mapList = {
+                    "SS": "诉讼",
+                    "WS": "文书",
+                    "JS": "技术"
+                }
+                return mapList[status]
+            }
+        },
         data()  {
             return  {
                 pagination: {
@@ -208,7 +218,6 @@
                 columns: [
                     { title: 'tysah', dataIndex: '统一受案号', itemId: 1 },
                     { title: 'exhibit_name', dataIndex: '案卷名称', itemId: 12 },
-                    { title: 'yr_cese_type_name', dataIndex: '案件类型', itemId: 16 },
                     { title: 'ay', dataIndex: '案由', itemId: 7 },
                     { title: 'bgr', dataIndex: '嫌疑人', itemId: 15 },
                     { title: 'bgqx', dataIndex: '保管期限', itemId: 13 },
@@ -216,7 +225,7 @@
                     { title: 'out_exhibit_id', dataIndex: '条形码号', itemId: 10 },
                     { title: 'dh', dataIndex: '档号', itemId: 2 },
                     { title: 'jh', dataIndex: '卷号', itemId: 8 },
-                    { title: 'case_take_user_name', dataIndex: '承办人', itemId: 11 },
+                    { title: 'cbr', dataIndex: '承办人', itemId: 11 },
                     { title: 'cell_name', dataIndex: '存储位置', itemId: 3 },
                     { title: 'nd', dataIndex: '年度', itemId: 5 },
                     { title: 'stock_status', dataIndex: '入库状态', itemId: 6 },
@@ -226,7 +235,7 @@
                     addSearch: [
                         { dom: 'tysah', value: '',placeholder: '统一受案号', itemId: 1, name: 'input' },
                         { dom: 'case_name', value: '',placeholder: '案件名称', itemId: 2, name: 'input' },
-                        { dom: 'cbr', value: '',placeholder: '承办人', itemId: 3, name: 'input' },
+                        { dom: 'case_take_user_name', value: '',placeholder: '承办人', itemId: 3, name: 'input' },
                         { dom: 'bgr', value: '',placeholder: '嫌疑人', itemId: 4, name: 'input' },
                     ],
                     selectOption: {},

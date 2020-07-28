@@ -8,8 +8,8 @@ import { getToken } from '@/utils/auth'
 // create an axios instance
 const service = axios.create({
   // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  baseURL: 'http://141.113.80.44/dossier_qd',
-  // baseURL: 'http://106.12.68.167/dossier_qd',
+  baseURL: 'http://141.113.80.45/dossier_qd',
+//   baseURL: 'http://106.12.68.167/dossier_qd',
   // baseURL: 'http://192.168.43.254:8080/dossier_qd',
   // baseURL: 'http://192.168.2.205:8081/dossier_qd',
   // baseURL: 'http://suvu2h.natappfree.cc/dossier_qd',

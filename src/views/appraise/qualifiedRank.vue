@@ -32,11 +32,16 @@
                 addSearch: [
                     { dom: 'timeYear', value: '',placeholder: '请选择年份', itemId: 6, name: 'dataPicker' },
                     { dom: 'status_case', value: ['sl'],placeholder: '请选择查询状态', itemId: 7, name: 'cascader' },
+                    { dom: 'weila_status', value: 'la_dao',placeholder: '是否包含不规范办结', itemId: 8, name: 'select' },
                 ],
                 selectOption:{ 
                     status_case: [
                         { value: 'sl', label: '按受理年度' },
                         { value: 'bj', label: '按办结年度' },
+                    ],
+                    weila_status:[
+                        { value:'la_dao', label:"不包含不规范办结",},
+                        { value:'', label:"包含不规范办结",},
                     ]
                 },
                 tableData:[],
@@ -59,7 +64,8 @@
                     case_name:'',
                     case_bh:'', //统一受案号
                     case_take_user_name:'',
-                    status_case: JSON.stringify(['sl'])
+                    status_case: JSON.stringify(['sl']),
+                    weila_status:'la_dao',
                 },
                 isLoading:false,
             }

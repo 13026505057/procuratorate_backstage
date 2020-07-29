@@ -157,7 +157,7 @@ export default {
         }, 
         comfirmSearch(){
             let dataInfo = this.resultDataInfo()
-            this.$emit('comfirmSearch',dataInfo)
+            this.$emit('comfirmSearch',{ ...dataInfo,pageNum: 1 })
         },
         resultDataInfo(){
             let dataInfo = {}

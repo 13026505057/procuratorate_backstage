@@ -41,13 +41,13 @@
                     <template slot-scope="{row}">
                         <span v-if="item.itemId == 6" :style="{'color':row[item.title]=='in'?'':'red'}">{{ row[item.title]=='in'?'已入库':'待入库' }}</span>
                         <span v-else-if="item.itemId == 7" :style="{'color':row[item.title]=='0'?'red':''}">{{ row[item.title]=='0'?'失效':'有效' }}</span>
-                        <span v-else-if="item.itemId == 8">{{ row[item.title]=='1'?'评查中':'待入库' }}</span>
                         <span v-else>{{ row[item.title] }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column align="center" label="操作">
                     <template slot-scope="{row}">
                         <el-button @click="printQrCodeAgain(row.exhibit_id)" class="highlight-btn" type="operation" size="small">补打条码</el-button>
+                        <el-button @click="deleteCancel(row.exhibit_id)" class="highlight-btn" type="operation" size="small">作废</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -99,17 +99,20 @@
                 </el-form-item>
             </el-form>
         </el-dialog>
+        <!-- 作废 -->
+        <DeleteCancel ref="deleteCancel" />
     </div>
 </template>
 <script>
     import Search from '@/components/Search'
     import DialogPagin from '@/components/DialogPagin'
+    import DeleteCancel from '@/components/DeleteCancel'
     import { exportExcelFun } from '@/utils/auth'
     import { mapGetters } from 'vuex'
     export default {
-        components: { Search,DialogPagin },
+        components: { Search,DialogPagin,DeleteCancel },
         computed :{
-            ...mapGetters(['exhibit_type','exhibit_time_bg','case_type','base_url','depList'])
+            ...mapGetters(['exhibit_type','exhibit_time_bg','case_type','base_url','depList','print_id'])
         },
         filters: {
             mapStatus(status){
@@ -255,6 +258,11 @@
             dialogTablePagin(data){
                 this.showModel.gridData = data
             },
+            // 作废
+            deleteCancel(exhibit_id){
+                this.$refs.deleteCancel.openDeleteDialog(exhibit_id)
+                // this.showModel.dialogTableVisible = false;
+            },
             getTypeList(){
                 let dataArr = [
                     { showModel: 'selectOption_time', store: 'exhibit_time_bg' },
@@ -270,7 +278,7 @@
             async getTableList(dataInfo){
                 this.loadingTable = true;
                 this.showModel.dialogTableVisible = false;
-                this.showModel.dialogReceivedVisible = false;
+                // this.showModel.dialogReceivedVisible = false;
                 this.showModel.dialogAddCaseVisible = false;
                 const resultData = await this.$api.getConfirmedByPage(dataInfo);
                 const pagination = { ...this.pagination };
@@ -326,10 +334,10 @@
             // 确认提交
             async confirmBtn(){
                 ['print_code','print_accept'].map(item=> this.submitDataInfo[item] = Number(this.submitDataInfo[item]))
-                let resultData = await this.$api.addExhibitData(this.submitDataInfo)
+                let resultData = await this.$api.addExhibitData({ print_id: this.print_id, ...this.submitDataInfo })
                 if(resultData && resultData.code=='0'){
                     this.$message.success('添加成功')
-                    this.getCaseType()
+                    this.getTableList(this.pagination);
                     this.resetSubmitInfo()
                 }
             },

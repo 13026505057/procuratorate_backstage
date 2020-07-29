@@ -1,6 +1,6 @@
 <template>
     <div class="uncompletedPutPage">
-        <Search style="margin-top:10px;" :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'exhibit'" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
+        <Search style="margin-top:10px;" :addSearch="addSearch" :selectOption="selectOption" :resetData="true" :type="'exhibit'" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab"  v-loading="tableLoading">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
@@ -66,7 +66,14 @@
                 stockNum:'',
                 exhibitNum:'',
                 exhibitType:[],
-                addSearch: [],
+                addSearch: [
+                    { dom: 'tysah', value: '',placeholder: '请输入统一受案号', itemId: 1, name: 'input' },
+                    { dom: 'bmsah', value: '',placeholder: '请输入部门受案号', itemId: 2, name: 'input' },
+                    { dom: 'case_name', value: '',placeholder: '请输入案件名称', itemId: 3, name: 'input' },
+                    { dom: 'exhibit_name', value: '',placeholder: '请输入案卷名称', itemId: 4, name: 'input' },
+                    { dom: 'bgr', value: '',placeholder: '请输入嫌疑人', itemId: 5, name: 'input' },
+                    { dom: 'cbr', value: '',placeholder: '请输入承办人', itemId: 6, name: 'input' },
+                ],
                 setDynamicBtn: [
                     { title: '导出', fun: 'exprotFun' }
                 ],
@@ -90,6 +97,7 @@
                     { title: 'bmsah', dataIndex: '部门受案号', itemId: 2 },
                     { title: 'case_name', dataIndex: '案件名称', itemId: 3 },
                     { title: 'case_type_name', dataIndex: '案件类型', itemId: 4 },
+                    { title: 'exhibit_name', dataIndex: '案卷名称', itemId: 10 },
                     { title: 'cbr', dataIndex: '承办人', itemId: 5 },
                     { title: 'bgr', dataIndex: '嫌疑人', itemId: 6 },
                     { title: 'exhibit_type', dataIndex: '案卷类型', itemId: 12 },
@@ -97,7 +105,7 @@
                     { title: 'jh', dataIndex: '卷号', overflow: true, itemId: 13 },
                     { title: 'nd', dataIndex: '年度', overflow: true, itemId: 9 },
                     { title: 'out_exhibit_id', dataIndex: '条形码号', overflow: false, itemId: 8 },
-                    { title: 'exhibit_create_time', dataIndex: '接受时间', itemId: 11 },
+                    { title: 'exhibit_create_time', dataIndex: '接收时间', itemId: 11 },
                 ],
             }
            

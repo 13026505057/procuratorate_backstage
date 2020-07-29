@@ -33,10 +33,10 @@
                         <el-pagination
                             background
                             @current-change="handleCurrentChange1"
-                            :current-page.sync="currentPage1"
-                            :page-size="pageSize"
+                            :current-page.sync="seatchData.pageNum"
+                            :page-size="seatchData.pageSize"
                             layout="prev, pager, next, jumper"
-                            :total="total1">
+                            :total="seatchData.total">
                         </el-pagination>
                     </div>
                 </el-tab-pane>
@@ -114,9 +114,6 @@
                     {label: "待入库案卷数", prop: "total_quantity-in_quantity", tableId:10},
                 ],
                 dialogVisible:false,
-                currentPage1:1,
-                pageSize:10,
-                total1:0,
                 headStyle:{
                     backgroundColor: '#eaf5ff',
                     borderTop: '1px solid #97cfff',
@@ -126,10 +123,8 @@
                 },
                 progressList:{},
                 seatchData: {
-                    timeYear:'',
-                    case_name:'',
-                    case_bh:'', //统一受案号
-                    case_take_user_name:'',
+                    pageNum: 1,
+                    pageSize: 10,
                 },
                 disabled1:false,
                 tableLoading:false,
@@ -187,14 +182,12 @@
                 // console.log({...this.seatchData})
                 this.tableLoading = true;
                 let dataInfo = { ...this.seatchData }
-                dataInfo ['pageNum'] = this.currentPage1;
-                dataInfo ['pageSize'] = this.pageSize;
                 dataInfo ['case_type_id'] = this.activeName;
                 
                 const resultData = await this.$api.getProgressCase(dataInfo);
                 if(resultData && resultData.code == '0') {
                     this.tableData = resultData.data.list;
-                    this.total1 = resultData.data.total;
+                    this.seatchData.total = resultData.data.total;
                     this.tableLoading = false;
 
                 }
@@ -216,7 +209,7 @@
             },
             // 搜索
             comfirmSearch(data){
-                // console.log(data)
+                console.log(data)
                 this.$nextTick(()=>{ for(let key in data) { this.seatchData[key] = data[key] } })
                 this.getCaseType(this.seatchData);
             },

@@ -42,10 +42,10 @@
                         <el-pagination
                             background
                             @current-change="handleCurrentChange1"
-                            :current-page.sync="currentPage1"
-                            :page-size="pageSize"
+                            :current-page.sync="seatchData.pageNum"
+                            :page-size="seatchData.pageSize"
                             layout="prev, pager, next, jumper"
-                            :total="total1">
+                            :total="seatchData.total">
                         </el-pagination>
                     </div>
                 </el-tab-pane>
@@ -53,7 +53,7 @@
             <el-dialog v-dialogDrag title="案卷详情" :visible.sync="dialogVisibleDetails" width="68%" center>
                 <span>
                     <div class="table-dataList" >
-                        <el-table v-loading="tableLoading1" :data="tableData1" :header-cell-style="headerRowStyle" border
+                        <el-table :data="tableData1" :header-cell-style="headerRowStyle" border
                             row-key="exhibit_id" style="width: 100%">
                             <el-table-column align="center" type="index"></el-table-column>
                             <el-table-column
@@ -132,9 +132,6 @@
                    
                 ],
                 dialogVisibleDetails:false,
-                currentPage1:1,
-                pageSize:10,
-                total1:0,
                 headStyle:{
                     backgroundColor: '#eaf5ff',
                     borderTop: '1px solid #97cfff',
@@ -143,23 +140,16 @@
                     color: '#2c2c2c'
                 },
                 seatchData: {
-                    timeYear:'',
-                    case_name:'',
-                    case_bh:'', //统一受案号
-                    case_take_user_name:'',
-                    anguan_pingcha_chaoqi:'',
+                    pageNum:1,
+                    pageSize:10,
                     cout_for: 'weigui',
                 },
-                total2:1,
-                currentPage2:1,
                 tableData1:[],
                 tableData1_temporary: [],
                 disabled1:false,
                 disabled2:false,
                 disabled3:false,
                 tableLoading:false,
-                tableLoading1:false,
-
             }
         },
         filters:{
@@ -204,22 +194,16 @@
             },
             // DialogPagin
             dialogTablePagin(data){
-                console.log(data)
-                this.tableLoading1 = true;
                 this.tableData1 = data;
-                this.tableLoading1 = false;
-
             },
             // 默认数据列表
             async getDataList(seatchData){
                 this.tableLoading = true;
-                seatchData ['pageNum'] = this.currentPage1;
-                seatchData ['pageSize'] = this.pageSize;
                 seatchData ['case_type_id'] = this.activeName;
                 const resultData = await this.$api.getUndocumented(seatchData);
                 if(resultData && resultData.code == '0') {
                     this.tableData = resultData.data.list;
-                    this.total1 = resultData.data.total;
+                    this.seatchData.total = resultData.data.total;
                     this.tableLoading = false;
                 }
             },
@@ -245,7 +229,6 @@
             },
             // 页面分页
             handleCurrentChange1(val) {
-                console.log(`当前页: ${val}`);
                 this.getDataList(this.seatchData);
             },
             

@@ -55,7 +55,7 @@
             <!-- 分页 -->
             <el-pagination small background
                 style="text-align: center;margin-top: 20px;padding-bottom:20px;"
-                @current-change="handleCurrentChange" :current-page.sync="pagination_merge.pageNum"
+                @current-change="handleCurrentChange_merge" :current-page.sync="pagination_merge.pageNum"
                 :page-size="pagination_merge.pageSize" layout="prev, pager, next, jumper"
                 :total="pagination_merge.total">
             </el-pagination>
@@ -159,6 +159,10 @@
             handleCurrentChange(val) {
                 this.pagination['pageNum'] = val;
                 this.getTableList(this.pagination)
+            },
+            handleCurrentChange_merge(val) {
+                this.pagination_merge['pageNum'] = val;
+                this.getWasInHouseList(this.pagination_merge)
             },
             // DialogPagin
             dialogTablePagin(data){

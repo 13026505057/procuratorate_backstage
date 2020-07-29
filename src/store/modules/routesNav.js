@@ -40,7 +40,6 @@ import History from '@/views/archivesManage/checkHistory/history'
 import PutStorage from '@/views/archivesManage/putStorage/index'
 import UncompletedPut from '@/views/archivesManage/putStorage/uncompleted'
 import CompletedPut from '@/views/archivesManage/putStorage/completed'
-import Temporary from '@/views/archivesManage/putStorage/temporary'
 import ExhibitDoubt from '@/views/archivesManage/exhibitDoubt/index'
 import FinishStatus from '@/views/archivesManage/exhibitDoubt/finishStatus'
 import UnStandard from '@/views/archivesManage/exhibitDoubt/unStandard'
@@ -126,7 +125,6 @@ let routesNav = {
     PutStorage: PutStorage,
     UncompletedPut: UncompletedPut,
     CompletedPut: CompletedPut,
-    Temporary: Temporary,
     ReadyItem: ReadyItem,
     ExhibitDoubt: ExhibitDoubt,
     FinishStatus: FinishStatus,

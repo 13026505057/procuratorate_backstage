@@ -16,6 +16,7 @@
                                 v-for="item in columns" :key="item.itemId" align="center">
                                     <template slot-scope="{row}">
                                         <span v-if="item.itemId == 11">{{ row[item.title] == 'yes'?'已使用':'未使用' }}</span>
+                                        <span v-else-if="item.itemId == 8">{{ row[item.title] == 'yrk'?'是':'否' }}</span>
                                         <span v-else>{{ row[item.title] }}</span>
                                     </template>
                             </el-table-column>
@@ -82,13 +83,14 @@
                 columns: [
                     { title: 'tysah', dataIndex: '统一受案号', itemId: 7 },
                     { title: 'exhibit_name', dataIndex: '案卷名称', itemId: 1 },
+                    { title: 'deal_status', dataIndex: '是否预入库', itemId: 8 },
+                    { title: 'out_exhibit_id', dataIndex: '条形码号', itemId: 4 },
                     { title: 'dh', dataIndex: '档号', itemId: 2 },
-                    { title: 'jh', dataIndex: '卷号', itemId: 3 },
-                    { title: 'out_exhibit_id', dataIndex: '条码号', itemId: 4 },
-                    { title: 'create_time', dataIndex: '作废时间', itemId: 5 },
-                    { title: 'create_user_name', dataIndex: '作废人', itemId: 6 },
-                    { title: 'zuofei_reason', dataIndex: '作废原因', itemId: 12 },
                     { title: 'have_new', dataIndex: '档号是否使用', itemId: 11 },
+                    { title: 'jh', dataIndex: '卷号', itemId: 3 },
+                    { title: 'create_user_name', dataIndex: '作废人', itemId: 6 },
+                    { title: 'create_time', dataIndex: '作废时间', itemId: 5 },
+                    { title: 'zuofei_reason', dataIndex: '作废原因', itemId: 12 },
                 ],
             }
            

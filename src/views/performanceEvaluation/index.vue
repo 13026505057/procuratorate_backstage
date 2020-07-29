@@ -32,9 +32,15 @@
                 addSearch: [
                     { dom: 'timeYear', value: '',placeholder: '请选择年份', itemId: 6, name: 'dataPicker' },
                     { dom: 'status_case', value: [],placeholder: '请选择查询状态', itemId: 7, name: 'cascader' },
+                    { dom: 'weila_status', value: 'la_dao',placeholder: '是否包含不规范办结', itemId: 8, name: 'select' },
                 ],
                 selectOption:{ 
-                    status_case: []
+                    status_case: [],
+                    weila_status:[
+                        { value:'la_dao', label:"不包含不规范办结",},
+                        { value:'', label:"包含不规范办结",},
+                    ]
+
                 },
                 showModel: {
                     status_case_city: [
@@ -86,7 +92,8 @@
                     case_name:'',
                     case_bh:'', //统一受案号
                     case_take_user_name:'',
-                    status_case: ''
+                    status_case: '',
+                    weila_status:'la_dao',
                 },
                 isLoading:false,
             }
@@ -120,6 +127,7 @@
             async getDataList(dataInfo){
                 // 受理和办结
                 let status = dataInfo.status_case
+                console.log(status)
                 let dataList = [
                     { dom: ["sl","all"], fun: "caseJaugeAllSlrq" },
                     { dom: ["sl","area"], fun: "caseJaugeSlrq" },
@@ -186,7 +194,7 @@
                 }
             },
             comfirmSearch(data){
-                // console.log(data)
+                console.log(data)
                 this.$nextTick(()=>{ 
                     for(let key in data) { this.seatchData[key] = data[key] } 
                     this.getDataList(this.seatchData)

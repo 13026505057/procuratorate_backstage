@@ -116,16 +116,16 @@ const cases = {
     //档案绩效评价
     //地市查询归档率
     caseJauge(data){
-        return request({ url: '/chart/area/getStockCountByArea', method: 'post', data })
+        return request({ url: '/chart/area/getStockCountByAreaLaDao', method: 'post', data })
     },
     caseJaugeAll(data){
-        return request({ url: '/chart/city/getStockPersentByCity', method: 'post', data })
+        return request({ url: '/chart/city/getStockPersentByCityLaDao', method: 'post', data })
     },
     caseJaugeSlrq(data){
-        return request({ url: '/chart/area/getStockCountBySlrqArea', method: 'post', data })
+        return request({ url: '/chart/area/getStockCountBySlrqAreaLaDao', method: 'post', data })
     },
     caseJaugeAllSlrq(data){
-        return request({ url: '/chart/city/getStockPersentBySlrqCity', method: 'post', data })
+        return request({ url: '/chart/city/getStockPersentBySlrqCityLaDao', method: 'post', data })
     },
     // 案件预入库
     yrExhibitGetByPage(data){

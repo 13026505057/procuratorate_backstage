@@ -58,10 +58,10 @@
                         <el-pagination
                             background
                             @current-change="handleCurrentChange1"
-                            :current-page.sync="currentPage1"
-                            :page-size="pageSize"
+                            :current-page.sync="seatchData.pageNum"
+                            :page-size="seatchData.pageSize"
                             layout="prev, pager, next, jumper"
-                            :total="total1">
+                            :total="seatchData.total">
                         </el-pagination>
                     </div>
                 </el-tab-pane>
@@ -156,9 +156,6 @@
                    
                 ],
                 dialogVisibleDetails:false,
-                currentPage1:1,
-                pageSize:10,
-                total1:0,
                 headStyle:{
                     backgroundColor: '#eaf5ff',
                     borderTop: '1px solid #97cfff',
@@ -167,24 +164,15 @@
                     color: '#2c2c2c'
                 },
                 seatchData: {
-                    timeYear:'',
-                    case_name:'',
-                    case_bh:'', //统一受案号
-                    case_take_user_name:'',
+                    pageNum: 1,
+                    pageSize:10,
                     stock_status_str:'in,out,wout,win',
-
                 },
-                total2:1,
-                currentPage2:1,
                 tableData1:[],
                 tableData1_temporary: [],
                 disabled1:false,
-                disabled2:false,
-                disabled3:false,
                 tableLoading:false,
-
             }
-           
         },
         filters:{
             pigeonhole(status){
@@ -237,15 +225,12 @@
             async getDataList(seatchData){
                 this.tableLoading = true;
                 let dataInfo = { ...seatchData }
-                dataInfo ['pageNum'] = this.currentPage1;
-                dataInfo ['pageSize'] = this.pageSize;
                 dataInfo ['case_type_id'] = this.activeName;
                 const resultData = await this.$api.getInByPage(dataInfo);
                 if(resultData && resultData.code == '0') {
                     this.tableData = resultData.data.list;
-                    this.total1 = resultData.data.total
+                    this.seatchData.total = resultData.data.total
                     this.tableLoading = false;
-
                 }
             },
             // 查询

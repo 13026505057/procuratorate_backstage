@@ -43,9 +43,14 @@
                 },
                 tableLoading: false,
                 addSearch: [
-                    { dom: 'exhibit_new_bmsah', value: '',placeholder: '请输入新部门受案号', itemId: 4, name: 'input' },
+                    { dom: 'exhibit_old_tysah', value: '',placeholder: '请输入旧统一受案号', itemId: 8, name: 'input' },
                     { dom: 'exhibit_old_bmsah', value: '',placeholder: '请输入旧部门受案号', itemId: 5, name: 'input' },
+                    { dom: 'exhibit_old_case_name', value: '',placeholder: '请输入旧案件名称', itemId: 10, name: 'input' },
+                    { dom: 'exhibit_new_tysah', value: '',placeholder: '请输入新统一受案号', itemId: 7, name: 'input' },
+                    { dom: 'exhibit_new_bmsah', value: '',placeholder: '请输入新部门受案号', itemId: 4, name: 'input' },
+                    { dom: 'exhibit_new_case_name', value: '',placeholder: '请输入新案件名称', itemId: 9, name: 'input' },
                     { dom: 'exhibit_name', value: '',placeholder: '请输入卷宗名称', itemId: 6, name: 'input' },
+                    { dom: 'out_exhibit_id', value: '',placeholder: '请输入条形码号', itemId: 11, name: 'input' },
                     // { dom: 'nd', value: '',placeholder: '请选择年度', itemId: 7, name: 'dataPicker' },
                     // { dom: 'exhibit_type', value: '',placeholder: '请选择类型', itemId: 8, name: 'select' },
                 ],
@@ -57,19 +62,22 @@
                 },
                 // table表头
                 columns: [
-                    { title: 'exhibit_name', dataIndex: '卷宗名称', itemId: 1 },
-                    { title: 'exhibit_new_bmsah', dataIndex: '新部门受案号', itemId: 10 },
+                    { title: 'exhibit_old_tysah', dataIndex: '旧统一受案号', itemId: 7 },
                     { title: 'exhibit_old_bmsah', dataIndex: '旧部门受案号', itemId: 2 },
+                    { title: 'exhibit_old_case_name', dataIndex: '旧案件名称', itemId: 5 },
+                    { title: 'exhibit_new_tysah', dataIndex: '新统一受案号', itemId: 9 },
+                    { title: 'exhibit_new_bmsah', dataIndex: '新部门受案号', itemId: 10 },
+                    { title: 'exhibit_new_case_name', dataIndex: '新案件名称', itemId: 6 },
+                    { title: 'exhibit_name', dataIndex: '卷宗名称', itemId: 1 },
                     { title: 'dh', dataIndex: '档号', itemId: 8 },
                     { title: 'out_exhibit_id', dataIndex: '条形码号', itemId: 11 },
-                    { title: 'operate_time', dataIndex: '操作时间', itemId: 4 },
                     { title: 'operate_user_name', dataIndex: '操作人', itemId: 3 },
+                    { title: 'operate_time', dataIndex: '操作时间', itemId: 4 },
                 ],
             }
            
         },
         mounted(){
-            console.log(window)
             this.selectOption.exhibit_type = this.stock_status;
             this.getTableList(this.pagination);
         },

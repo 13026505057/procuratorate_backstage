@@ -2,7 +2,14 @@
     <div class="litigationCasePage">
         <div class="searchInfo">
             <div class="searchItem" v-for="item in searchList" :key="item.itemId">
-                <template v-if="item.name == 'daterange_begin'">
+                <template v-if="item.name == 'select'">
+                    <el-select v-model="seatchData[item.dom]" :placeholder="item.placeholder" >
+                        <el-option v-for="itemChild in selectOption[item.dom]" :key="itemChild.value" 
+                            :label="itemChild.label" :value="itemChild.value">
+                        </el-option>
+                    </el-select>
+                </template>
+                <template v-else-if="item.name == 'daterange_begin'">
                     <el-date-picker v-model="seatchData[item.dom]" type="datetime" :placeholder="item.placeholder" 
                         value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptions"></el-date-picker>
                 </template>
@@ -52,9 +59,16 @@
         data()  {
             return  {
                 searchList: [
+                    { dom: 'weila_status', value: 'la_dao',placeholder: '是否包含不规范办结', itemId: 8, name: 'select' },
                     { dom: 'slrq_begin', placeholder: '开始时间', itemId: 4, name: 'daterange_begin' },
                     { dom: 'slrq_end', placeholder: '结束时间', itemId: -4, name: 'daterange_end' },
                 ],
+                selectOption:{
+                    weila_status:[
+                        { value:'la_dao', label:"不包含不规范办结",},
+                        { value:'', label:"包含不规范办结",},
+                    ]
+                },
                 tableData:[],
                 tableItems:[
                     {label: "单位", prop: "org_name"},
@@ -83,6 +97,7 @@
                     color: '#2c2c2c'
                 },
                 seatchData: {
+                    weila_status: 'la_dao',
                     slrq_begin: '' || `${new Date().getFullYear()}-01-01 00:00:00`,
                     slrq_end: '' || `${parseTime(new Date())}`
                 },
@@ -152,6 +167,7 @@
                         path: skipPageData[column.property],
                         query: { ...this.seatchData,org_id: row['org_id'],type: column.property }
                     });
+                    console.log(href)
                     window.open(href, '_blank');
                 }
             }

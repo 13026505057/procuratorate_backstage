@@ -162,7 +162,7 @@ export default {
     async deleteItem(exhibit_id){
         let resultData = await this.$api.editCaseData({exhibit_id,exhibit_status:'0'})
         if(resultData && resultData.code=='0') {
-            this.getTableList();
+            this.getTableList(this.pagination);
             this.$message.success('操作成功')
         }
     },

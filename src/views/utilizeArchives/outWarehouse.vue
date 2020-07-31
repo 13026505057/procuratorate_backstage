@@ -97,10 +97,10 @@
                 <el-pagination
                     background
                     @current-change="handleCurrentChange1"
-                    :current-page.sync="currentPage1"
-                    :page-size="pageSize"
+                    :current-page.sync="seatchData.pageNum"
+                    :page-size="seatchData.pageSize"
                     layout="prev, pager, next, jumper"
-                    :total="total1">
+                    :total="seatchData.total">
                 </el-pagination>
             </div>
                
@@ -177,9 +177,7 @@
 
                 ],
                 dialogVisible:false,
-                currentPage1:1,
-                pageSize:10,
-                total1:0,
+                
                 stepItems:[{
                     title:"是否办结：已办结",
                     description: "时间：overtime"
@@ -193,11 +191,8 @@
                 },
                 progressList:{},
                 seatchData: {
-                    timeYear:'',
-                    case_name:'',
-                    case_bh:'', //统一受案号
-                    case_take_user_name:'',
-
+                    pageNum:1,
+                    pageSize:10,
                 },
                 // scanData: {
                 //     cell_id:'',
@@ -295,14 +290,12 @@
             async getDataList(){
                 console.log({...this.seatchData})
                 let dataInfo = { ...this.seatchData }
-                dataInfo ['pageNum'] = this.currentPage1;
-                dataInfo ['pageSize'] = this.pageSize;
                 // dataInfo ['case_type_id'] = this.activeName;
                 
                 const resultData = await this.$api.getExhibitOut(dataInfo);
                 if(resultData && resultData.code == '0') {
                     this.tableData = resultData.data.list,
-                    this.total1 = resultData.data.total
+                    this.seatchData.total = resultData.data.total
                 }
             },
             //查询卷宗类别如：诉讼 文书 技术

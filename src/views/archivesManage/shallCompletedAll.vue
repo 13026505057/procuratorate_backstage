@@ -95,10 +95,6 @@
                 pagination: {
                     pageNum: 1,
                     pageSize: 10,
-                    case_name: '',
-                    case_bh: '',
-                    timeYear: '',
-                    case_take_user_name: '',
                     case_type_id: '',
                 },
                 setDynamicBtn: [

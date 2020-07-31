@@ -30,7 +30,8 @@
         data()  {
             return  {
                 addSearch: [
-                    { dom: 'timeYear', value: '',placeholder: '请选择年份', itemId: 6, name: 'dataPicker' },
+                    { dom: 'begin_time', value: '',placeholder: '开始时间', itemId: 5, name: 'daterange_begin' },
+                    { dom: 'end_time', value: '',placeholder: '结束时间', itemId: 6, name: 'daterange_end' },
                     { dom: 'status_case', value: [],placeholder: '请选择查询状态', itemId: 7, name: 'cascader' },
                     { dom: 'weila_status', value: 'la_dao',placeholder: '是否包含不规范办结', itemId: 8, name: 'select' },
                 ],
@@ -40,7 +41,6 @@
                         { value:'la_dao', label:"不包含不规范办结",},
                         { value:'', label:"包含不规范办结",},
                     ]
-
                 },
                 showModel: {
                     status_case_city: [
@@ -88,11 +88,6 @@
                     color: '#2c2c2c'
                 },
                 seatchData: {
-                    timeYear:'',
-                    case_name:'',
-                    case_bh:'', //统一受案号
-                    case_take_user_name:'',
-                    status_case: '',
                     weila_status:'la_dao',
                 },
                 isLoading:false,
@@ -107,12 +102,12 @@
                 if(this.org_list && this.org_list[0].level !== 'area') {
                     this.selectOption.status_case = this.showModel.status_case_city
                     let dataArr = ['sl','all']
-                    this.addSearch[1].value = dataArr
+                    this.addSearch.map(item => {if(item.dom == 'status_case') item.value = dataArr })
                     this.seatchData.status_case = JSON.stringify(dataArr)
                 } else {
                     this.selectOption.status_case = this.showModel.status_case_area
                     let dataArr = ['sl']
-                    this.addSearch[1].value = dataArr
+                    this.addSearch.map(item => {if(item.dom == 'status_case') item.value = dataArr })
                     this.seatchData.status_case = JSON.stringify(dataArr)
                 }
             },

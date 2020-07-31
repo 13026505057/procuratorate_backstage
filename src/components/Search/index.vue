@@ -22,10 +22,12 @@
                 </el-select>
             </template>
             <template v-else-if="item.name == 'daterange_begin'">
-                <el-date-picker v-model="item.value" type="datetime" :placeholder="item.placeholder" value-format="yyyy-MM-dd HH:mm:ss" default-time="00:00:00"></el-date-picker>
+                <el-date-picker v-model="item.value" type="datetime" :placeholder="item.placeholder" 
+                    value-format="yyyy-MM-dd HH:mm:ss" default-time="00:00:00"></el-date-picker>
             </template>
             <template v-else-if="item.name == 'daterange_end'">
-                <el-date-picker v-model="item.value" type="datetime" :placeholder="item.placeholder" value-format="yyyy-MM-dd HH:mm:ss" default-time="23:59:59"></el-date-picker>
+                <el-date-picker v-model="item.value" type="datetime" :placeholder="item.placeholder" 
+                    value-format="yyyy-MM-dd HH:mm:ss" default-time="23:59:59"></el-date-picker>
             </template>
             <template v-else-if="item.name == 'cascader'">
                 <el-cascader :placeholder="item.placeholder" v-model="item.value" :options="selectOption[item.dom]" 
@@ -157,10 +159,10 @@ export default {
         }, 
         comfirmSearch(){
             let dataInfo = this.resultDataInfo()
-            this.$emit('comfirmSearch',{ ...dataInfo,pageNum: 1 })
+            this.$emit('comfirmSearch',dataInfo)
         },
         resultDataInfo(){
-            let dataInfo = {}
+            let dataInfo = {pageNum: 1}
             this.searchList.map(item=>{
                 dataInfo[item.dom] = item.value
                 if(this.selectOrgId && this.selectOrgId.length > 0){

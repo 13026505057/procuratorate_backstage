@@ -49,10 +49,10 @@
                 <el-pagination
                     background
                     @current-change="handleCurrentChange1"
-                    :current-page.sync="currentPage1"
-                    :page-size="pageSize"
+                    :current-page.sync="seatchData.pageNum"
+                    :page-size="seatchData.pageSize"
                     layout="prev, pager, next, jumper"
-                    :total="total1">
+                    :total="seatchData.total">
                 </el-pagination>
             </div>
              <el-dialog v-dialogDrag
@@ -178,9 +178,7 @@
                     fontSize: '18px',
                     color: '#2c2c2c'
                 },
-                currentPage1:1,
-                total1:1,
-                pageSize:10,
+               
                 dialogVisible:false,
                 dialogTitle:'',
                 unit_form:{
@@ -210,6 +208,8 @@
                 userName:'',
                 routesGroupsArr: [],
                 seatchData: {
+                    pageNum:1,
+                    pageSize:10,
                     user_true_name: '',
                     dept_id: ''
                 }
@@ -246,12 +246,11 @@
                 this.$nextTick(()=>{ for(let key in data) { this.seatchData[key] = data[key] } this.getDataList();})
             },
             async getDataList(){
-                const dataInfo = {pageNum:this.currentPage1,pageSize:this.pageSize,
-                    ...this.seatchData }
+                const dataInfo = { ...this.seatchData }
                 const resultData = await this.$api.getPersonnelList(dataInfo);
                 if(resultData&&resultData.code == 0){
                     this.tableData = resultData.data.list;
-                    this.total1 = resultData.data.total;
+                    this.seatchData.total = resultData.data.total;
                 }
             },
             // 查部门

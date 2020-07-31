@@ -13,10 +13,10 @@ const service = axios.create({
 //   baseURL: 'http://192.168.2.254:8081/dossier_qd',
 //   baseURL: 'http://192.168.2.205:8081/dossier_qd',
 //   withCredentials: true, // send cookies when cross-domain requests
-  timeout: 1000*60*10 // request timeout
+  timeout: 1000*60*10 // request timeout 
 })
 
-// request interceptor
+// request interceptor 
 service.interceptors.request.use( config => {
   // do something before request is sent
   store.dispatch('app/setBaseUrl',config.baseURL)

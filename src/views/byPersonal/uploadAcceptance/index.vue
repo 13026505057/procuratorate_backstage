@@ -99,7 +99,7 @@
            
         },
         mounted(){
-            // this.getTableList(this.pagination);
+            this.getTableList(this.pagination);
         },
         methods: {
             setDynamicBtnFun(data){
@@ -144,6 +144,7 @@
             },
             // 确认搜索
             comfirmSearch(data){
+                console.log(data)
                 this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] }  })
                 this.getTableList(this.pagination)
             },

@@ -2,7 +2,7 @@
     <div class="mergeRequestPage">
         <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'case'" @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
         <div class="head-tab">
-            <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
+            <el-tabs v-model="showModel.activeNameTab">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
                     <span slot="label">
                         {{item.case_type_name}}
@@ -20,7 +20,7 @@
                             </el-table-column>
                             <el-table-column align="center" label="操作">
                                 <template slot-scope="{row}">
-                                    <el-button @click="showDialogPanel(row.case_bh,row.case_id,row.bmsah,row.case_name)" class="highlight-btn" size="small">多案并卷</el-button>
+                                    <el-button @click="showDialogPanel(row.is_and_case)" class="highlight-btn" size="small">相关案件</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -39,16 +39,18 @@
         </div>
         <!-- 案件列表 -->
         <el-dialog v-dialogDrag title="案件列表" :visible.sync="showModel.dialogTableVisible" width="70%">
-            <Search :addSearch="mergeData.addSearch" :selectOption="mergeData.selectOption" :resetData="true" 
-                @comfirmSearch="comfirmSearch_merge" :hiddenAdress="false"/>
             <el-table :data="showModel.gridData" align="center" v-loading="loadingTable_merge">
                 <el-table-column type="index" label="#"></el-table-column>
                 <el-table-column :label="item.dataIndex" :prop="item.title" :show-overflow-tooltip="item.overflow"
                     v-for="item in showModel.gridData_columns" :key="item.itemId" align="center">
+                    <template slot-scope="{row}">
+                        <span v-if="item.itemId == 8">{{row[item.title] == 1?"主案":(row[item.title] == 0?"副案":"")}}</span>
+                        <span v-else>{{row[item.title]}}</span>
+                    </template>
                 </el-table-column>
                 <el-table-column align="center" label="操作">
                     <template slot-scope="{row}">
-                        <el-button v-if="submiteDataInfo.weigui_case_id==row.case_id?false:true" @click="mergeCase(row.case_id)" class="highlight-btn" type="operation" size="small">并卷</el-button>
+                        <el-button @click="mergeCase(row.case_id)" class="highlight-btn" type="operation" size="small">拆卷</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -76,12 +78,13 @@
                 pagination: {
                     pageNum: 1,
                     pageSize: 10,
-                    case_name: '',
-                    case_bh: '',
-                    timeYear: '',
-                    case_take_user_name: '',
-                    case_none_status: '',
-                    case_type_id: '',
+                    is_and_case: "NOTNULL",
+                    // case_name: '',
+                    // case_bh: '',
+                    // timeYear: '',
+                    // case_take_user_name: '',
+                    // case_none_status: '',
+                    // case_type_id: '',
                 },
                 loadingTable: false,
                 addSearch: [
@@ -95,7 +98,10 @@
                 },
                 showModel: {
                     activeNameTab: "0",
-                    tableList:[],   // 类型
+                    tableList:[{
+                        case_type_id:"0",
+                        case_type_name:"多案并卷拆卷"
+                    }],   // 类型
                     tableData:[],   // 数据信息
                     // 案件列表
                     dialogTableVisible: false,
@@ -108,6 +114,7 @@
                         { title: 'case_take_user_name', dataIndex: '承办人', itemId: 5 },
                         { title: 'bgr', dataIndex: '嫌疑人', itemId: 6 },
                         { title: 'case_type_name', dataIndex: '案件类型', itemId: 7 },
+                        { title: 'is_and_case_root', dataIndex: '是否主卷', itemId: 8 },
                     ],
                 },
                 // table表头
@@ -139,14 +146,11 @@
                     case_bh: '',
                     case_name: '',
                 },
-                submiteDataInfo: {
-                    weigui_case_id: '',
-                    yigui_case_id: ''
-                }
+                submiteDataInfo: {}
             }
         },
         mounted(){
-            this.getCaseType();
+            this.getTableList(this.pagination);
         },
         methods: {
             receivedAddress(data){
@@ -164,43 +168,12 @@
                 this.pagination_merge['pageNum'] = val;
                 this.getWasInHouseList(this.pagination_merge)
             },
-            // DialogPagin
-            dialogTablePagin(data){
-                this.showModel.gridData = data
-            },
-            handleClickTab(e){
-                this.pagination.case_type_id = e.paneName
-                this.getTableList(this.pagination)
-            },
-            // 类型分类
-            getCaseType(){
-                this.$api.getCaseType().then(async (res)=>{
-                    this.showModel.tableList = res.data.list;
-                    if(this.showModel.activeNameTab !== '0') this.pagination.case_type_id = this.showModel.activeNameTab
-                        else this.pagination.case_type_id = this.showModel.activeNameTab = res.data.list[0].case_type_id
-                    this.getTableList(this.pagination)
-                    // 角标
-                    let dataInfo = {...this.pagination};
-                    // 每个页面字段不同(cout_for)
-                    dataInfo['cout_for'] = 'getDangAnWeiGui';
-                    ['pageNum','pageSize','case_type_id'].map(item=> delete dataInfo[item])
-                    const resultData = await this.$api.getCornerMarkType(dataInfo);
-                    Object.keys(resultData.data).map(item=>{
-                        res.data.list.map((itemChild,index)=>{
-                            if("_"+itemChild.case_type_id == item) {
-                                itemChild.contNum = resultData.data[item]
-                                this.$set(this.showModel.tableList[index],index,itemChild)
-                            }
-                        })
-                    })
-                })
-            },
             // 获取案件列表
             async getTableList(dataInfo){
                 this.loadingTable = true;
                 this.showModel.dialogTableVisible = false;
                 this.showModel.dialogReceivedVisible = false;
-                const resultData = await this.$api.getDangAnWeiGui(dataInfo);
+                const resultData = await this.$api.getDismantleList(dataInfo);
                 const pagination = { ...this.pagination };
                 let resultData_table = [];
                 resultData.data.list.map(item=>{
@@ -214,40 +187,32 @@
             // 确认搜索
             comfirmSearch(data){
                 this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] } })
-                this.getCaseType()
+                this.getTableList(this.pagination)
             },
-            // 确认搜索
-            comfirmSearch_merge(data){
-                this.$nextTick(()=>{ for(let key in data){ this.pagination_merge[key] = data[key] } })
-                this.getWasInHouseList(this.pagination_merge)
-            },
-            showDialogPanel(case_bh,case_id,bmsah,case_name){
+            
+            showDialogPanel(is_and_case){
                 this.showModel.dialogTableVisible = true;
-                this.mergeData.addSearch[0].value = case_bh;
-                this.mergeData.addSearch[2].value = case_name;
-                this.pagination_merge.case_bh = case_bh;
-                this.pagination_merge.case_name = case_name;
-                this.submiteDataInfo.weigui_case_id = case_id;
+                this.pagination_merge.is_and_case = is_and_case;
                 this.getWasInHouseList(this.pagination_merge)
             },
             // 获取已入库案件信息
             async getWasInHouseList(dataInfo){
                 this.loadingTable_merge = true;
                 // dataInfo ['dangan_accept_status'] = '1'; 
-                const resultData = await this.$api.getConfirmedByPage(dataInfo);
+                const resultData = await this.$api.getDismantleList(dataInfo);
                 const pagination = { ...this.pagination_merge };
                 this.showModel.gridData = resultData.data.list;
                 pagination.total = resultData.data.total;
                 this.pagination_merge = pagination;
                 this.loadingTable_merge = false;
             },
-            // 并卷
+            // 拆卷
             async mergeCase(case_id){
-                this.submiteDataInfo.yigui_case_id = case_id;
-                let resultData = await this.$api.isAddCase(this.submiteDataInfo)
+                this.submiteDataInfo.reduce_case_id = case_id;
+                let resultData = await this.$api.dismantleCase(this.submiteDataInfo)
                 if(resultData && resultData.code == '0') {
                     this.$message.success('操作成功')
-                    this.getCaseType();
+                    this.getTableList(this.pagination);
                 }
             }
         }

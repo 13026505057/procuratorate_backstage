@@ -9,6 +9,9 @@
           </el-tab-pane>
         </el-tabs>
       </div>
+      <!-- 删除页面
+        {"path": "beforehandItem", "component": "views/archivesManage/checkArchives/beforehandItem", "name": "案件预入库 - BeforehandItem", "meta":{ "title":"案件预入库","icon": "icon-zhiliangpingcha" }},
+       -->
    </div>
 </template>
 

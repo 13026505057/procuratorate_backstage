@@ -188,8 +188,6 @@
                 this.exhibitNum = data;
                 // 默认数据列表
                 this.getIds();
-                
-
             },
             async getIds(){
                     // console.log({...this.seatchData})

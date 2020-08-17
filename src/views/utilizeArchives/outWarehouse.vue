@@ -29,24 +29,17 @@
                         </template>
                     </el-table-column>
                     <el-table-column
+                        label="部门受案号"
+                        align="center">
+                        <template slot-scope="props">
+                            <span>{{props.row.bmsah}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
                         label="案件名称"
                         align="center">
                         <template slot-scope="props">
                             <span>{{props.row.case_name}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        label="档号"
-                        align="center">
-                        <template slot-scope="props">
-                            <span>{{props.row.dh}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        label="卷号"
-                        align="center">
-                        <template slot-scope="props">
-                            <span>{{props.row.jh}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -64,10 +57,45 @@
                         </template>
                     </el-table-column>
                     <el-table-column
+                        label="档号"
+                        align="center">
+                        <template slot-scope="props">
+                            <span>{{props.row.dh}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        label="卷号"
+                        align="center">
+                        <template slot-scope="props">
+                            <span>{{props.row.jh}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        label="条形码号"
+                        align="center">
+                        <template slot-scope="props">
+                            <span>{{props.row.out_exhibit_id}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        label="存储位置"
+                        align="center">
+                        <template slot-scope="props">
+                            <span>{{props.row.cell_name}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
                         label="借阅人"
                         align="center">
                         <template slot-scope="props">
                             <span>{{props.row.borrow_user_true_name}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        label="借阅时间"
+                        align="center">
+                        <template slot-scope="props">
+                            <span>{{props.row.borrow_time}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -77,18 +105,12 @@
                             <span>{{props.row.approve_user_true_name}}</span>
                         </template>
                     </el-table-column>
+                    
                     <el-table-column
-                        label="借阅时间"
+                        label="审批时间"
                         align="center">
                         <template slot-scope="props">
-                            <span>{{props.row.borrow_begin_time}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        label="归还时间"
-                        align="center">
-                        <template slot-scope="props">
-                            <span>{{props.row.borrow_end_time}}</span>
+                            <span>{{props.row.approve_time}}</span>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -247,7 +269,7 @@
             async exhibitOut(){
                     let dataInfo = {}
                     // dataInfo ['cell_id'] = this.stockNum;
-                    dataInfo ['exhibit_id'] = this.exhibitNum;
+                    dataInfo ['out_exhibit_id'] = this.exhibitNum;
                     
                     const resultData = await this.$api.exhibitOut(dataInfo);
                     if(resultData && resultData.code == '0') {

@@ -29,14 +29,14 @@
                                 label="操作">
                                 <template slot-scope="{ row }">
                                     <el-button @click="addUnitClick('update',row)" class="ash-btn" size="small">修改</el-button>
-                                    <el-popconfirm
+                                    <!-- <el-popconfirm
                                         icon="el-icon-info"
                                         iconColor="red"
                                         title="确定删除吗？"
                                         @onConfirm = "confirmDel"
                                         >
                                         <el-button slot="reference" @click="delUnitClick(row.case_id)" class="highlight-btn" size="small">删除</el-button>
-                                    </el-popconfirm>
+                                    </el-popconfirm> -->
                                 </template>
                             </el-table-column>
                         </el-table>

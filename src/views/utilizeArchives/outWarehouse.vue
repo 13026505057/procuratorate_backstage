@@ -53,7 +53,9 @@
                         label="卷宗状态"
                         align="center">
                         <template slot-scope="props">
-                            <span>{{props.row.exhibit_status=='waitOut'?'待出库':'其他'}}</span>
+                            <span>{{props.row.exhibit_status=='waitOut'?'待出库':''}}</span>
+                            <span>{{props.row.exhibit_status=='out'?'已出库':''}}</span>
+                            <span>{{props.row.exhibit_status=='back'?'已归还':''}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column

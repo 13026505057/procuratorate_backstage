@@ -122,7 +122,7 @@ const asyncDataRoutes = [
         "redirect": "/byPersonal/archivesSituation",
         "children": [
             {   "path": "personalAcceptance", "component": "views/byPersonal/personalAcceptance/index", "name": "个人受理案件 - PersonalAcceptance", "meta":{ "title":"个人受理案件","icon": "icon-zhiliangpingcha" } },
-            {   "path": "uploadAcceptance", "component": "views/byPersonal/uploadAcceptance/index", "name": "受理案件上传 - UploadAcceptance", "meta":{ "title":"受理案件上传","icon": "icon-zhiliangpingcha" } },
+            {   "path": "uploadAcceptance", "component": "views/byPersonal/uploadAcceptance/index", "name": "线下案件上传 - UploadAcceptance", "meta":{ "title":"线下案件上传","icon": "icon-zhiliangpingcha" } },
             {   "path": "archivesSituation", "component": "views/byPersonal/archivesSituation/index", 
                 "name": "案件归档情况 - ArchivesSituation", "meta":{ "title":"案件归档情况","icon": "icon-zhiliangpingcha" },
                 "redirect": "/byPersonal/archivesSituation/caseShallCompleted",

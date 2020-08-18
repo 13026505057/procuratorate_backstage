@@ -175,7 +175,11 @@
                 this.$refs.stockNumRef.focus();
             },
             getFocus2(){
-                this.$refs.exhibitNumRef.focus();
+                console.log(2222)
+                setTimeout(() => {
+                    this.$refs.exhibitNumRef.focus();
+                }, 100);
+                
             },
             //货架号扫码枪扫描后处理
             stockNumChange(data){
@@ -205,6 +209,13 @@
                             // self.Warehousing()
                             this.exhibitIn();
                         }else if(resultData.data.type=="cell"){
+                            this.$message({
+                                message: '请扫描卷吗',
+                                type: 'error'
+                            });
+                            this.exhibitNum = "";
+                            this.inpDisabled = false;
+                            this.getFocus2();
                             
                         }
                         // this.getDataList();
@@ -215,7 +226,10 @@
                         // this.exhibitNum = "";
                         // this.getFocus('exhibitNumRef');
                     }else{
+                        this.exhibitNum = "";
                         this.inpDisabled = false;
+                        this.getFocus2();
+                        
                     }
             },
             async exhibitIn(){
@@ -236,6 +250,8 @@
                         this.getFocus2();
                     }else{
                         this.inpDisabled = false;
+                        this.exhibitNum = "";
+                        this.getFocus2();
                     }
             },
             receivedAddress(data){

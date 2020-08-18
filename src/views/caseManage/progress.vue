@@ -108,7 +108,7 @@
                     {label: "是否归档", prop: "time_status", tableId:5},
                     {label: "承办人", prop: "case_take_user_name", tableId:6},
                     {label: "嫌疑人", prop: "case_name", tableId:11},
-                    {label: "是否成卷", prop: "chengjuan", tableId:7},
+                    // {label: "是否成卷", prop: "chengjuan", tableId:7},
                     {label: "总案卷数", prop: "total_quantity", tableId:8},
                     {label: "在库案卷数", prop: "in_quantity", tableId:9},
                     {label: "待入库案卷数", prop: "total_quantity-in_quantity", tableId:10},

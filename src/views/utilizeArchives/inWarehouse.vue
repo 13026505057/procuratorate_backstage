@@ -57,8 +57,9 @@
                         label="卷宗状态"
                         align="center">
                         <template slot-scope="props">
-                            <span>待归还</span>
-                             <!-- <span>{{props.row.exhibit_status=='waitOut'?'待出库':'其他'}}</span> -->
+                            <span>{{props.row.exhibit_status=='waitOut'?'待出库':''}}</span>
+                            <span>{{props.row.exhibit_status=='out'?'已出库':''}}</span>
+                            <span>{{props.row.exhibit_status=='back'?'已归还':''}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -82,14 +83,6 @@
                             <span>{{props.row.out_exhibit_id}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column
-                        label="存储位置"
-                        align="center">
-                        <template slot-scope="props">
-                            <span>{{props.row.cell_name}}</span>
-                        </template>
-                    </el-table-column>
-                    
                     <el-table-column
                         label="借阅人"
                         align="center">
@@ -117,6 +110,13 @@
                         align="center">
                         <template slot-scope="props">
                             <span>{{props.row.approve_time}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        label="归还时间"
+                        align="center">
+                        <template slot-scope="props">
+                            <span>{{props.row.back_time}}</span>
                         </template>
                     </el-table-column>
                 </el-table>

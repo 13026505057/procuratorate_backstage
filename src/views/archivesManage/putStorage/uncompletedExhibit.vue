@@ -70,9 +70,10 @@
                     { dom: 'tysah', value: '',placeholder: '请输入统一受案号', itemId: 1, name: 'input' },
                     { dom: 'bmsah', value: '',placeholder: '请输入部门受案号', itemId: 2, name: 'input' },
                     { dom: 'case_name', value: '',placeholder: '请输入案件名称', itemId: 3, name: 'input' },
-                    { dom: 'exhibit_name', value: '',placeholder: '请输入案卷名称', itemId: 4, name: 'input' },
+                    // { dom: 'exhibit_name', value: '',placeholder: '请输入案卷名称', itemId: 4, name: 'input' },
                     { dom: 'bgr', value: '',placeholder: '请输入嫌疑人', itemId: 5, name: 'input' },
                     { dom: 'cbr', value: '',placeholder: '请输入承办人', itemId: 6, name: 'input' },
+                    { dom: 'nd', value: '',placeholder: '年度', itemId: 7, name: 'dataPicker' }
                 ],
                 setDynamicBtn: [
                     { title: '导出', fun: 'exprotFun' }
@@ -97,7 +98,7 @@
                     { title: 'bmsah', dataIndex: '部门受案号', itemId: 2 },
                     { title: 'case_name', dataIndex: '案件名称', itemId: 3 },
                     { title: 'case_type_name', dataIndex: '案件类型', itemId: 4 },
-                    { title: 'exhibit_name', dataIndex: '案卷名称', itemId: 10 },
+                    // { title: 'exhibit_name', dataIndex: '案卷名称', itemId: 10 },
                     { title: 'cbr', dataIndex: '承办人', itemId: 5 },
                     { title: 'bgr', dataIndex: '嫌疑人', itemId: 6 },
                     { title: 'exhibit_type', dataIndex: '案卷类型', itemId: 12 },

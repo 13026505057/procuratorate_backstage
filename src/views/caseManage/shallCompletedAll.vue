@@ -1,7 +1,7 @@
 <template>
     <div class="shallCompletedAllPage">
         <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'case'" @comfirmSearch="comfirmSearch" 
-            @receivedAddress="receivedAddress" @exportExcelFun="openExportExcelFun" :exportExcelBtn="true"/>
+            @receivedAddress="receivedAddress" @exportExcelFun="openExportExcelFun" :exportExcelBtn="true" :guifan='true'/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
@@ -19,9 +19,9 @@
                                     <span v-else>{{ row[item.title] }}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column align="center" label="是否规范">
+                            <el-table-column align="center" label="是否规范办结">
                                 <template slot-scope="{row}">
-                                    {{row.weila_status == 'la_dao'?'是':'否'}}
+                                    {{row.weila_status == 'wei_la_dao'?'否':'是'}}
                                 </template>
                             </el-table-column>
                             <el-table-column align="center" label="操作">

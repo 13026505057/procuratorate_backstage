@@ -13,6 +13,14 @@ const cases = {
     addCaseItemData(data) {
         return request({ url: '/cases/cases/add', method: 'post', data })
     },
+    // 新增案件修改
+    updateCaseItemData(data) {
+        return request({ url: '/cases/cases/update', method: 'post', data })
+    },
+    // 新增案件删除
+    delCaseItemData(data) {
+        return request({ url: '/cases/cases/del', method: 'post', data })
+    },
     getProgressCase(data) {
         return request({ url: '/cases/cases/getCaseJinDuByPage', method: 'post', data })
     },
@@ -143,6 +151,14 @@ const cases = {
     casesShouliBuGuiFanJieAnGetByPage(data){
         return request({ url: '/casesShouliBuGuiFanJieAnGetByPage', method: 'post', data })
     },
+    // 获取多案并卷拆卷
+    getDismantleList(data){
+        return request({ url: '/cases/cases/getByPage', method: 'post', data })
+    },
+    // 拆卷
+    dismantleCase(data){
+        return request({ url: '/exhibit/exhibit/isReduceCase', method: 'post', data })
+    }
     
     //档案绩效评价
     //基层院查询归档率

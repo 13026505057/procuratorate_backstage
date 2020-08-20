@@ -33,10 +33,33 @@
                         </template>
                     </el-table-column>
                     <el-table-column
+                        label="部门受案号"
+                        align="center">
+                        <template slot-scope="props">
+                            <span>{{props.row.bmsah}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
                         label="案件名称"
                         align="center">
                         <template slot-scope="props">
                             <span>{{props.row.case_name}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        label="卷宗名称"
+                        align="center">
+                        <template slot-scope="props">
+                            <span>{{props.row.exhibit_name}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        label="卷宗状态"
+                        align="center">
+                        <template slot-scope="props">
+                            <span>{{props.row.exhibit_status=='waitOut'?'待出库':''}}</span>
+                            <span>{{props.row.exhibit_status=='out'?'已出库':''}}</span>
+                            <span>{{props.row.exhibit_status=='back'?'已归还':''}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -54,17 +77,10 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                        label="卷宗名称"
+                        label="条形码号"
                         align="center">
                         <template slot-scope="props">
-                            <span>{{props.row.exhibit_name}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        label="卷宗状态"
-                        align="center">
-                        <template slot-scope="props">
-                            <span>待归还</span>
+                            <span>{{props.row.out_exhibit_id}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -75,24 +91,32 @@
                         </template>
                     </el-table-column>
                     <el-table-column
+                        label="借阅时间"
+                        align="center">
+                        <template slot-scope="props">
+                            <span>{{props.row.borrow_time}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
                         label="审批人"
                         align="center">
                         <template slot-scope="props">
                             <span>{{props.row.approve_user_true_name}}</span>
                         </template>
                     </el-table-column>
+                    
                     <el-table-column
-                        label="借阅时间"
+                        label="审批时间"
                         align="center">
                         <template slot-scope="props">
-                            <span>{{props.row.borrow_begin_time}}</span>
+                            <span>{{props.row.approve_time}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column
                         label="归还时间"
                         align="center">
                         <template slot-scope="props">
-                            <span>{{props.row.borrow_end_time}}</span>
+                            <span>{{props.row.back_time}}</span>
                         </template>
                     </el-table-column>
                 </el-table>

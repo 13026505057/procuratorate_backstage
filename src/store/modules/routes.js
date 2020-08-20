@@ -41,7 +41,6 @@ const asyncDataRoutes = [
                     {"path": "receiveItem", "component": "views/archivesManage/checkArchives/receiveItem", "name": "案卷接收（入库） - ReceiveItem", "meta":{ "title":"案卷接收（入库）","icon": "icon-zhiliangpingcha" }},
                     {"path": "receiveItemYear", "component": "views/archivesManage/checkArchives/receiveItemYear", "name": "13-18案卷接收 - ReceiveItemYear", "meta":{ "title":"13-18案卷接收","icon": "icon-zhiliangpingcha" }},
                     {"path": "readyItem", "component": "views/archivesManage/checkArchives/readyItem", "name": "预收卷 - ReadyItem", "meta":{ "title":"预收卷","icon": "icon-zhiliangpingcha" }},
-                    {"path": "beforehandItem", "component": "views/archivesManage/checkArchives/beforehandItem", "name": "案件预入库 - BeforehandItem", "meta":{ "title":"案件预入库","icon": "icon-zhiliangpingcha" }},
                     {"path": "bindReadyItem", "component": "views/archivesManage/checkArchives/bindReadyItem", "name": "预入库绑定 - BindReadyItem", "meta":{ "title":"预入库绑定","icon": "icon-zhiliangpingcha" }},
                     {"path": "mergeRequestCheck", "component": "views/archivesManage/exhibitDoubt/mergeRequestCheck", "name": "多案并卷 - MergeRequestCheck", "meta":{ "title":"多案并卷","icon": "icon-zhiliangpingcha" }},
                     {"path": "allCaseMaterials", "component": "views/archivesManage/checkArchives/allCaseMaterials", "name": "所有案卷 - AllCaseMaterials", "meta":{ "title":"所有案卷","icon": "icon-zhiliangpingcha" }}
@@ -55,6 +54,8 @@ const asyncDataRoutes = [
                     {"path": "finishStatus", "component": "views/archivesManage/exhibitDoubt/finishStatus", "name": "案件办结情况查询 - FinishStatus", "meta":{ "title":"案件办结情况查询","icon": "icon-zhiliangpingcha" }},
                     {"path": "wasDeleteExhibite", "component": "views/archivesManage/exhibitDoubt/wasDeleteExhibite", "name": "已作废案卷查询 - WasDeleteExhibite", "meta":{ "title":"已作废案卷查询","icon": "icon-zhiliangpingcha" }},
                     {"path": "mergeRequest", "component": "views/archivesManage/exhibitDoubt/mergeRequest", "name": "多案并卷 - MergeRequest", "meta":{ "title":"多案并卷","icon": "icon-zhiliangpingcha" }},
+                    {"path": "mergeRequestDismantle", "component": "views/archivesManage/exhibitDoubt/mergeRequestDismantle", "name": "多案并卷拆卷 - MergeRequestDismantle", "meta":{ "title":"多案并卷拆卷","icon": "icon-zhiliangpingcha" }},
+                    {"path": "caseHandling", "component": "views/archivesManage/exhibitDoubt/caseHandling", "name": "新增案件处理 - CaseHandling", "meta":{ "title":"新增案件处理","icon": "icon-zhiliangpingcha" }},
                     {"path": "BySelfMatchDoubt", "component": "views/archivesManage/exhibitDoubt/bySelfMatchDoubt", "name": "人工匹配 - BySelfMatchDoubt", "meta":{ "title":"人工匹配","icon": "icon-zhiliangpingcha" }},
                 ]
             },
@@ -121,7 +122,7 @@ const asyncDataRoutes = [
         "redirect": "/byPersonal/archivesSituation",
         "children": [
             {   "path": "personalAcceptance", "component": "views/byPersonal/personalAcceptance/index", "name": "个人受理案件 - PersonalAcceptance", "meta":{ "title":"个人受理案件","icon": "icon-zhiliangpingcha" } },
-            {   "path": "uploadAcceptance", "component": "views/byPersonal/uploadAcceptance/index", "name": "受理案件上传 - UploadAcceptance", "meta":{ "title":"受理案件上传","icon": "icon-zhiliangpingcha" } },
+            {   "path": "uploadAcceptance", "component": "views/byPersonal/uploadAcceptance/index", "name": "线下案件上传 - UploadAcceptance", "meta":{ "title":"线下案件上传","icon": "icon-zhiliangpingcha" } },
             {   "path": "archivesSituation", "component": "views/byPersonal/archivesSituation/index", 
                 "name": "案件归档情况 - ArchivesSituation", "meta":{ "title":"案件归档情况","icon": "icon-zhiliangpingcha" },
                 "redirect": "/byPersonal/archivesSituation/caseShallCompleted",

@@ -31,7 +31,7 @@ import AllCaseMaterials from '@/views/archivesManage/checkArchives/allCaseMateri
 
 import CheckItem from '@/views/archivesManage/checkItem'
 import ReadyItem from '@/views/archivesManage/checkArchives/readyItem'
-import BeforehandItem from '@/views/archivesManage/checkArchives/beforehandItem'
+// import BeforehandItem from '@/views/archivesManage/checkArchives/beforehandItem'
 import BindReadyItem from '@/views/archivesManage/checkArchives/bindReadyItem'
 import MergeRequestCheck from '@/views/archivesManage/exhibitDoubt/mergeRequest' 
 import CheckHistory from '@/views/archivesManage/checkHistory/index'
@@ -45,6 +45,8 @@ import FinishStatus from '@/views/archivesManage/exhibitDoubt/finishStatus'
 import UnStandard from '@/views/archivesManage/exhibitDoubt/unStandard'
 import WasDeleteExhibite from '@/views/archivesManage/exhibitDoubt/wasDeleteExhibite'
 import MergeRequest from '@/views/archivesManage/exhibitDoubt/mergeRequest' 
+import MergeRequestDismantle from '@/views/archivesManage/exhibitDoubt/mergeRequestDismantle' 
+import CaseHandling from '@/views/archivesManage/exhibitDoubt/caseHandling' 
 import MatterExhibit from '@/views/archivesManage/exhibitDoubt/matterExhibit'
 import BySelfMatchDoubt from '@/views/historyCase/bySelfMatch'
 import UnCompletedPutExhibit from '@/views/archivesManage/putStorage/uncompletedExhibit'
@@ -54,7 +56,7 @@ import CompletedPutExhibit from '@/views/archivesManage/putStorage/completedExhi
 import OutWarehouse from '@/views/utilizeArchives/outWarehouse'
 import InWarehouse from '@/views/utilizeArchives/inWarehouse'
 
-//档案绩效评价
+//档案绩效评价 
 import PerformanceEvaluationItem from '@/views/performanceEvaluation/index'
 
 // 分析评估
@@ -114,7 +116,6 @@ let routesNav = {
     CompletedArchives: CompletedArchives,
     CheckArchives: CheckArchives,
     ReceiveItem: ReceiveItem,
-    BeforehandItem: BeforehandItem,
     ReceiveItemYear: ReceiveItemYear,
     MergeRequestCheck: MergeRequestCheck,
     AllCaseMaterials: AllCaseMaterials,
@@ -131,6 +132,8 @@ let routesNav = {
     UnStandard: UnStandard,
     WasDeleteExhibite: WasDeleteExhibite,
     MergeRequest: MergeRequest,
+    MergeRequestDismantle:MergeRequestDismantle,
+    CaseHandling:CaseHandling,
     BindReadyItem: BindReadyItem,
     MatterExhibit: MatterExhibit,
     UnCompletedPutExhibit:UnCompletedPutExhibit,

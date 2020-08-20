@@ -1,7 +1,7 @@
 <template>
     <div class="bindReadyItemPage">
         <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'exhibit'" :hiddenAdress="true"
-            @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress"/>
+            @comfirmSearch="comfirmSearch" @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
@@ -113,6 +113,77 @@
                 </el-form-item>
             </el-form>
         </el-dialog>
+        <!-- 接收案卷 -->
+        <el-dialog v-dialogDrag title="新增案卷" :visible.sync="showModel.dialogReceivedVisible">
+            <el-form :inline="true" :model="submitDataInfo" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
+                <el-form-item label="案卷名称 " prop="exhibit_name">
+                    <el-input class="input_class" v-model="submitDataInfo.exhibit_name"></el-input>
+                </el-form-item>
+                <el-form-item label="统一受案号" prop="tysah">
+                    <el-input class="input_class" v-model="submitDataInfo.tysah"></el-input>
+                </el-form-item>
+                <el-form-item label="案由" prop="ay">
+                    <el-input class="input_class" v-model="submitDataInfo.ay"></el-input>
+                </el-form-item>
+                <el-form-item label="承办人" prop="cbr">
+                    <el-input class="input_class" v-model="submitDataInfo.cbr"></el-input>
+                </el-form-item>
+                <el-form-item label="案件类型" prop="case_type_id">
+                    <el-select class="input_class" v-model="submitDataInfo.case_type_id" >
+                        <el-option v-for="itemChild in selectOption.case_type_id" :key="itemChild.value" 
+                            :label="itemChild.label" :value="itemChild.value"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="档号" prop="dh">
+                    <el-input class="input_class" v-model="submitDataInfo.dh"></el-input>
+                </el-form-item>
+                <el-form-item label="卷号" prop="jh">
+                    <el-input class="input_class" v-model="submitDataInfo.jh"></el-input>
+                </el-form-item>
+                <el-form-item label="被告人/嫌疑人" prop="bgr">
+                    <el-input class="input_class" v-model="submitDataInfo.bgr"></el-input>
+                </el-form-item>
+                <el-form-item label="年度" prop="nd">
+                    <el-input class="input_class" v-model="submitDataInfo.nd"></el-input>
+                </el-form-item>
+                
+                <el-form-item label="保管期限" prop="bgqx">
+                    <el-select class="input_class" v-model="submitDataInfo.bgqx" >
+                        <el-option v-for="itemChild in showModel.bgqx" :key="itemChild.value" 
+                            :label="itemChild.label" :value="itemChild.value"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="案卷类型" prop="exhibit_type">
+                    <el-select class="input_class" v-model="submitDataInfo.exhibit_type">
+                        <el-option v-for="itemChild in showModel.exhibit_type" :key="itemChild.value" 
+                            :label="itemChild.label" :value="itemChild.value"></el-option>
+                    </el-select>
+                </el-form-item>
+                <!-- <div v-for="(item,index) in eachDataInfoList" :key="index" style="display:table;width: 100%;margin-bottom: 10px">
+                    <span style="display:table-cell;width: 25%;text-align: right;padding-right: 20px">
+                        {{ item.captionTitle }}：
+                    </span>
+                    <el-input v-model="submitDataInfo[item.dom]" v-if="item.itemId<4 || item.itemId == 5"
+                        :placeholder="item.placeholder" style="width: auto"></el-input>
+                    <el-select v-model="submitDataInfo[item.dom]" :placeholder="item.placeholder" v-else-if="item.itemId == 4">
+                        <el-option v-for="itemChild in showModel.exhibit_type" :key="itemChild.value" 
+                            :label="itemChild.label" :value="itemChild.value"></el-option>
+                    </el-select>
+                    <el-select v-model="submitDataInfo[item.dom]" :placeholder="item.placeholder" v-else-if="item.itemId == 6">
+                        <el-option v-for="itemChild in showModel.bgqx" :key="itemChild.value" 
+                            :label="itemChild.label" :value="itemChild.value"></el-option>
+                    </el-select>
+                </div> -->
+                <div class="checkboxSelect">
+                    <el-checkbox v-model="submitDataInfo.print_code" >同时打印案件条形码</el-checkbox>
+                    <el-checkbox v-model="submitDataInfo.print_accept">同时打印收卷回执单</el-checkbox>
+                </div>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="showModel.dialogReceivedVisible = false">取 消</el-button>
+                <el-button type="primary" @click="confirmBtn">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -121,7 +192,7 @@
     export default {
         components: { Search },
         computed :{
-            ...mapGetters(['exhibit_type','exhibit_time_bg','org_id','depList','case_type'])
+            ...mapGetters(['exhibit_type','exhibit_time_bg','org_id','depList','case_type','print_id'])
         },
         filters: {
             mapStatus(status){
@@ -147,8 +218,13 @@
                     stock_status: [
                         { value: 'none', label: '未入库' },
                         { value: 'in', label: '已入库' },
-                    ]
+                    ],
+                    case_type_id: [],
                 },
+                setDynamicBtn: [
+                    { title: '新增案卷', fun: 'addCaseItem' },
+                    { title: '导出', fun: 'exportCaseItem' }
+                ],
                 showModel: {
                     activeNameTab: "0",
                     tableList:[
@@ -180,6 +256,8 @@
                     ],
                     // 新增案件
                     dialogAddCaseVisible: false,
+                    // 新增案卷
+                    dialogReceivedVisible: false,
                     dept_id: []
                 },
                 submitDataInfo_case: {
@@ -190,6 +268,48 @@
                     case_type_id: '',
                     case_take_user_name: '',
                     dept_id: ''
+                },
+                submitDataInfo: {
+                    nd: '',
+                    exhibit_type: '',
+                    bgqx: '',
+                    dh: '',
+                    jh: '',
+                    bgr: '',
+                    exhibit_name:'',
+                    tysah:'',
+                    ay:'',
+                    case_type_id:'30',
+                    cbr:'',
+                    print_code: true,
+                    print_accept: false
+                },
+                rules: {
+                    exhibit_name:[
+                        { required: true, message: '请输入案卷名称', trigger: 'blur' },
+                    ],
+                    nd: [
+                        { required: true, message: '请输入年度', trigger: 'blur' },
+                        { min: 4, max: 4, message: '年份输入错误', trigger: 'blur' },
+                        { pattern: /^\d+$|^\d+[.]?\d+$/, message: '只能输入数字', trigger: 'blur' }
+                    ],
+                    dh: [
+                        // { required: true, message: '请输入档号', trigger: 'blur' },
+                        { pattern: /^\d+$|^\d+[.]?\d+$/, message: '只能输入数字', trigger: 'blur' }
+                    ],
+                    jh: [
+                        { required: true, message: '请输入卷号', trigger: 'blur' },
+                        { pattern: /^\d+$|^\d+[.]?\d+$/, message: '只能输入数字', trigger: 'blur' }
+                    ],
+                    bgr: [
+                         { required: true, message: '请输入被告人', trigger: 'blur' },
+                    ],
+                    exhibit_type: [
+                        { required: true, message: '请选择案卷类型', trigger: 'blur' }
+                    ],
+                    bgqx: [
+                        { required: true, message: '请选择保管期限', trigger: 'blur' }
+                    ]
                 },
                 eachDataInfoList_case: [
                     { captionTitle: '统一受案号', placeholder: '请输入统一受案号', dom: 'tysah', itemId: 2, type: 'input' },
@@ -212,7 +332,7 @@
                     ],
                     dept_id: [
                         { required: true, message: '请选择承办部门', trigger: 'blur' }
-                    ]
+                    ],
                 },
                 // table表头
                 columns: [
@@ -266,6 +386,7 @@
             }
         },
         mounted(){
+            this.selectOption.case_type_id = this.case_type;
             this.pagination_merge_ysl.org_id = this.pagination_merge_yrk.org_id = this.org_id
             this.getTableList(this.pagination)
             this.getTypeList()
@@ -276,6 +397,54 @@
                     this.pagination[item] = data[item]
                     this.pagination_merge_yrk[item] = this.pagination_merge_ysl[item] = data[item]
                 } )
+            },
+            setDynamicBtnFun(data){
+                const statusMap = {
+                    "addCaseItem": "addCaseItem",
+                    "exportCaseItem":'exportCaseItem'
+                }
+                this[statusMap[data.fun]](data.dataInfo)
+            },
+            // 新增案卷
+            async addCaseItem(){
+                this.resetSubmitInfo();
+                this.showModel.dialogReceivedVisible = true;
+            },
+            exportCaseItem(data){
+                this.$nextTick(()=>{
+                    window.open(this.base_url+'/exhibit/exhibit/exoprtYrExhibits?'+exportExcelFun(data))
+                })
+            },
+            //重置表单
+            resetSubmitInfo(){
+                for( let key in this.submitDataInfo){ this.submitDataInfo[key] = '' }
+                this.submitDataInfo.print_code = true;
+                this.submitDataInfo.exhibit_type = localStorage.getItem('yr_exhibit_type');
+                this.submitDataInfo.bgqx = localStorage.getItem('yr_bgqx')
+                this.submitDataInfo.nd = localStorage.getItem('yr_nd') || new Date().getFullYear()
+                this.submitDataInfo.case_type_id = localStorage.getItem('yr_case_type_id')
+            },
+            // 新增案卷
+            confirmBtn(){
+                this.confirmAddExhibit()
+            },
+            async confirmAddExhibit(){
+                ['print_code','print_accept'].map(item=> this.submitDataInfo[item] = Number(this.submitDataInfo[item])) || 0
+                this.submitDataInfo ['province_id'] = this.pagination.province_id;
+                this.submitDataInfo ['city_id'] = this.pagination.city_id;
+                this.submitDataInfo ['area_id'] = this.pagination.area_id;
+                this.submitDataInfo ['print_id'] = this.print_id;
+                let resultData = await this.$api.yrExhibitAdd(this.submitDataInfo)
+                if(resultData && resultData.code =='0') {
+                    localStorage.setItem('yr_case_type_id',this.submitDataInfo.case_type_id)
+                    localStorage.setItem('yr_nd',this.submitDataInfo.nd)
+                    localStorage.setItem('yr_exhibit_type',this.submitDataInfo.exhibit_type)
+                    localStorage.setItem('yr_bgqx',this.submitDataInfo.bgqx)
+                    this.showModel.dialogReceivedVisible = false;
+                    this.$message.success('操作成功');
+                    this.resetSubmitInfo();
+                    this.getTableList(this.pagination);
+                }
             },
             // 分页
             handleCurrentChange(val) {
@@ -404,6 +573,8 @@
                 let dataArr = [
                     { showModel: 'case_type_id', store: 'case_type' },
                     { showModel: 'dept_id', store: 'depList' },
+                    { showModel: 'bgqx', store: 'exhibit_time_bg' },
+                    { showModel: 'exhibit_type', store: 'exhibit_type' },
                 ]
                 dataArr.map(item=> this.showModel[item.showModel] = this[item.store] )
             },
@@ -472,6 +643,15 @@
             .tab-badge-num{
                 position: absolute;
                 top: -2px;
+            }
+        }
+        .demo-ruleForm{
+            width: 100%;
+            margin:0 auto;
+            // text-align: center;
+            .input_class{
+                width:250px;
+                margin:0 auto;
             }
         }
         .checkboxSelect{

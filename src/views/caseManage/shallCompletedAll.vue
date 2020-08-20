@@ -19,6 +19,11 @@
                                     <span v-else>{{ row[item.title] }}</span>
                                 </template>
                             </el-table-column>
+                            <el-table-column align="center" label="是否规范">
+                                <template slot-scope="{row}">
+                                    {{row.weila_status == 'la_dao'?'是':'否'}}
+                                </template>
+                            </el-table-column>
                             <el-table-column align="center" label="操作">
                                 <template slot-scope="{row}">
                                     <el-button @click="showDialogPanel(row.exhibits)" class="highlight-btn" size="small">已有案卷</el-button>
@@ -187,12 +192,16 @@
                 this.showModel.dialogTableVisible = false;
                 this.showModel.dialogReceivedVisible = false;
                 const resultData = await this.$api.getConfirmedByPage(dataInfo);
+                console.log('列表信息')
+                console.log(resultData.data.list)
                 const pagination = { ...this.pagination };
                 let resultData_table = [];
                 resultData.data.list.map(item=>{
                     resultData_table.push({...item,wait_quantity: item.total_quantity - item.in_quantity})
                 })
+               
                 this.showModel.tableData = resultData_table;
+                 console.log(this.showModel.tableData)
                 pagination.total = resultData.data.total;
                 this.pagination = pagination;
                 this.loadingTable = false;

@@ -56,6 +56,7 @@ const asyncDataRoutes = [
                     {"path": "mergeRequest", "component": "views/archivesManage/exhibitDoubt/mergeRequest", "name": "多案并卷 - MergeRequest", "meta":{ "title":"多案并卷","icon": "icon-zhiliangpingcha" }},
                     {"path": "mergeRequestDismantle", "component": "views/archivesManage/exhibitDoubt/mergeRequestDismantle", "name": "多案并卷拆卷 - MergeRequestDismantle", "meta":{ "title":"多案并卷拆卷","icon": "icon-zhiliangpingcha" }},
                     {"path": "caseHandling", "component": "views/archivesManage/exhibitDoubt/caseHandling", "name": "新增案件处理 - CaseHandling", "meta":{ "title":"新增案件处理","icon": "icon-zhiliangpingcha" }},
+                    {"path": "Searchcase", "component": "views/archivesManage/exhibitDoubt/searchCase", "name": "备注案件查询 - Searchcase", "meta":{ "title":"备注案件查询","icon": "icon-zhiliangpingcha" }},
                     {"path": "BySelfMatchDoubt", "component": "views/archivesManage/exhibitDoubt/bySelfMatchDoubt", "name": "人工匹配 - BySelfMatchDoubt", "meta":{ "title":"人工匹配","icon": "icon-zhiliangpingcha" }},
                 ]
             },

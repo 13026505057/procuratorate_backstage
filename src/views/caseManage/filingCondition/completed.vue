@@ -1,7 +1,7 @@
 <template>
     <div class="unCompleted-content">
         <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'case'" @comfirmSearch="comfirmSearch" 
-        @receivedAddress="receivedAddress" @exportExcelFun="openExportExcelFun" :exportExcelBtn="true"/>
+        @receivedAddress="receivedAddress" @exportExcelFun="openExportExcelFun" :exportExcelBtn="true" :guifan='true'/>
         <div class="head-tab">
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane class="tab-pane-position" v-for="tabItem in tabItems" :key="tabItem.case_type_id" :name="tabItem.case_type_id" >
@@ -42,6 +42,11 @@
                                 >
                                 <template slot-scope="props">
                                     <span>{{props.row.total_quantity-props.row.in_quantity}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column align="center" label="是否规范办结">
+                                <template slot-scope="{row}">
+                                    {{row.weila_status == 'wei_la_dao'?'否':'是'}}
                                 </template>
                             </el-table-column>
                             <el-table-column
@@ -229,6 +234,8 @@
                 const resultData = await this.$api.getInByPage(dataInfo);
                 if(resultData && resultData.code == '0') {
                     this.tableData = resultData.data.list;
+                    console.log('列表数据')
+                    console.log(this.tableData)
                     this.seatchData.total = resultData.data.total
                     this.tableLoading = false;
                 }

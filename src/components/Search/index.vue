@@ -5,6 +5,7 @@
                 <el-input v-model="item.value" :placeholder="item.placeholder" 
                     class="item" clearable></el-input>
             </template>
+            
             <template v-else-if="item.name == 'dataPicker'">
                 <el-date-picker v-model="item.value" :placeholder="item.placeholder" :picker-options="pickerOptions"
                     type="year" class="item" value-format="yyyy" clearable></el-date-picker>
@@ -40,6 +41,17 @@
                     </el-option>
                 </el-select>
             </template>
+            <template v-else-if="guifan">
+                <el-select v-model="item.value" placeholder="是否规范办结" style="width:150px" clearable> 
+                    <el-option
+                    v-for="it in options"
+                    :key="it.value"
+                    :label="it.label"
+                    :value="it.value">
+                    </el-option>
+                </el-select>
+            </template>
+         
         </div>
         <div class="searchItem" v-if="hiddenAdress">
             <template v-if="org_list && org_list[0].level !== 'area'">
@@ -57,6 +69,8 @@
 import { mapGetters } from 'vuex'
 export default {
     props: {
+        beizhu:[Boolean],
+        guifan: [Boolean],
         resetData: [Boolean],
         addSearch: {
             type: Array,
@@ -79,6 +93,13 @@ export default {
     },
     data(){
         return{
+            options: [{
+            value: 'la_dao',
+            label: '是'
+            }, {
+            value: 'wei_la_dao',
+            label: '否'
+            }],
             selectOrgId: '',
             searchList: [],
             searchList_case: [
@@ -92,6 +113,8 @@ export default {
                 { dom: 'over_time_end', value: '',placeholder: '办结结束时间', itemId: -4, name: 'daterange_end' },
                 { dom: 'slrq_begin', value: '',placeholder: '受理开始时间', itemId: -5, name: 'daterange_begin' },
                 { dom: 'slrq_end', value: '',placeholder: '受理结束时间', itemId: -6, name: 'daterange_end' },
+                { dom: 'weila_status', value: '',placeholder: '是否规范', itemId: 8, name: 'weila_status' },
+                { dom: 'mark', value: '',placeholder: '请输入备注', itemId: 9, name: 'input' },
             ],
             searchList_case_sl: [
                 { dom: 'case_bh', value: '', placeholder: '统一受案号', itemId: 0, name: 'input' },

@@ -73,7 +73,7 @@
                     // { dom: 'exhibit_name', value: '',placeholder: '请输入案卷名称', itemId: 4, name: 'input' },
                     { dom: 'bgr', value: '',placeholder: '请输入嫌疑人', itemId: 5, name: 'input' },
                     { dom: 'cbr', value: '',placeholder: '请输入承办人', itemId: 6, name: 'input' },
-                    { dom: 'nd', value: '',placeholder: '年度', itemId: 7, name: 'dataPicker' }
+                    { dom: 'nd', value: '',placeholder: '年度', itemId: 7, name: 'dataPicker' },
                 ],
                 setDynamicBtn: [
                     { title: '导出', fun: 'exprotFun' }

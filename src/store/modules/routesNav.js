@@ -46,7 +46,8 @@ import UnStandard from '@/views/archivesManage/exhibitDoubt/unStandard'
 import WasDeleteExhibite from '@/views/archivesManage/exhibitDoubt/wasDeleteExhibite'
 import MergeRequest from '@/views/archivesManage/exhibitDoubt/mergeRequest' 
 import MergeRequestDismantle from '@/views/archivesManage/exhibitDoubt/mergeRequestDismantle' 
-import CaseHandling from '@/views/archivesManage/exhibitDoubt/caseHandling' 
+import CaseHandling from '@/views/archivesManage/exhibitDoubt/caseHandling'
+import Searchcase from '@/views/archivesManage/exhibitDoubt/searchcase' 
 import MatterExhibit from '@/views/archivesManage/exhibitDoubt/matterExhibit'
 import BySelfMatchDoubt from '@/views/historyCase/bySelfMatch'
 import UnCompletedPutExhibit from '@/views/archivesManage/putStorage/uncompletedExhibit'
@@ -134,6 +135,7 @@ let routesNav = {
     MergeRequest: MergeRequest,
     MergeRequestDismantle:MergeRequestDismantle,
     CaseHandling:CaseHandling,
+    Searchcase:Searchcase,
     BindReadyItem: BindReadyItem,
     MatterExhibit: MatterExhibit,
     UnCompletedPutExhibit:UnCompletedPutExhibit,

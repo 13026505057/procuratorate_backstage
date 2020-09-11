@@ -2,8 +2,8 @@
     <div class="unit-content">
         <!-- <div class="search-box"> -->
         <div class="head-search">
-            <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" 
-                @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
+            <Search :addSearch="addSearch" :selectOption="selectOption" :hiddenAdress='false' :resetData="true" @comfirmSearch="comfirmSearch" 
+                @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun" />
         </div>
             
         <!-- </div> -->
@@ -63,10 +63,12 @@
                 <span>
                     <el-form ref="form" :model="unit_form" label-width="80px">
                         <el-form-item :label="formItem.name" v-for="formItem in formItems" :key="formItem.formId">
-                            <el-input v-model="unit_form[formItem.inp]" :show-password="formItem.formId == '1'?true:false"></el-input>
+                            <span style="color:red">*</span>
+                            <el-input v-model="unit_form[formItem.inp]" :show-password="formItem.formId == '1'?true:false" style="width:95%"></el-input>
                         </el-form-item>
                         <el-form-item label="部门">
-                            <el-select v-model="unit_form.dept_ids" multiple clearable placeholder="请选择" style="width:100%">
+                            <span style="color:red">*</span>
+                            <el-select v-model="unit_form.dept_ids" multiple clearable placeholder="请选择" style="width:95%">
                                 <el-option
                                     v-for="item in deptOptions"
                                     :key="item.dept_id"
@@ -76,7 +78,8 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="职位">
-                            <el-select v-model="unit_form.position_ids" multiple clearable placeholder="请选择" style="width:100%">
+                            <span style="color:red">*</span>
+                            <el-select v-model="unit_form.position_ids" multiple clearable placeholder="请选择" style="width:95%">
                                 <el-option
                                     v-for="item in positionData"
                                     :key="item.position_id"
@@ -86,7 +89,8 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="角色">
-                            <el-select v-model="unit_form.role_ids" multiple clearable placeholder="请选择" style="width:100%">
+                            <span style="display:inline-block;width:3px"></span>
+                            <el-select v-model="unit_form.role_ids" multiple clearable placeholder="请选择" style="width:95%">
                                 <el-option
                                     v-for="item in roleOptions"
                                     :key="item.role_id"
@@ -96,12 +100,14 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="权限组设置">
-                            <el-select v-model="unit_form.group_ids" multiple clearable placeholder="请选择" style="width:100%">
+                            <span style="color:red">*</span>
+                            <el-select v-model="unit_form.group_ids" multiple clearable placeholder="请选择" style="width:95%">
                                 <el-option v-for="item in groupOptions" :key="item.group_id" :label="item.group_name" :value="item.group_id"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="路由设置">
-                            <el-select v-model="unit_form.vue_role_ids" clearable placeholder="请选择" style="width:100%">
+                            <span style="color:red">*</span>
+                            <el-select v-model="unit_form.vue_role_ids" clearable placeholder="请选择" style="width:95%">
                                 <el-option
                                     v-for="item in routesGroupsArr"
                                     :key="item.vue_role_id"
@@ -117,10 +123,8 @@
                         :title="popconfirmTitle"
                         @onConfirm="confirmClick"
                         >
-                        <!-- <el-button>删除</el-button> -->
                         <el-button slot="reference" type="primary" @click="confirmAddUnit">确 定</el-button>
                     </el-popconfirm>
-                    <!-- <el-button type="primary" @click="confirmAddUnit">确 定</el-button> -->
                     <el-button type="primary" @click="dialogVisible = false">关 闭</el-button>
                 </span>
             </el-dialog>
@@ -144,7 +148,7 @@
     export default {
         components: { Search },
         computed: {
-            ...mapGetters(['base_url'])
+            ...mapGetters(['base_url','org_id'])
         },
         data()  {
             return  {
@@ -221,6 +225,7 @@
             this.getGroupList();
             this.getPositionList();
             this.getRoutesGroupsList();
+      
         },
         methods: {
             setDynamicBtnFun(data){
@@ -253,15 +258,22 @@
                     this.seatchData.total = resultData.data.total;
                 }
             },
-            // 查部门
-            async getDeptList(){
-                const dataInfo = {pageNum:1,pageSize:1000}
+            //新增 修改里边查部门
+             async getUeptList(dataInfo){              
                 const resultData = await this.$api.getDepartmentList(dataInfo);
+                       if(resultData&&resultData.code == 0){
+                            this.deptOptions = resultData.data.list;
+                       }
+             },
+            // 查部门
+            async getDeptList(){              
+                const dataInfo = {pageNum:1,pageSize:1000}
+                const resultData = await this.$api.getOrgbm(dataInfo);
                 let resultData_user = await this.$api.getUserList();
-                if(resultData&&resultData.code == 0){
-                    this.deptOptions = resultData.data.list;
+                if(resultData&&resultData.code == 0){                   
                     let dept = { label: 'dept_name', value: 'dept_id' }
-                    this.selectOption.dept_id = this.refeshArr(resultData.data.list,dept)
+                    this.selectOption.dept_id = this.refeshArr(resultData.data,dept)
+                    console.log( this.selectOption.dept_id )
                 }
                 if(resultData_user&&resultData_user.code == 0){
                     let user = { label: 'user_true_name', value: 'user_true_name' }
@@ -326,8 +338,12 @@
                 this.unit_form.group_ids = [];
                 if(type == "add"){
                     this.dialogTitle = "新增人员";
+                    const id = {pageNum:1,pageSize:1000,org_id:this.org_id}
+                    this.getUeptList(id)
                 }else{
                     this.dialogTitle = "修改人员"
+                    const id = {pageNum:1,pageSize:1000,org_id:row_user_id.org_id}
+                    this.getUeptList(id)
                     this.unit_form.username = row_user_id.username;
                     this.unit_form.password = '';
                     this.unit_form.user_true_name = row_user_id.user_true_name;
@@ -359,24 +375,66 @@
                     this.popconfirmTitle = "确定修改吗"
                 }
             },
-            async confirmClick(){
-                console.log(this.unit_form)
-                this.unit_form.dept_ids = this.unit_form.dept_ids.join(',');
-                this.unit_form.position_ids = this.unit_form.position_ids.join(',');
-                this.unit_form.role_ids = this.unit_form.role_ids.join(',');
-                this.unit_form.group_ids = this.unit_form.group_ids.join(',');
-                const dataInfo = { ...this.unit_form };
+            async confirmClick(){        
                 if(this.type == "add"){
-                    dataInfo.password = md5.hex(this.unit_form.password)
-                    const resultData = await this.$api.addPersonnel(dataInfo);
-                    if(resultData&&resultData.code == 0){
+                    if(!this.unit_form.username){
                         this.$message({
-                            message: '新增成功',
-                            type: 'success'
+                            message: '请填写账号',
+                            type: 'error'
                         });
-                        this.dialogVisible = false;
+                    }else if(!this.unit_form.password){
+                        this.$message({
+                            message: '请填写密码',
+                            type: 'error'
+                        });
+                    }else if(!this.unit_form.user_true_name){
+                        this.$message({
+                            message: '请填写真实姓名',
+                            type: 'error'
+                        });
+                    }else if(!this.unit_form.vue_role_ids){
+                        this.$message({
+                            message: '请选择路由设置',
+                            type: 'error'
+                        });
+                        
+                    }else if(this.unit_form.dept_ids.length == 0){
+                        this.$message({
+                            message: '请选择部门',
+                            type: 'error'
+                        });
+                    }else if(this.unit_form.group_ids.length == 0){
+                        this.$message({
+                            message: '请选择权限组设置',
+                            type: 'error'
+                        });
+                    }else if(this.unit_form.position_ids.length == 0){
+                        this.$message({
+                            message: '请选择职位',
+                            type: 'error'
+                        });
+                    }else{
+                        this.unit_form.dept_ids = this.unit_form.dept_ids.join(',');
+                        this.unit_form.position_ids = this.unit_form.position_ids.join(',');
+                        this.unit_form.role_ids = this.unit_form.role_ids.join(',');
+                        this.unit_form.group_ids = this.unit_form.group_ids.join(',');
+                        const dataInfo = { ...this.unit_form };
+                        dataInfo.password = md5.hex(this.unit_form.password)
+                        const resultData = await this.$api.addPersonnel(dataInfo);
+                        if(resultData&&resultData.code == 0){
+                            this.$message({
+                                message: '新增成功',
+                                type: 'success'
+                            });
+                            this.dialogVisible = false;
+                        }
                     }
                 }else{
+                    this.unit_form.dept_ids = this.unit_form.dept_ids.join(',');
+                    this.unit_form.position_ids = this.unit_form.position_ids.join(',');
+                    this.unit_form.role_ids = this.unit_form.role_ids.join(',');
+                    this.unit_form.group_ids = this.unit_form.group_ids.join(',');
+                    const dataInfo = { ...this.unit_form };
                     if(dataInfo.password) dataInfo.password = md5.hex(dataInfo.password);
                     dataInfo['user_id'] = this.user_id;
                     const resultData = await this.$api.updatePersonnel(dataInfo);

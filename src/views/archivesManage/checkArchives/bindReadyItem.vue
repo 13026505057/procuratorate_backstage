@@ -81,7 +81,7 @@
                     </el-table-column>
                     <el-table-column align="center" label="操作">
                         <template slot-scope="{row}">
-                            <el-button @click="bindCaseDataClick_ysl(row.bmsah)" class="highlight-btn" type="operation" size="small">绑定</el-button>
+                            <el-button @click="bindCaseDataClick_ysl(row.bmsah,row.over_time)" class="highlight-btn" type="operation" size="small">绑定</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -94,6 +94,18 @@
                 </el-pagination>
             </template>
         </el-dialog>
+        <!-- 已受理案件绑定弹窗 -->
+        <el-dialog v-dialogDrag title="已受理案件绑定" :visible.sync="ysldet" @close="resetSubmitInfo_case">
+              <el-form :model="ruleForm" :rules="rulesForm" ref="rulesForm" label-width="130px" class="demo-ruleForm">
+                <el-form-item label="实质办结日期" prop="over_time">
+                     <el-date-picker v-model="ruleForm.over_time" type="datetime" placeholder="请选择办结日期"
+                            value-format="yyyy-MM-dd HH:mm:ss" default-time="00:00:00"></el-date-picker>
+                </el-form-item>
+                <el-form-item >
+                      <el-button @click="Todetais('rulesForm')"> 确定</el-button>
+                </el-form-item>
+              </el-form>
+        </el-dialog>
         <!-- 新增案件 -->
         <el-dialog v-dialogDrag title="新增案件" :visible.sync="showModel.dialogAddCaseVisible" @close="resetSubmitInfo_case">
             <el-form :model="submitDataInfo_case" :rules="rules_addCase" ref="ruleForm" label-width="20%" class="demo-ruleForm">
@@ -105,6 +117,15 @@
                             <el-option v-for="itemChild in showModel[item.dom]" :key="itemChild.value" 
                                 :label="itemChild.label" :value="itemChild.value"></el-option>
                         </el-select>
+                        <el-cascader
+                                :options="showModels"
+                                :props="{ checkStrictly: true }"
+                                v-model="submitDataInfo_case[item.dom]"
+                                clearable
+                                v-else-if="item.type == 'cascader'">
+                        </el-cascader>
+                        <el-date-picker v-model="submitDataInfo_case[item.dom]"  :placeholder="item.placeholder"  v-else-if="item.type == 'picker'"
+                            value-format="yyyy-MM-dd HH:mm:ss" default-time="00:00:00"></el-date-picker>
                     </el-form-item>
                 </template>
                 <el-form-item>
@@ -129,10 +150,17 @@
                     <el-input class="input_class" v-model="submitDataInfo.cbr"></el-input>
                 </el-form-item>
                 <el-form-item label="案件类型" prop="case_type_id">
-                    <el-select class="input_class" v-model="submitDataInfo.case_type_id" >
+                    <!-- <el-select class="input_class" v-model="submitDataInfo.case_type_id" >
                         <el-option v-for="itemChild in selectOption.case_type_id" :key="itemChild.value" 
                             :label="itemChild.label" :value="itemChild.value"></el-option>
-                    </el-select>
+                    </el-select> -->
+                    <el-cascader
+                                :options="showModels"
+                                :props="{ checkStrictly: true }"
+                                v-model="submitDataInfo.case_type_id"
+                                clearable
+                                >
+                    </el-cascader>
                 </el-form-item>
                 <el-form-item label="档号" prop="dh">
                     <el-input class="input_class" v-model="submitDataInfo.dh"></el-input>
@@ -206,6 +234,13 @@
         },
         data()  {
             return  {
+                ruleForm:{
+                    over_time:'',
+                },
+                
+                bmsah:'',
+                ysldet:false,
+                showModels:[],
                 pagination: {
                     pageNum: 1,
                     pageSize: 10,
@@ -267,7 +302,9 @@
                     bmsah: '',
                     case_type_id: '',
                     case_take_user_name: '',
-                    dept_id: ''
+                    dept_id: '',
+                    slrq:'',
+                    over_time:''
                 },
                 submitDataInfo: {
                     nd: '',
@@ -283,6 +320,11 @@
                     cbr:'',
                     print_code: true,
                     print_accept: false
+                },
+                rulesForm:{
+                    over_time:[
+                        { required: true, message: '请选择日期', trigger: 'blur' },
+                    ],
                 },
                 rules: {
                     exhibit_name:[
@@ -316,9 +358,11 @@
                     { captionTitle: '部门受案号', placeholder: '请输入部门受案号', dom: 'bmsah', itemId: 5, type: 'input' },
                     { captionTitle: '案件名称', placeholder: '请输入案件名称', dom: 'case_name', itemId: 1, type: 'input' },
                     { captionTitle: '案件描述', placeholder: '请输入案件描述', dom: 'case_desc', itemId: 3, type: 'textarea' },
-                    { captionTitle: '案件类型', placeholder: '请选择案件类型', dom: 'case_type_id', itemId: 11, type: 'select' },
+                    { captionTitle: '案件类型', placeholder: '请选择案件类型', dom: 'case_type_id', itemId: 11, type: 'cascader' },
                     { captionTitle: '承办人', placeholder: '请输入承办人', dom: 'case_take_user_name', itemId: 4, type: 'input' },
                     { captionTitle: '承办部门', placeholder: '请选择承办部门', dom: 'dept_id', itemId: 6, type: 'select' },
+                    { captionTitle: '受理日期', placeholder: '请选择受理日期', dom: 'slrq', itemId: 7, type: 'picker' },
+                    { captionTitle: '实质办结日期', placeholder: '请选择实质办结日期', dom: 'over_time', itemId: 8, type: 'picker' },
                 ],
                 rules_addCase: {
                     case_name: [
@@ -332,6 +376,12 @@
                     ],
                     dept_id: [
                         { required: true, message: '请选择承办部门', trigger: 'blur' }
+                    ],
+                    slrq: [
+                        { required: true, message: '请选择受理日期', trigger: 'blur' }
+                    ],
+                    over_time: [
+                        { required: true, message: '实质办结日期', trigger: 'blur' }
                     ],
                 },
                 // table表头
@@ -409,6 +459,17 @@
             async addCaseItem(){
                 this.resetSubmitInfo();
                 this.showModel.dialogReceivedVisible = true;
+                this.$api.getcasetype(this.org_id).then(res=>{
+                     let arr = []
+                    res.data.map((item,index)=>{
+                    arr.push({value:item.case_type_id,label:item.case_type_name,children:[]})
+                      item.caseTypes.map(it=>{
+                          arr[index].children.push({value:it.case_type_id,label:it.case_type_name}) 
+                      })
+                    
+                    })
+                     this.showModels = arr
+                })
             },
             exportCaseItem(data){
                 this.$nextTick(()=>{
@@ -434,6 +495,9 @@
                 this.submitDataInfo ['city_id'] = this.pagination.city_id;
                 this.submitDataInfo ['area_id'] = this.pagination.area_id;
                 this.submitDataInfo ['print_id'] = this.print_id;
+                console.log('this.submitDataInfo.case_type_id')
+                console.log(this.submitDataInfo.case_type_id)
+                this.submitDataInfo.case_type_id =  this.submitDataInfo.case_type_id
                 let resultData = await this.$api.yrExhibitAdd(this.submitDataInfo)
                 if(resultData && resultData.code =='0') {
                     localStorage.setItem('yr_case_type_id',this.submitDataInfo.case_type_id)
@@ -542,12 +606,25 @@
                 this.loadingTable_merge = false;
             },
             // 已受理绑定
-            bindCaseDataClick_ysl(bmsah){
-                this.bindCaseDataRequest_ysl(bmsah);
+            bindCaseDataClick_ysl(bmsah,over_time){
+                this.ysldet = true
+                this.bmsah = bmsah
+                // this.bindCaseDataRequest_ysl(bmsah,over_time);
             },
-            async bindCaseDataRequest_ysl(bmsah){
+            Todetais(formName){
+                this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.bindCaseDataRequest_ysl()
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+                });
+            },
+            async bindCaseDataRequest_ysl(){
+            
                 let dataInfo = {
-                    exhibit_id: this.bindCaseData.exhibit_id, bmsah: bmsah
+                    exhibit_id: this.bindCaseData.exhibit_id, bmsah: this.bmsah,over_time:this.ruleForm.over_time
                 }
                 let resultData = await this.$api.attachExhibitToShouliCase(dataInfo)
                 if(resultData && resultData.code == '0'){
@@ -583,6 +660,19 @@
                 Object.keys(this.submitDataInfo_case).map(item=> this.submitDataInfo_case[item] = dataInfo[item] )
                 this.showModel.dialogAddCaseVisible = true
                 this.bindCaseData.exhibit_id = exhibit_id
+                this.$api.getcasetype(this.org_id).then(res=>{
+                     let arr = []
+                    res.data.map((item,index)=>{
+                    arr.push({value:item.case_type_id,label:item.case_type_name,children:[]})
+                      item.caseTypes.map(it=>{
+                          arr[index].children.push({value:it.case_type_id,label:it.case_type_name}) 
+                      })
+                    
+                    })
+                     this.showModels = arr
+                     console.log("案件类型")
+                     console.log(arr)
+                })
             },
             //重置表单
             resetSubmitInfo_case(){
@@ -591,6 +681,7 @@
             confirmAddCase(formName){
                 this.$refs[formName].validate(async (valid) => {
                     if (valid) {
+                        this.submitDataInfo_case.case_type_id = this.submitDataInfo_case.case_type_id
                         let dataInfo = { ...this.submitDataInfo_case,case_bh: this.submitDataInfo_case.tysah }
                         let resultData = await this.$api.addCaseItemData(dataInfo)
                         if(resultData && resultData.code =='0') {

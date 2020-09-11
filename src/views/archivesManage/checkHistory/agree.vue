@@ -18,7 +18,7 @@
                                 <template slot-scope="{row}">
                                     <el-button @click="showDialogPanel(row.exhibits)" class="highlight-btn" size="small">已有案卷</el-button>
                                     <el-button v-if="row.dangan_accept_status=='0'?true:false" @click="reciveCaseAgain(row.case_id)" class="highlight-btn" size="small">重新接收</el-button>
-                                    <el-button @click="resultItem(row.case_id)" class="highlight-btn" size="small">审查结果</el-button>
+                                    <!-- <el-button @click="resultItem(row.case_id)" class="highlight-btn" size="small">审查结果</el-button> -->
                                 </template>
                             </el-table-column>
                         </el-table>

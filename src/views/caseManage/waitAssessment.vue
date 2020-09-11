@@ -2,6 +2,7 @@
     <div class="wait-content">
         <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'case'" @comfirmSearch="comfirmSearch" 
             @receivedAddress="receivedAddress" @exportExcelFun="openExportExcelFun" :exportExcelBtn="true"/>
+        <div style="display:flex;margin-top:5px;"><el-button size="mini"  style="background:rgb(94,189,255)!important;color:white" @click="tzpc">评查案件类型设置</el-button><div style="color:red; width:250px;line-height:28px;">以下案件类型不能进行一键评查：</div><Pmd :lists="lists" style="width:80%;line-height:28px;padding-left:10px"></Pmd></div>     
         <div class="head-tab">
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane class="tab-pane-position" v-for="tabItem in tabItems" :key="tabItem.case_type_id" :name="tabItem.case_type_id" >
@@ -12,7 +13,7 @@
                     <div class="table-dataList" >
                         <el-table v-loading="tableLoading" ref="multipleTable" :data="tableData" :header-cell-style="headerRowStyle"
                             border @selection-change="handleSelectionChange" style="width: 100%">
-                            <el-table-column type="selection" width="55"> </el-table-column>
+                            <el-table-column type="selection" width="55" :selectable='selectInit'> </el-table-column>
                             <el-table-column align="center" label="序号" width="60" type="index"></el-table-column>
                             <el-table-column
                                 :show-overflow-tooltip="tableItem.overflow" align="center" v-for="tableItem in tableItems"
@@ -22,7 +23,6 @@
                                         {{row[tableItem.prop]== 'in'?'已入库':'待入库'}}
                                     </span>
                                     <span v-else-if="tableItem.tableId == 5">{{row[tableItem.prop]==1?'超期':'未超期'}}</span>
-                                    <!-- <span v-else-if="tableItem.tableId == 7">{{ row[tableItem.prop] | pigeonhole }}</span> -->
                                     <span v-else-if="tableItem.tableId == 11">
                                         {{row[tableItem.prop.split('-')[0]]-row[tableItem.prop.split('-')[1]] }}
                                     </span>
@@ -31,7 +31,7 @@
                             </el-table-column>
                              <el-table-column align="center" label="操作"  >
                                  <template slot-scope='{row}'>
-                                    <el-button>延期胶卷</el-button>
+                                    <el-button @click='yanq(row.case_id)'>延期交卷</el-button>
                                     <el-button style="margin-left:0px" @click="examination(row.case_id)">确认审查</el-button>
                                  </template>
                              </el-table-column>
@@ -55,20 +55,49 @@
                 </el-tab-pane>
             </el-tabs>
         </div>
+        <!-- 延期交卷 -->
+        <el-dialog v-dialogDrag title="延期交卷" :visible.sync="yanqi">
+            <el-form ref="form" :model="form" label-width="80px">
+                <el-form-item label="延期日期">
+                    <el-date-picker
+                        v-model="form.to_time"
+                        type="datetime"
+                        value-format="yyyy-MM-dd HH:mm:ss" 
+                        placeholder="选择日期时间">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="延期原因">
+                    <el-input type="textarea" v-model="form.yanqi_reason"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="YQSubmit">确定</el-button>
+                    <el-button @click="yanqi = false">取消</el-button>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
     </div>
 </template>
 <script>
+    import Pmd from '@/components/Pmd'
     import Search from '@/components/Search'
     import { exportExcelFun } from '@/utils/auth'
     import { setTimeout } from 'timers';
     import { mapGetters } from 'vuex'
+   
     export default {
-        components: { Search },
+        components: { Search,Pmd},
         computed: {
             ...mapGetters(['base_url'])
         },
         data()  {
             return  {
+                form:{
+                    case_id:'',
+                    to_time:'',
+                    yanqi_reason:'',
+                },
+                yanqi:false,
+                lists: [],
                 addSearch: [
                     { dom: 'anguan_pingcha_chaoqi', value: '',placeholder: '评查是否超期', itemId: 6, name: 'select' },
                 ],
@@ -87,18 +116,14 @@
                 tableItems:[
                     {label: "统一受案号", prop: "case_bh", tableId:1},
                     {label: "部门受案号", prop: "bmsah", tableId:9},
-                    {label: "案件名称", prop: "case_name", tableId:2},
                     {label: "案件类型", prop: "case_type_name", tableId:3},
+                    {label: "案件名称", prop: "case_name", tableId:2},
                     {label: "案件状态", prop: "stock_status", tableId:4},
                     {label: "评查是否超期", prop: "anguan_pingcha_chaoqi", tableId:5},
                     {label: "案件描述", prop: "case_desc", overflow: true, tableId:6},                   
                     {label: "承办人", prop: "case_take_user_name", tableId:8},       
-                    // {label: "总案卷数", prop: "total_quantity", tableId:9},
-                    // {label: "在库案卷数", prop: "in_quantity", tableId:10},
-                    // {label: "待入库案卷数", prop: "total_quantity-in_quantity", tableId:11},
-                    // total_quantity-in_quantity
                     {label: "操作", prop: "case_take_user_name", tableId:10}, 
-                    {label: "延期", prop: "case_take_user_name", tableId:11}, 
+               
 
                 ],
                 dialogVisible:false,
@@ -135,10 +160,61 @@
                 return statusList[status]
             }
         },
+        created(){
+            this.caseTypeOrgGet()
+        },
         mounted(){
+            
             this.getCaseType(this.seatchData);
         },
         methods: {
+            //延期按钮
+            yanq(caseid){
+                this.yanqi = true;
+                this.form.case_id = caseid
+            },
+            YQSubmit(){
+               this.$api.yanqitime(this.form).then(res=>{
+                   if(res.code == 0){
+                        this.$message({
+                            message: '延期成功',
+                            type: 'success'
+                        });
+                        this.yanqi = false;
+                   }
+               }).catch(error=>{
+                        this.$message({
+                            message: '请重新尝试',
+                            type: 'warning'
+                        })
+               })
+            },
+            //跳转案件评查设置
+            tzpc(){
+                 this.$router.push('/setting/casetype')
+             },
+            //获取不能够一键评查的案件类型
+            caseTypeOrgGet(){
+                this.$api.caseTypeOrgGet().then(res=>{
+                    // this.lists = res.data
+                    let lis = res.data
+                    for( var i = 0;i<lis.length; i++){
+                        this.lists.push(lis[i].case_type_name)
+                        
+                    }
+                    console.log('数组')
+                    console.log(this.lists)
+                })
+            },
+            //判断当前复选框是否可以勾选
+            selectInit(row,index){
+                if(row.can_easy_pingcha == 1){
+                    return true
+                }else{
+                     return false
+                }
+                 
+            },
             receivedAddress(data){
                 Object.keys(data).map(item=> this.seatchData[item] = data[item] )
             },
@@ -230,7 +306,6 @@
                 })
                 let case_ids = case_id_arr.join(",")
                 const dataInfo = {case_ids:case_ids}
-                console.log(case_ids)
                 let resultData  = await this.$api.confirmNone(dataInfo);
                 if(resultData && resultData.code=='0'){
                     this.$message.success('操作成功')

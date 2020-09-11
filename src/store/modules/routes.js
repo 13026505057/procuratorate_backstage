@@ -9,13 +9,23 @@ const asyncDataRoutes = [
             {"path": "progress", "component": "views/caseManage/progress", "name": "案件进度查询 - Progress", "meta":{ "title":"案件进度查询","icon": "icon-jinduchaxun" }},
             {"path": "waitAssessment", "component": "views/caseManage/waitAssessment", "name": "等待质量评查 - WaitAssessment", "meta":{ "title":"等待质量评查","icon": "icon-zhiliangpingcha" }},
             {"path": "shallCompletedAllCase", "component": "views/caseManage/shallCompletedAllCase", "name": "所有应归档案件 - ShallCompletedAllCase", "meta":{ "title":"所有应归档案件","icon": "icon-zhiliangpingcha" }},
+            {  "path": "casePding", "component": "views/caseManage/casePding/index",
+            // "redirect": "/caseManage/casePding/casetime",
+            "name": "延期记录 - CasePding", "meta":{ "title":"延期记录","icon": "icon-jinduchaxun" },
+            "children": [
+                   {"path": "casetime", "component": "views/caseManage/casePding/casetime", "name": "延期中案件 - Casetime", "meta":{ "title":"延期中案件","icon": "icon-jinduchaxun" }},
+                   {"path": "casehistory", "component": "views/caseManage/casePding/casehistory", "name": "延期记录 - Casehistory", "meta":{ "title":"延期记录","icon": "icon-zhiliangpingcha" }}
+                 ]
+            },
             {   "path": "filingCondition", "component": "views/caseManage/filingCondition/index",
                 "name": "符合归档条件案件 - FilingCondition", "meta":{ "title":"符合归档条件案件","icon": "icon-jinduchaxun" },
                 "children": [
                     {"path": "uncompleted", "component": "views/caseManage/filingCondition/uncompleted", "name": "未归档案件 - UncompletedCase", "meta":{ "title":"未归档案件","icon": "icon-jinduchaxun" }},
-                    {"path": "completed", "component": "views/caseManage/filingCondition/completed", "name": "已归档案件 - CompletedCase", "meta":{ "title":"已归档案件","icon": "icon-zhiliangpingcha" }}
+                    {"path": "completed", "component": "views/caseManage/filingCondition/completed", "name": "已归档案件 - CompletedCase", "meta":{ "title":"已归档案件","icon": "icon-zhiliangpingcha" }},
+                
                 ]
             }
+       
         ]
     },
     {
@@ -107,12 +117,12 @@ const asyncDataRoutes = [
     },
     {
         "component": "layout",
-        "meta": {"title": "档案绩效评价", "icon": "lock"},
-        "name": "档案绩效评价 - PerformanceEvaluation", 
+        "meta": {"title": "时效评价", "icon": "lock"},
+        "name": "时效评价 - PerformanceEvaluation", 
         "path": "/performanceEvaluation",
         "redirect": "/performanceEvaluation",
         "children": [
-            {"path": "performanceEvaluation", "component": "views/performanceEvaluation/index", "name": "档案绩效评价 - PerformanceEvaluationItem", "meta":{ "title":"档案绩效评价","icon": "icon-zhiliangpingcha" }}
+            {"path": "performanceEvaluation", "component": "views/performanceEvaluation/index", "name": "时效评价 - PerformanceEvaluationItem", "meta":{ "title":"时效评价","icon": "icon-zhiliangpingcha" }}
         ]
     },
     {
@@ -167,6 +177,7 @@ const asyncDataRoutes = [
             {"path": "unit", "component": "views/setting/unit", "name": "单位设置 - Unit", "meta":{ "title":"单位设置","icon": "icon-zhiliangpingcha" }},
             {"path": "department", "component": "views/setting/department", "name": "部门设置 - Department", "meta":{ "title":"部门设置","icon": "icon-zhiliangpingcha" }},
             {"path": "position", "component": "views/setting/position", "name": "职位设置 - Position", "meta":{ "title":"职位设置","icon": "icon-zhiliangpingcha" }},
+            {"path": "casetype", "component": "views/setting/casetype", "name": "评查案件类型设置 - Casetype", "meta":{ "title":"评查案件类型设置","icon": "icon-zhiliangpingcha" }},
             {"path": "PermissionGroup", "component": "views/setting/permissionGroup", "name": "API权限组设置 - PermissionGroup", "meta":{ "title":"API权限组设置","icon": "icon-zhiliangpingcha" }},
             {"path": "Role", "component": "views/setting/role", "name": "角色设置 - Role", "meta":{ "title":"角色设置","icon": "icon-zhiliangpingcha" }},
             {"path": "personnel", "component": "views/setting/personnel", "name": "人员设置 - Personnel", "meta":{ "title":"人员设置","icon": "icon-zhiliangpingcha" }},

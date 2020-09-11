@@ -36,6 +36,11 @@ const setting = {
     getDepartmentList(data) {
         return request({ url: '/dept/getByPage', method: 'post', data })
     },
+    //获取机构部门
+    getOrgbm(data){
+        return request({ url: '/dept/getDeptsAddOrgName', method: 'post', data })
+        
+    },
     getDepartmentAllList(data) {
         return request({ url: '/dept/get', method: 'post', data })
     },

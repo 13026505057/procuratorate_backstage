@@ -1,208 +1,190 @@
 <template>
-    <div class="progress-content">
-        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="true" @comfirmSearch="comfirmSearch" 
-            @receivedAddress="receivedAddress" />
+    <div class="uncompletedHanderPage">
+        <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'case'" @comfirmSearch="comfirmSearch" 
+            @receivedAddress="receivedAddress" @exportExcelFun="openExportExcelFun" :exportExcelBtn="true"/>
         <div class="head-tab">
-            <div class="table-dataList" >
-                <el-table v-loading="isLoading" :data="tableData" :header-cell-style="headerRowStyle"
-                    border style="width: 100%" @cell-click="showUserDetail">
-                    <el-table-column align="center" label="序号" width="60" type="index"></el-table-column>
-                    <el-table-column align="center" v-for="tableItem in tableItems" :prop="tableItem.prop"
-                        :label="tableItem.label" :key="tableItem.label">
-                        <template slot-scope="{row}">
-                            <span v-if="tableItem.tableId == 2">{{Number(row.none_count)+Number(row.in_count)}}</span>
-                            <span v-else>{{row[tableItem.prop]}}</span>
-                        </template>
-                    </el-table-column>
-                </el-table>
-            </div>
+            <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
+                <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
+                    <span slot="label">
+                        {{item.case_type_name}}
+                        <el-badge :value="item.contNum" v-if="item.contNum == '0'?false:true" class="item tab-badge-num"></el-badge>
+                    </span>
+                    <div class="table-dataList" >
+                        <el-table :data="showModel.tableData" border style="width: 100%" v-loading="tableLoading">
+                            <el-table-column align="center" type="index"></el-table-column>
+                            <el-table-column :label="item.dataIndex" :show-overflow-tooltip="item.overflow"
+                                v-for="item in columns" :key="item.itemId" align="center">
+                                <template slot-scope="{row}">
+                                    <span v-if="item.itemId == 4">{{ row[item.title] | mapStatus }}</span>
+                                    <span v-else-if="item.itemId == 5">{{ row[item.title] | statusCheck }}</span>
+                                    <span v-else-if="item.itemId == 6">{{ row[item.title]==1?'超期':'未超期'}}</span>
+                                    <span v-else-if="item.itemId == 7||item.itemId == 8">{{ 30 - row[item.title]}}</span>
+                                    <span v-else>{{ row[item.title] }}</span>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                    <div class="pagination">
+                        <!-- 分页 -->
+                        <el-pagination small background
+                            style="text-align: center;margin-top: 20px;padding-bottom:20px;"
+                            @current-change="handleCurrentChange" :current-page.sync="pagination.pageNum"
+                            :page-size="pagination.pageSize" layout="prev, pager, next, jumper"
+                            :total="pagination.total">
+                        </el-pagination>
+                    </div>
+                </el-tab-pane>
+            </el-tabs>
         </div>
     </div>
 </template>
 <script>
     import Search from '@/components/Search'
+    import { exportExcelFun } from '@/utils/auth'
     import { mapGetters } from 'vuex'
     export default {
         components: { Search },
-        computed:{
-            ...mapGetters(['org_id','base_url','org_list'])
+        computed: {
+            ...mapGetters(['caseTimeStatus'])
+        },
+        filters: {
+            mapStatus(status){
+                const statusMap = {
+                    "in": "已归档",
+                    "in_jj_out": "已归档（交卷超期）",
+                    "in_rk_out": "已归档（入库超期）",
+                    "in_all_out": "已归档（双超期）",
+                    "none": "未归档",
+                    "none_jj_out": "未归档（交卷超期）",
+                    "none_rk_out": "未归档（入库超期）",
+                    "none_all_out": "未归档（双超期）",
+                }
+                return statusMap[status]
+            },
+            statusCheck(status){
+                const statusMap = {
+                    0: '未完成',
+                    1: '完成',
+                }
+                return statusMap[status]
+            }
         },
         data()  {
             return  {
+                pagination: {
+                    pageNum: 1,
+                    pageSize: 10
+                },
+                tableLoading: false,
                 addSearch: [
-                    { dom: 'begin_time', value: '',placeholder: '开始时间', itemId: 5, name: 'daterange_begin' },
-                    { dom: 'end_time', value: '',placeholder: '结束时间', itemId: 6, name: 'daterange_end' },
-                    { dom: 'status_case', value: [],placeholder: '请选择查询状态', itemId: 7, name: 'cascader' },
-                    { dom: 'weila_status', value: 'la_dao',placeholder: '是否包含不规范办结', itemId: 8, name: 'select' },
+                    { dom: 'time_status', value: null, placeholder: '归档情况', itemId: 5, name: 'selectTimeStatus' },
+                    { dom: 'anguan_pingcha_chaoqi', value: '', placeholder: '评查是否超期', itemId: 6, name: 'select' },
                 ],
-                selectOption:{ 
-                    status_case: [],
-                    weila_status:[
-                        { value:'la_dao', label:"不包含不规范办结",},
-                        { value:'', label:"包含不规范办结",},
-                    ]
+                selectOption: {
+                    time_status: [],
+                    anguan_pingcha_chaoqi:[
+                        {value: '',label: '评查是否超期'}, 
+                        {value: '1',label: '评查超期'}, 
+                        {value: '0',label: '评查未超期'}
+                    ],
                 },
                 showModel: {
-                    status_case_city: [
-                        {   value: 'sl', label: '按受理年度',
-                            children: [
-                                { value: 'all', label: '全市' },
-                                { value: 'area', label: '区院' },
-                            ]
-                        },
-                        {   value: 'bj', label: '按办结年度',
-                            children: [
-                                { value: 'all', label: '全市' },
-                                { value: 'area', label: '区院' },
-                            ]
-                        },
-                    ],
-                    status_case_area: [
-                        {  value: 'sl', label: '按受理年度' },
-                        {  value: 'bj', label: '按办结年度' },
-                    ],
+                    activeNameTab: "0",
+                    tableList:[],   // 类型
+                    tableData:[],   // 数据信息
                 },
-                tableData:[],
-                tableItems:[],
-                tableItemsCity:[
-                    {label: "单位名称", prop: "org_name", tableId:1},
-                    {label: "应交卷数量", prop: "", tableId:2},
-                    {label: "实交卷数量", prop: "in_count", tableId:3},
-                    {label: "超期未交卷数量", prop: "chaoqi_count", tableId:4},
-                    {label: "交卷率", prop: "persent", tableId:5},
+                // table表头
+                columns: [
+                    { title: 'case_bh', dataIndex: '统一受案号', itemId: 1 },
+                    { title: 'bmsah', dataIndex: '部门受案号', itemId: -1 },
+                    { title: 'case_name', dataIndex: '案件名称', itemId: 10 },
+                    { title: 'case_type_name', dataIndex: '案件类型', itemId: 2 },
+                    { title: 'case_desc', dataIndex: '案件描述', overflow: true, itemId: 11 },
+                    { title: 'time_status', dataIndex: '是否双归档', itemId: 4 },
+                    { title: 'case_take_user_name', dataIndex: '承办人', itemId: 3 },
+                    { title: 'bjrq', dataIndex: '办结日期', itemId: 9 },
+                    { title: 'case_none_confirm', dataIndex: '评查状态', itemId: 5 },
+                    { title: 'anguan_pingcha_chaoqi', dataIndex: '案管是否评查超期', itemId: 6 },
+                    { title: 'anguan_confirm_day', dataIndex: '办案人交卷剩余时间', itemId: 7 },
+                    { title: 'dangan_accept_day', dataIndex: '档案上架剩余时间', itemId: 8 },
                 ],
-                tableItemsArea:[
-                    {label: "办案人姓名", prop: "case_take_user_name", tableId:1},
-                    {label: "单位名称", prop: "org_name", tableId:3},
-                    {label: "部门名称", prop: "dept_name", tableId:4},
-                    {label: "应交卷数量", prop: "", tableId:2},
-                    {label: "实交卷数量", prop: "in_count", tableId:6},
-                    {label: "未交卷数量", prop: "chaoqi_count", tableId:22},
-                    {label: "交卷率", prop: "persent", tableId:7},
-                ],
-                headStyle:{
-                    backgroundColor: '#eaf5ff',
-                    borderTop: '1px solid #97cfff',
-                    borderBottom: '1px solid #97cfff',
-                    fontSize: '18px',
-                    color: '#2c2c2c'
-                },
-                seatchData: {
-                    weila_status:'la_dao',
-                },
-                isLoading:false,
             }
         },
         mounted(){
-            this.initLevelData()
-            this.getDataList(this.seatchData)
+            this.getTypeList()
+            this.getCaseType();
         },
         methods: {
-            initLevelData(){
-                if(this.org_list && this.org_list[0].level !== 'area') {
-                    this.selectOption.status_case = this.showModel.status_case_city
-                    let dataArr = ['sl','all']
-                    this.addSearch.map(item => {if(item.dom == 'status_case') item.value = dataArr })
-                    this.seatchData.status_case = JSON.stringify(dataArr)
-                } else {
-                    this.selectOption.status_case = this.showModel.status_case_area
-                    let dataArr = ['sl']
-                    this.addSearch.map(item => {if(item.dom == 'status_case') item.value = dataArr })
-                    this.seatchData.status_case = JSON.stringify(dataArr)
-                }
-            },
-            // 展示个人统计数
-            showUserDetail(row, column, cell, event){
-                console.log(row, column, cell, event)
-            },
             receivedAddress(data){
-                Object.keys(data).map(item=> this.seatchData[item] = data[item] )
+                Object.keys(data).map(item=> this.pagination[item] = data[item] )
             },
-            // 默认数据列表
-            async getDataList(dataInfo){
-                // 受理和办结
-                let status = dataInfo.status_case
-                console.log(status)
-                let dataList = [
-                    { dom: ["sl","all"], fun: "caseJaugeAllSlrq" },
-                    { dom: ["sl","area"], fun: "caseJaugeSlrq" },
-                    { dom: ["bj","all"], fun: "caseJaugeAll" },
-                    { dom: ["bj","area"], fun: "caseJauge" },
-                    { dom: ["sl"], fun: "caseJaugeSlrq" },
-                    { dom: ["bj"], fun: "caseJauge" },
+            getTypeList(){
+                let dataArr = [
+                    { showModel: 'time_status', store: 'caseTimeStatus' },
                 ]
-                dataList.map(item=>{
-                    if(status == JSON.stringify(item.dom)) {
-                        delete dataInfo.status_case;
-                        this[item.fun](dataInfo)
-                    }
+                dataArr.map(item=> this.selectOption[item.showModel] = this[item.store] )
+                console.log(this.selectOption)
+            },
+            // 分页
+            handleCurrentChange(val) {
+                this.pagination['pageNum'] = val;
+                this.getTableList(this.pagination)
+            },
+            handleClickTab(e){
+                this.pagination.case_type_id = e.paneName
+                this.getTableList(this.pagination)
+            },
+            // 类型分类
+            getCaseType(){
+                this.$api.getCaseType().then(async (res)=>{
+                    this.showModel.tableList = res.data.list;
+                    if(this.showModel.activeNameTab !== '0') this.pagination.case_type_id = this.showModel.activeNameTab
+                        else this.pagination.case_type_id = this.showModel.activeNameTab = res.data.list[0].case_type_id
+                    this.getTableList(this.pagination)
+                    // 角标
+                    let dataInfo = {...this.pagination};
+                    ['pageNum','pageSize','case_type_id'].map(item=> delete dataInfo[item])
+                    const resultData = await this.$api.getCornerMarkType(dataInfo);
+                    Object.keys(resultData.data).map(item=>{
+                        res.data.list.map((itemChild,index)=>{
+                            if("_"+itemChild.case_type_id == item) {
+                                itemChild.contNum = resultData.data[item]
+                                this.$set(this.showModel.tableList[index],index,itemChild)
+                            }
+                        })
+                    })
                 })
             },
-            //查询地级市的归档率 - 受理
-            async caseJaugeAllSlrq(dataInfo){
-                this.isLoading = true;
-                dataInfo ['nd'] = this.seatchData.timeYear;
-                dataInfo ['area_id'] = '';
-                this.tableItems = this.tableItemsCity;
-                const resultData = await this.$api.caseJaugeAllSlrq(dataInfo);
-                if(resultData && resultData.code == '0') {
-                    this.tableData = resultData.data;
-                    this.isLoading = false
-                }
+            // 获取案件列表
+            async getTableList(dataInfo){
+                this.tableLoading = true;
+                const resultData = await this.$api.getProgressCase(dataInfo);
+                const pagination = { ...this.pagination };
+                let resultData_table = [];
+                resultData.data.list.map(item=>{
+                    resultData_table.push({...item,wait_quantity: item.total_quantity - item.in_quantity})
+                })
+                this.showModel.tableData = resultData_table;
+                pagination.total = resultData.data.total;
+                this.pagination = pagination;
+                this.tableLoading = false;
             },
-            //查询基层院的归档率 - 受理
-            async caseJaugeSlrq(dataInfo){
-                this.isLoading = true;
-                this.tableItems = this.tableItemsArea;
-                // dataInfo ['area_id'] = this.org_id;
-                dataInfo ['nd'] = this.seatchData.timeYear;
-                dataInfo ['city_id'] = '';
-                const resultData = await this.$api.caseJaugeSlrq(dataInfo);
-                if(resultData && resultData.code == '0') {
-                    this.tableData = resultData.data;
-                    this.isLoading = false
-                }
-            },
-            //查询地级市的归档率 - 办结
-            async caseJaugeAll(dataInfo){
-                this.isLoading = true;
-                dataInfo ['nd'] = this.seatchData.timeYear;
-                dataInfo ['area_id'] = '';
-                this.tableItems = this.tableItemsCity;
-                const resultData = await this.$api.caseJaugeAll(dataInfo);
-                if(resultData && resultData.code == '0') {
-                    this.tableData = resultData.data;
-                    this.isLoading = false
-                }
-            },
-            //查询基层院的归档率 - 办结
-            async caseJauge(dataInfo){
-                this.isLoading = true;
-                this.tableItems = this.tableItemsArea;
-                // dataInfo ['area_id'] = this.org_id;
-                dataInfo ['nd'] = this.seatchData.timeYear;
-                dataInfo ['city_id'] = '';
-                const resultData = await this.$api.caseJauge(dataInfo);
-                if(resultData && resultData.code == '0') {
-                    this.tableData = resultData.data;
-                    this.isLoading = false
-                }
-            },
+            // 确认搜索
             comfirmSearch(data){
+                this.$nextTick(()=>{ for(let key in data){ this.pagination[key] = data[key] }  })
+                this.getCaseType()
+            },
+             // 导出
+            openExportExcelFun(data){
                 console.log(data)
-                this.$nextTick(()=>{ 
-                    for(let key in data) { this.seatchData[key] = data[key] } 
-                    this.getDataList(this.seatchData)
-                })
+                // window.open(this.base_url+'/cases/cases/exportYingGuiWeiGuiCases?'+exportExcelFun(data))
             },
-            headerRowStyle({row, rowIndex}){ 
-                return this.headStyle
-            },
+           
         },
     }
 </script>
 <style lang="scss">
-    .progress-content{
+    .uncompletedHanderPage{
         margin: 20px;
         .head-tab{
             margin-top: 30px;
@@ -214,10 +196,25 @@
                 }
                 .highlight-btn{
                     background-color: #6cb5ff;
-                    
                 }
                 .ash-btn{
                     background-color: #d1d1d1;
+                }
+            }
+            .pagination{
+                margin-top: 40px;
+                display: flex;
+                justify-content: center;
+                .page-change{
+                    height: 28px;
+                    line-height: 28px;
+                    font-size: 13px;
+                    margin: 2px 5px;
+                    padding: 0px 6px;
+                    // background-image: $gradual-color;
+                    color: #ffffff;
+                    border-radius: 4px;
+                    cursor: pointer;
                 }
             }
             .tab-pane-position {
@@ -227,20 +224,9 @@
                 position: absolute;
                 top: -2px;
             }
-            .customClass{
-                // background-color: #47ccff;
-            }
-            .step-flex{
-                display: flex;
-                justify-content: center;
-                overflow-y: auto;
-            }
-            .dialog-footer button{
-                margin: 0 60px;
-            }
+        }
+        .checkboxSelect{
+            padding: 15px 0 0 10%;;
         }
     }
-    
- 
-    
 </style>

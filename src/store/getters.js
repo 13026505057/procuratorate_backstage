@@ -12,6 +12,7 @@ const getters = {
   org_id: state => state.user.org_id,
   depList: state => state.user.depList,
   user_id: state => state.user.user_id,
+  dept_id: state => state.user.dept_id,
   address_id: state => state.user.address_id,
   user_true_name: state => state.user.user_true_name,
   roles: state => state.user.roles,

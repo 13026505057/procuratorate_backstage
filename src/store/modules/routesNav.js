@@ -10,11 +10,15 @@ import Role from '@/views/setting/role'
 import Personnel from '@/views/setting/personnel'
 import StorageLocation from '@/views/setting/storageLocation'
 import PrintSetting from '@/views/setting/printSetting'
+import Casetype from '@/views/setting/casetype'
 
 // 案管
 import FilingCondition from '@/views/caseManage/filingCondition/index'
 import CompletedCase from '@/views/caseManage/filingCondition/completed'
 import UncompletedCase from '@/views/caseManage/filingCondition/uncompleted'
+import CasePding from '@/views/caseManage/casePding/index'
+import Casehistory from '@/views/caseManage/casePding/casehistory'
+import Casetime from '@/views/caseManage/casePding/casetime'
 import WaitAssessment from '@/views/caseManage/waitAssessment'
 import Progress from '@/views/caseManage/progress'
 import ShallCompletedAllCase from '@/views/caseManage/shallCompletedAll'
@@ -101,6 +105,7 @@ let routesNav = {
     PermissionGroup:PermissionGroup,
     StorageLocation:StorageLocation,
     PrintSetting:PrintSetting,
+    Casetype:Casetype,
     
     // 案管
     FilingCondition: FilingCondition,
@@ -109,6 +114,10 @@ let routesNav = {
     WaitAssessment: WaitAssessment,
     Progress: Progress,
     ShallCompletedAllCase: ShallCompletedAllCase,
+    CasePding:CasePding,
+    Casehistory:Casehistory,
+    Casetime:Casetime,
+
     
     // 档案Routes
     ShallCompletedAll: ShallCompletedAll,

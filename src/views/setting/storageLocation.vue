@@ -32,14 +32,7 @@
                         label="操作">
                         <template slot-scope="{ row }">
                             <el-button @click="printClick(row)" class="ash-btn" size="small">条码打印</el-button>
-                            <!-- <el-popconfirm
-                                icon="el-icon-info"
-                                iconColor="red"
-                                title="确定删除吗？"
-                                @onConfirm = "confirmDel"
-                                >
-                                <el-button slot="reference" @click="delUnitClick(row.position_id)" class="highlight-btn" size="small">删除</el-button>
-                            </el-popconfirm> -->
+                            <el-button @click="detail(row)" class="ash-btn" size="small">详情</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -54,6 +47,31 @@
                     :total="total1">
                 </el-pagination>
             </div>
+            <el-dialog v-dialogDrag
+                title="详情"
+                :visible.sync="detailrow"
+                width="40%"
+                center>
+                <el-table
+                    :data="tabaledetail"
+                    style="width: 100%">
+                    <el-table-column
+                        prop="cell_name"
+                        label="格子名称"
+                        align="center"
+                        >
+                    </el-table-column>
+                    <el-table-column
+                        prop="cell_id"
+                        label="格子条码"
+                        align="center">
+                    </el-table-column>
+                </el-table>
+                
+                <span slot="footer" class="dialog-footer">      
+                    <el-button type="primary" @click="detailrow = false">关 闭</el-button>
+                </span>
+            </el-dialog>
              <el-dialog v-dialogDrag
                 :title="dialogTitle"
                 :visible.sync="dialogVisible"
@@ -146,6 +164,8 @@
         },
         data()  {
             return  {
+                tabaledetail:[],
+                detailrow:false,
                 tableItems:[
                     { label: "货架名称",  prop: "shale_name" },
                     { label: "货架行数", prop: "hang" ,},
@@ -210,6 +230,12 @@
             this.getDataList();
         },
         methods: {
+            detail(row){
+                 this.detailrow = true
+                 this.tabaledetail = row.cellList
+                 console.log('当前行')
+                 console.log(this.tabaledetail)
+            },
             updateStorageData(){
                 this.showModel.dialogLocationVisible = true
             },

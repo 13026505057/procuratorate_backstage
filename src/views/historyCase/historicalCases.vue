@@ -91,6 +91,8 @@
                             <el-option v-for="itemChild in showModel[item.dom]" :key="itemChild.value" 
                                 :label="itemChild.label" :value="itemChild.value"></el-option>
                         </el-select>
+                        <el-date-picker v-model="submitDataInfo_case[item.dom]" type="datetime" :placeholder="item.placeholder"  v-if="item.type == 'time'"
+                            value-format="yyyy-MM-dd HH:mm:ss" default-time="00:00:00"></el-date-picker>
                     </el-form-item>
                 </template>
                 <el-form-item>
@@ -207,7 +209,9 @@
                     bmsah: '',
                     case_type_id: '',
                     case_take_user_name: '',
-                    dept_id: ''
+                    dept_id: '',
+                    slrq:'',
+                    over_time:'',
                 },
                 eachDataInfoList_case: [
                     { captionTitle: '统一受案号', placeholder: '请输入统一受案号', dom: 'tysah', itemId: 2, type: 'input' },
@@ -217,6 +221,8 @@
                     { captionTitle: '案件类型', placeholder: '请选择案件类型', dom: 'case_type_id', itemId: 11, type: 'select' },
                     { captionTitle: '承办人', placeholder: '请输入承办人', dom: 'case_take_user_name', itemId: 4, type: 'input' },
                     { captionTitle: '承办部门', placeholder: '请选择承办部门', dom: 'dept_id', itemId: 6, type: 'select' },
+                    { captionTitle: '受理日期', placeholder: '请选择受理日期', dom: 'slrq', itemId: 7, type: 'time' },
+                    { captionTitle: '实质办结日期', placeholder: '请选择实质办结日期', dom: 'over_time', itemId: 8, type: 'time' },
                 ],
                 rules_addCase: {
                     case_name: [
@@ -230,7 +236,13 @@
                     ],
                     dept_id: [
                         { required: true, message: '请选择承办部门', trigger: 'blur' }
-                    ]
+                    ],
+                    slrq: [
+                        { required: true, message: '请选择受理日期', trigger: 'blur' }
+                    ],
+                    over_time: [
+                        { required: true, message: '请选择实质办结日期', trigger: 'blur' }
+                    ],
                 },
                 setDynamicBtn: [
                     { title: '新增案件', fun: 'addCaseItem' },

@@ -1,5 +1,11 @@
 <template>
     <div class="searchInfo">
+        <div class="searchItem" v-if="!hiddenAdress">
+            <template v-if="org_list && org_list[0].level !== 'area'">
+                <el-cascader ref="treeOrg" class="demonstration" placeholder="试试搜索：青岛市" v-model="selectOrgId" :options="org_list" 
+                    :props="{ checkStrictly: true }" filterable clearable @change='getCheckedNodes'></el-cascader>
+            </template>
+        </div>
         <div class="searchItem" v-for="item in searchList" :key="item.itemId">
             <template v-if="item.name == 'input'">
                 <el-input v-model="item.value" :placeholder="item.placeholder" 
@@ -51,6 +57,16 @@
                     </el-option>
                 </el-select>
             </template>
+            <template v-else-if="item.name == 'is_alive'&& youxiao">
+                <el-select v-model="item.value" placeholder="是否有效" style="width:150px" clearable> 
+                    <el-option
+                    v-for="it in optilist"
+                    :key="it.value"
+                    :label="it.label"
+                    :value="it.value">
+                    </el-option>
+                </el-select>
+            </template>
          
         </div>
         <div class="searchItem" v-if="hiddenAdress">
@@ -69,8 +85,9 @@
 import { mapGetters } from 'vuex'
 export default {
     props: {
-        beizhu:[Boolean],
+   
         guifan: [Boolean],
+        youxiao: [Boolean],
         resetData: [Boolean],
         addSearch: {
             type: Array,
@@ -100,6 +117,13 @@ export default {
             value: 'wei_la_dao',
             label: '否'
             }],
+            optilist: [{
+            value: '1',
+            label: '是'
+            }, {
+            value: '0',
+            label: '否'
+            }],
             selectOrgId: '',
             searchList: [],
             searchList_case: [
@@ -114,7 +138,7 @@ export default {
                 { dom: 'slrq_begin', value: '',placeholder: '受理开始时间', itemId: -5, name: 'daterange_begin' },
                 { dom: 'slrq_end', value: '',placeholder: '受理结束时间', itemId: -6, name: 'daterange_end' },
                 { dom: 'weila_status', value: '',placeholder: '是否规范', itemId: 8, name: 'weila_status' },
-                { dom: 'mark', value: '',placeholder: '请输入备注', itemId: 9, name: 'input' },
+                { dom: 'is_alive', value: '',placeholder: '是否有效', itemId: 12, name: 'is_alive' },
             ],
             searchList_case_sl: [
                 { dom: 'case_bh', value: '', placeholder: '统一受案号', itemId: 0, name: 'input' },
@@ -161,6 +185,10 @@ export default {
             else addSearchItem(this.addSearch)
     },
     methods: {
+        getCheckedNodes(){
+            console.log('132')
+          console.log(this.selectOrgId)
+        },
         changeInputData(dom){
             this.autocompleteSelect = dom
         },
@@ -182,6 +210,8 @@ export default {
         }, 
         comfirmSearch(){
             let dataInfo = this.resultDataInfo()
+            console.log('搜索框确定')
+            console.log(dataInfo)
             this.$emit('comfirmSearch',dataInfo)
         },
         resultDataInfo(){

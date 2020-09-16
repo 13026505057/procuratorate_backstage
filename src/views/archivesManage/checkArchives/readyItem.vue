@@ -209,7 +209,6 @@
                     { title: 'case_name', dataIndex: '案件名称', itemId: 10 },
                     { title: 'ajlb_mc', dataIndex: '案件类型', itemId: 2 },
                     { title: 'case_desc', dataIndex: '案件描述', overflow: true, itemId: 11 },
-                    // { title: 'time_status', dataIndex: '是否归档', itemId: 4 },
                     { title: 'case_take_user_name', dataIndex: '承办人', itemId: 3 },
                     { title: 'slrq', dataIndex: '受理日期', itemId: 5 },
                     { title: 'bjrq', dataIndex: '办结按钮点击日期', itemId: 6 },

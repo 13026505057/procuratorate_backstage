@@ -66,8 +66,7 @@
                         label="格子条码"
                         align="center">
                     </el-table-column>
-                </el-table>
-                
+                </el-table>               
                 <span slot="footer" class="dialog-footer">      
                     <el-button type="primary" @click="detailrow = false">关 闭</el-button>
                 </span>
@@ -228,29 +227,25 @@
         mounted(){
             this.stockForm.org_id = this.org_id;
             this.getDataList();
+            this.getcc();
         },
         methods: {
             detail(row){
                  this.detailrow = true
                  this.tabaledetail = row.cellList
-                 console.log('当前行')
-                 console.log(this.tabaledetail)
             },
             updateStorageData(){
                 this.showModel.dialogLocationVisible = true
             },
-            async getDataList(){
-                const dataInfo = {pageNum:this.currentPage1,pageSize:this.pageSize,org_id:this.stockForm.org_id}
-                const resultData = await this.$api.getStock(dataInfo);
-                if(resultData&&resultData.code == 0){
-                    this.tableData = resultData.data.list;
-                    this.total1 = resultData.data.total;
+            async getcc(){
+                const resultData = await this.$api.updatecc()
+                 if(resultData&&resultData.code == 0){
                     const location = () =>{
                         let data = []
-                        resultData.data.list.map(item=>{
+                        resultData.data.map(item=>{
                             let dataCell = []
                             item.cellList.map(itemChild=>{
-                                dataCell.push({value:itemChild.cell_id,label:itemChild.cell_name})
+                                dataCell.push({value:itemChild.cell_id,label:itemChild.cell_name_and_id})
                             })
                             data.push({
                                 value: item.shale_id,
@@ -261,7 +256,31 @@
                         return data
                     }
                     this.showModel.old_cell_id = this.showModel.new_cell_id = location()
-                }
+                 }
+            },
+            async getDataList(){
+                const dataInfo = {pageNum:this.currentPage1,pageSize:this.pageSize,org_id:this.stockForm.org_id}
+                const resultData = await this.$api.getStock(dataInfo);
+                if(resultData&&resultData.code == 0){
+                    this.tableData = resultData.data.list;
+                    this.total1 = resultData.data.total;
+                //     const location = () =>{
+                //         let data = []
+                //         resultData.data.list.map(item=>{
+                //             let dataCell = []
+                //             item.cellList.map(itemChild=>{
+                //                 dataCell.push({value:itemChild.cell_id,label:itemChild.cell_name+itemChild.cell_name_and_id})
+                //             })
+                //             data.push({
+                //                 value: item.shale_id,
+                //                 label: item.shale_name,
+                //                 children: dataCell
+                //             })
+                //         })
+                //         return data
+                //     }
+                //     this.showModel.old_cell_id = this.showModel.new_cell_id = location()
+                 }
             },
             async confirmUpdateLocation(formName){
                 this.$refs[formName].validate(async (valid) => {

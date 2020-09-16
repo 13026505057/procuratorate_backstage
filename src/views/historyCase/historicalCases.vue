@@ -46,7 +46,7 @@
                 </el-table-column>
                 <el-table-column align="center" label="操作">
                     <template slot-scope="{row}">
-                        <el-button @click="printQrCodeAgain(row.exhibit_id)" class="highlight-btn" type="operation" size="small">补打条码</el-button>
+                        <el-button @click="printQrCodeAgain(row.exhibit_id,row)" class="highlight-btn" type="operation" size="small">补打条码</el-button>
                         <el-button @click="deleteCancel(row.exhibit_id)" class="highlight-btn" type="operation" size="small">作废</el-button>
                     </template>
                 </el-table-column>
@@ -322,8 +322,9 @@
                 })
             },
             // 补打条形码
-            async printQrCodeAgain(exhibit_id){
-                let resultData = await this.$api.printAgain({exhibit_id})
+            async printQrCodeAgain(exhibit_id,row){       
+                let datainfo = {exhibit_id:exhibit_id,print_id: this.print_id}
+                let resultData = await this.$api.printAgain(datainfo)
                 if(resultData && resultData.code == '0') this.$message.success('已发送打印请求')
             },
             // 接收案卷信息

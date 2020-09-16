@@ -10,7 +10,7 @@ const service = axios.create({
   
   // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
    baseURL: 'http://141.113.80.44/dossier_qd',
-  //baseURL: 'http://106.12.68.167/dossier_qd',
+  // baseURL: 'http://106.12.68.167/dossier_qd',
   // baseURL: 'http://192.168.2.99:8080/dossier_qd',
   //baseURL: 'http://8z9rwa.natappfree.cc/dossier_qd',
 //   withCredentials: true, // send cookies when cross-domain requests

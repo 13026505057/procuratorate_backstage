@@ -336,7 +336,6 @@
                         { pattern: /^\d+$|^\d+[.]?\d+$/, message: '只能输入数字', trigger: 'blur' }
                     ],
                     dh: [
-                        // { required: true, message: '请输入档号', trigger: 'blur' },
                         { pattern: /^\d+$|^\d+[.]?\d+$/, message: '只能输入数字', trigger: 'blur' }
                     ],
                     jh: [
@@ -399,7 +398,6 @@
                     { title: 'cell_name', dataIndex: '存储位置', itemId: 3 },
                     { title: 'nd', dataIndex: '年度', itemId: 5 },
                     { title: 'stock_status', dataIndex: '入库状态', itemId: 6 },
-                    // { title: 'case_type_name', dataIndex: '隶属案件类型', itemId: 7 },
                 ],
                 mergeData: {
                     addSearch: [
@@ -630,6 +628,7 @@
                 if(resultData && resultData.code == '0'){
                     this.showModel.dialogTableVisible = false;
                     this.$message.success('操作成功');
+                    this.ysldet = false
                     this.getTableList(this.pagination);
                 } 
             },
@@ -670,8 +669,6 @@
                     
                     })
                      this.showModels = arr
-                     console.log("案件类型")
-                     console.log(arr)
                 })
             },
             //重置表单

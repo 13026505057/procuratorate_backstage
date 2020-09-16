@@ -256,7 +256,12 @@ const cases = {
     //导入信息修改
     updatedetal(data){
         return request({url:'/caseExcelLineUpdate',method:'post',data})
-    }
+    },
+    // 储存位置  更换储存位置
+    updatecc(){
+        return request({url:'/shale/shale/get',method:'post'})
+    },
+
 
 }
 export default cases

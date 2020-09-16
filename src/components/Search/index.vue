@@ -47,7 +47,7 @@
                     </el-option>
                 </el-select>
             </template>
-            <template v-else-if="guifan">
+            <template v-else-if="item.name == 'weila_status'">
                 <el-select v-model="item.value" placeholder="是否规范办结" style="width:150px" clearable> 
                     <el-option
                     v-for="it in options"
@@ -86,7 +86,11 @@ import { mapGetters } from 'vuex'
 export default {
     props: {
    
-        guifan: [Boolean],
+      
+        guifan: {
+            type: Boolean,
+            default: false
+        },
         youxiao: [Boolean],
         resetData: [Boolean],
         addSearch: {
@@ -210,8 +214,6 @@ export default {
         }, 
         comfirmSearch(){
             let dataInfo = this.resultDataInfo()
-            console.log('搜索框确定')
-            console.log(dataInfo)
             this.$emit('comfirmSearch',dataInfo)
         },
         resultDataInfo(){

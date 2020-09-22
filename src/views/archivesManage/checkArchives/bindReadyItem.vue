@@ -395,6 +395,7 @@
                     { title: 'dh', dataIndex: '档号', itemId: 2 },
                     { title: 'jh', dataIndex: '卷号', itemId: 8 },
                     { title: 'cbr', dataIndex: '承办人', itemId: 11 },
+                    { title: 'yr_case_type_name', dataIndex: '预入库案卷类型', itemId: 16 },
                     { title: 'cell_name', dataIndex: '存储位置', itemId: 3 },
                     { title: 'nd', dataIndex: '年度', itemId: 5 },
                     { title: 'stock_status', dataIndex: '入库状态', itemId: 6 },
@@ -678,7 +679,8 @@
             confirmAddCase(formName){
                 this.$refs[formName].validate(async (valid) => {
                     if (valid) {
-                        this.submitDataInfo_case.case_type_id = this.submitDataInfo_case.case_type_id
+                        console.log(this.submitDataInfo_case.case_type_id)
+                        this.submitDataInfo_case.case_type_id = this.submitDataInfo_case.case_type_id.pop()
                         let dataInfo = { ...this.submitDataInfo_case,case_bh: this.submitDataInfo_case.tysah }
                         let resultData = await this.$api.addCaseItemData(dataInfo)
                         if(resultData && resultData.code =='0') {

@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2020-06-18 10:32:23
+ * @,@LastEditTime: ,: 2020-11-09 15:46:15
+ * @,@LastEditors: ,: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \procuratorate_backstage\src\utils\request.js
+ */
 
 import axios from 'axios'
 import qs from "qs"
@@ -8,10 +16,11 @@ import { getToken } from '@/utils/auth'
 // create an axios instance
 const service = axios.create({
   // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  baseURL: 'http://141.113.80.44/dossier_qd',
-//   baseURL: 'http://106.12.68.167/dossier_qd',
-//   baseURL: 'http://192.168.2.98:8080/dossier_qd',
-//   baseURL: 'http://192.168.2.205:8081/dossier_qd',
+//   baseURL: 'http://141.113.80.44/dossier_qd',
+  // baseURL: 'http://106.12.68.167/dossier_qd',
+  // baseURL: 'http://192.168.2.98:8888/',
+  // 新地址
+  baseURL: 'http://182.61.13.204/dossier_qd',
 //   withCredentials: true, // send cookies when cross-domain requests
   timeout: 1000*60*10 // request timeout 
 })

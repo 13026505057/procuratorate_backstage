@@ -32,6 +32,10 @@ export default {
       'permission_routes',
       'sidebar'
     ]),
+    created(){
+      console.log('路由')
+      console.log(this.permission_routes)
+    },
     activeMenu() {
       const route = this.$route
       const { meta, path } = route

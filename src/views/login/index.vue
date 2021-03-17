@@ -3,7 +3,7 @@
     <div>
       <div class="title-container">
         <h3 class="title">
-          <img src="@/assets/login/emblem.png" alt="">青岛市检察机关档案归档考核系统
+          <img src="@/assets/login/emblem.png" alt="">山东省检察机关档案归档考核系统
         </h3>
       </div>
       <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
@@ -121,7 +121,6 @@ $cursor: #fff;
     color: $cursor;
   }
 }
-
 /* reset element-ui css */
 .login-container {
   display: flex;

@@ -5,7 +5,7 @@
             <span class="title">档案归档考核系统</span>
         </div>
         <div class="rightBox">
-            <em class="title">青岛市检察机关档案管理系统</em>
+            <em class="title">山东检察机关档案管理系统</em>
         </div>
     </div>
 </template>
@@ -19,8 +19,11 @@ export default {
 <style lang="scss">
     .header{
         height: 55px;
-        background-image: url('../../assets/header/headerBg.png');
+        background-image: url('../../assets/header/headerBgNew.png');
         line-height: 55px;
+        // width: 100%;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
         padding: 0 50px 0 10px;
         display: flex;
         .leftBox, .rightBox{

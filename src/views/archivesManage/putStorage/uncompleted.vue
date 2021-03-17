@@ -76,11 +76,13 @@
                 exhibitType:[],
                 addSearch: [
                     { dom: 'case_bh', value: '',placeholder: '请输入统一受案号', itemId: 5, name: 'input' },
+                    { dom: 'bmsah', value: '', placeholder: '请输入部门受案号', itemId: -1, name: 'input' },
                     { dom: 'out_exhibit_id', value: '',placeholder: '扫描条形码', itemId: 8, name: 'input' },
                     { dom: 'exhibit_name', value: '',placeholder: '请输入案件名称', itemId: 6, name: 'input' },
-                    { dom: 'begin_time', value: '',placeholder: '开始时间', itemId: 4, name: 'daterange_begin' },
-                    { dom: 'end_time', value: '',placeholder: '结束时间', itemId: -4, name: 'daterange_end' },
-                    { dom: 'year', value: '',placeholder: '选择案件年度', itemId: 11, name: 'dataPicker' },
+                    { dom: 'exhibit_name', value: '', placeholder: '请输入案卷名称', itemId: 1, name: 'input' },
+                    { dom: 'begin_time', value: '',placeholder: '操作开始时间', itemId: 4, name: 'daterange_begin' },
+                    { dom: 'end_time', value: '',placeholder: '操作结束时间', itemId: -4, name: 'daterange_end' },
+                    { dom: 'year', value: '',placeholder: '年度', itemId: 11, name: 'dataPicker' },
                     { dom: 'bgr', value: '',placeholder: '嫌疑人', itemId: 10, name: 'input' },
                     { dom: 'cbr', value: '',placeholder: '承办人', itemId: 9, name: 'input' },
                 ],
@@ -109,6 +111,7 @@
                     { title: 'case_type_name', dataIndex: '案件类型', itemId: 4 },
                     { title: 'cbr', dataIndex: '承办人', itemId: 5 },
                     { title: 'bgr', dataIndex: '嫌疑人', itemId: 6 },
+                    { title: 'exhibit_name', dataIndex: '案卷名称', itemId: 16 },
                     { title: 'exhibit_type', dataIndex: '案卷类型', itemId: 12 },
                     { title: 'dh', dataIndex: '档号', overflow: false, itemId: 7 },
                     { title: 'jh', dataIndex: '卷号', overflow: false, itemId: 8 },
@@ -175,7 +178,11 @@
                 this.$refs.stockNumRef.focus();
             },
             getFocus2(){
-                this.$refs.exhibitNumRef.focus();
+                console.log(2222)
+                setTimeout(() => {
+                    this.$refs.exhibitNumRef.focus();
+                }, 100);
+                
             },
             //货架号扫码枪扫描后处理
             stockNumChange(data){
@@ -205,6 +212,13 @@
                             // self.Warehousing()
                             this.exhibitIn();
                         }else if(resultData.data.type=="cell"){
+                            this.$message({
+                                message: '请扫描卷吗',
+                                type: 'error'
+                            });
+                            this.exhibitNum = "";
+                            this.inpDisabled = false;
+                            this.getFocus2();
                             
                         }
                         // this.getDataList();
@@ -215,7 +229,10 @@
                         // this.exhibitNum = "";
                         // this.getFocus('exhibitNumRef');
                     }else{
+                        this.exhibitNum = "";
                         this.inpDisabled = false;
+                        this.getFocus2();
+                        
                     }
             },
             async exhibitIn(){
@@ -236,6 +253,8 @@
                         this.getFocus2();
                     }else{
                         this.inpDisabled = false;
+                        this.exhibitNum = "";
+                        this.getFocus2();
                     }
             },
             receivedAddress(data){

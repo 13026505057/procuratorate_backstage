@@ -8,6 +8,7 @@ const getDefaultState = () => {
     org_name: '',
     org_id: '',
     user_id: '',
+    dept_id:'',
     org_list: [],
     user_true_name: '',
     roles: [],
@@ -38,6 +39,9 @@ const mutations = {
   },
   SET_USER_ID: (state, user_id) => {
     state.user_id = user_id
+  },
+  SET_DEPT_ID: (state, dept_id) => {
+    state.dept_id = dept_id
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
@@ -88,8 +92,9 @@ const actions = {
         if (!data) {
           reject('Verification failed, please Login again.')
         }
-
-        const { user_id, org_name, user_true_name, org_id, province_id, city_id, area_id, userVueRoleList, username } = data[0]
+        console.log('用户信息')
+        console.log(data[0])
+        const { user_id, org_name, user_true_name, org_id, province_id, city_id, area_id, userVueRoleList, username,dept_id,nation_id } = data[0]
         // const roles = new Array(data[0].username)
         const roles = {
           group_name: userVueRoleList.length>0?[userVueRoleList[0].group_name]:['defalut'],
@@ -104,8 +109,9 @@ const actions = {
         commit('SET_ORG_NAME', org_name)
         commit('SET_USER_NAME', user_true_name)
         commit('SET_USER_ID', user_id)
+        commit('SET_DEPT_ID', dept_id)
         commit('SET_ORG_ID', org_id)
-        commit('SET_ORG_ADDRESS_ID', { province_id, city_id, area_id })
+        commit('SET_ORG_ADDRESS_ID', { province_id, city_id, area_id,nation_id })
 
         dispatch('getDeptList',org_id)
         resolve(roles)

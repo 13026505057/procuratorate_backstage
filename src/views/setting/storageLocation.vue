@@ -32,14 +32,7 @@
                         label="操作">
                         <template slot-scope="{ row }">
                             <el-button @click="printClick(row)" class="ash-btn" size="small">条码打印</el-button>
-                            <!-- <el-popconfirm
-                                icon="el-icon-info"
-                                iconColor="red"
-                                title="确定删除吗？"
-                                @onConfirm = "confirmDel"
-                                >
-                                <el-button slot="reference" @click="delUnitClick(row.position_id)" class="highlight-btn" size="small">删除</el-button>
-                            </el-popconfirm> -->
+                            <el-button @click="detail(row)" class="ash-btn" size="small">详情</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -54,6 +47,30 @@
                     :total="total1">
                 </el-pagination>
             </div>
+            <el-dialog v-dialogDrag
+                title="详情"
+                :visible.sync="detailrow"
+                width="40%"
+                center>
+                <el-table
+                    :data="tabaledetail"
+                    style="width: 100%">
+                    <el-table-column
+                        prop="cell_name"
+                        label="格子名称"
+                        align="center"
+                        >
+                    </el-table-column>
+                    <el-table-column
+                        prop="cell_id"
+                        label="格子条码"
+                        align="center">
+                    </el-table-column>
+                </el-table>               
+                <span slot="footer" class="dialog-footer">      
+                    <el-button type="primary" @click="detailrow = false">关 闭</el-button>
+                </span>
+            </el-dialog>
              <el-dialog v-dialogDrag
                 :title="dialogTitle"
                 :visible.sync="dialogVisible"
@@ -146,6 +163,8 @@
         },
         data()  {
             return  {
+                tabaledetail:[],
+                detailrow:false,
                 tableItems:[
                     { label: "货架名称",  prop: "shale_name" },
                     { label: "货架行数", prop: "hang" ,},
@@ -208,23 +227,25 @@
         mounted(){
             this.stockForm.org_id = this.org_id;
             this.getDataList();
+            this.getcc();
         },
         methods: {
+            detail(row){
+                 this.detailrow = true
+                 this.tabaledetail = row.cellList
+            },
             updateStorageData(){
                 this.showModel.dialogLocationVisible = true
             },
-            async getDataList(){
-                const dataInfo = {pageNum:this.currentPage1,pageSize:this.pageSize,org_id:this.stockForm.org_id}
-                const resultData = await this.$api.getStock(dataInfo);
-                if(resultData&&resultData.code == 0){
-                    this.tableData = resultData.data.list;
-                    this.total1 = resultData.data.total;
+            async getcc(){
+                const resultData = await this.$api.updatecc()
+                 if(resultData&&resultData.code == 0){
                     const location = () =>{
                         let data = []
-                        resultData.data.list.map(item=>{
+                        resultData.data.map(item=>{
                             let dataCell = []
                             item.cellList.map(itemChild=>{
-                                dataCell.push({value:itemChild.cell_id,label:itemChild.cell_name})
+                                dataCell.push({value:itemChild.cell_id,label:itemChild.cell_name_and_id})
                             })
                             data.push({
                                 value: item.shale_id,
@@ -235,7 +256,31 @@
                         return data
                     }
                     this.showModel.old_cell_id = this.showModel.new_cell_id = location()
-                }
+                 }
+            },
+            async getDataList(){
+                const dataInfo = {pageNum:this.currentPage1,pageSize:this.pageSize,org_id:this.stockForm.org_id}
+                const resultData = await this.$api.getStock(dataInfo);
+                if(resultData&&resultData.code == 0){
+                    this.tableData = resultData.data.list;
+                    this.total1 = resultData.data.total;
+                //     const location = () =>{
+                //         let data = []
+                //         resultData.data.list.map(item=>{
+                //             let dataCell = []
+                //             item.cellList.map(itemChild=>{
+                //                 dataCell.push({value:itemChild.cell_id,label:itemChild.cell_name+itemChild.cell_name_and_id})
+                //             })
+                //             data.push({
+                //                 value: item.shale_id,
+                //                 label: item.shale_name,
+                //                 children: dataCell
+                //             })
+                //         })
+                //         return data
+                //     }
+                //     this.showModel.old_cell_id = this.showModel.new_cell_id = location()
+                 }
             },
             async confirmUpdateLocation(formName){
                 this.$refs[formName].validate(async (valid) => {

@@ -68,6 +68,10 @@
                 <el-form-item label="接收备注" prop="mark">
                     <el-input class="input_class" type="textarea" v-model="submitDataInfo.mark"></el-input>
                 </el-form-item>
+                <el-form-item label="实质办结日期" prop="over_time">
+                    <el-date-picker v-model="submitDataInfo.over_time" type="datetime" placeholder="请选择办结日期"
+                            value-format="yyyy-MM-dd HH:mm:ss" default-time="00:00:00"></el-date-picker>
+                </el-form-item>
                 <div class="checkboxSelect">
                     <el-checkbox v-model="submitDataInfo.print_code">同时打印案件条形码</el-checkbox>
                     <el-checkbox v-model="submitDataInfo.print_accept">同时打印收卷回执单</el-checkbox>
@@ -75,7 +79,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="showModel.dialogReceivedVisible = false">取 消</el-button>
-                <el-button type="primary" @click="confirmBtn">确 定</el-button>
+                <el-button type="primary" @click="confirmBtn('ruleForm')">确 定</el-button>
             </span>
         </el-dialog>
         <!-- 批量打印回执单 -->
@@ -205,7 +209,6 @@
                     { title: 'case_name', dataIndex: '案件名称', itemId: 10 },
                     { title: 'ajlb_mc', dataIndex: '案件类型', itemId: 2 },
                     { title: 'case_desc', dataIndex: '案件描述', overflow: true, itemId: 11 },
-                    // { title: 'time_status', dataIndex: '是否归档', itemId: 4 },
                     { title: 'case_take_user_name', dataIndex: '承办人', itemId: 3 },
                     { title: 'slrq', dataIndex: '受理日期', itemId: 5 },
                     { title: 'bjrq', dataIndex: '办结按钮点击日期', itemId: 6 },
@@ -220,7 +223,8 @@
                     bgr: '',
                     mark: '',
                     print_code: 1,
-                    print_accept: 0
+                    print_accept: 0,
+                    over_time:''
                 },
                 rules: {
                     nd: [
@@ -240,6 +244,9 @@
                     bgr: [
                         { required: true, message: '请输入被告人', trigger: 'blur' },
                     ],
+                    over_time:[
+                        { required: true, message: '请选择实质办结日期', trigger: 'blur' },
+                    ]
                 },
                 submitDataInfo_temporary: {},
                 eachDataInfoList: [
@@ -404,9 +411,20 @@
                 this.submitDataInfo.bgqx = localStorage.getItem('bgqx');
             },
             // 确认提交
-            async confirmBtn(){
-                if(this.showModel.submiteModel) this.confirmEditExhibit();
-                    else this.addExhibitData()
+            async confirmBtn(formName){
+                if(this.showModel.submiteModel){
+                    this.confirmEditExhibit();
+                } else{
+                    this.$refs[formName].validate((valid) => {
+                            if (valid) {
+                                 this.addExhibitData()
+                            } else {
+                                console.log('error submit!!');
+                                return false;
+                            }
+                        });
+                   
+                } 
             },
             // 确认新增
             async addExhibitData(){

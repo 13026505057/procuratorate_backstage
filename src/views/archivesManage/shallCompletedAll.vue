@@ -1,7 +1,7 @@
 <template>
     <div class="shallCompletedAllPage">
         <Search :addSearch="addSearch" :selectOption="selectOption" :resetData="false" :type="'case'" @comfirmSearch="comfirmSearch" 
-            @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun"/>
+            @receivedAddress="receivedAddress" :setDynamicBtn="setDynamicBtn" @setDynamicBtnFun="setDynamicBtnFun" :guifan='true'/>
         <div class="head-tab">
             <el-tabs v-model="showModel.activeNameTab" @tab-click="handleClickTab">
                 <el-tab-pane class="tab-pane-position" v-for="item in showModel.tableList" :key="item.case_type_id" :name="item.case_type_id">
@@ -17,6 +17,11 @@
                                 <template slot-scope="{row}">
                                     <span v-if="item.itemId == 4">{{ row[item.title] | mapStatus }}</span>
                                     <span v-else>{{ row[item.title] }}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column align="center" label="是否规范办结">
+                                <template slot-scope="{row}">
+                                    {{row.weila_status == 'wei_la_dao'?'否':'是'}}
                                 </template>
                             </el-table-column>
                             <el-table-column align="center" label="操作" width="180">

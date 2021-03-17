@@ -154,7 +154,7 @@
                         <el-option v-for="itemChild in selectOption.case_type_id" :key="itemChild.value" 
                             :label="itemChild.label" :value="itemChild.value"></el-option>
                     </el-select> -->
-                    <el-cascader
+                    <el-cascader class="input_class"
                                 :options="showModels"
                                 :props="{ checkStrictly: true }"
                                 v-model="submitDataInfo.case_type_id"
@@ -496,7 +496,7 @@
                 this.submitDataInfo ['print_id'] = this.print_id;
                 console.log('this.submitDataInfo.case_type_id')
                 console.log(this.submitDataInfo.case_type_id)
-                this.submitDataInfo.case_type_id =  this.submitDataInfo.case_type_id
+                this.submitDataInfo.case_type_id =  this.submitDataInfo.case_type_id[1];
                 let resultData = await this.$api.yrExhibitAdd(this.submitDataInfo)
                 if(resultData && resultData.code =='0') {
                     localStorage.setItem('yr_case_type_id',this.submitDataInfo.case_type_id)

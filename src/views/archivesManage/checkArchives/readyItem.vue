@@ -18,9 +18,10 @@
                                     <span v-else>{{ row[item.title] }}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column align="center" label="操作">
+                            <el-table-column align="center" label="操作" width="250">
                                 <template slot-scope="{row}">
                                     <el-button @click="receivedItem(row.bmsah,row.case_bh)" class="highlight-btn" size="small">接收案卷</el-button>
+                                    <el-button @click="receivedCaseItem(row.case_id)" class="highlight-btn" size="small">接收案件</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -80,6 +81,19 @@
             <span slot="footer" class="dialog-footer">
                 <el-button @click="showModel.dialogReceivedVisible = false">取 消</el-button>
                 <el-button type="primary" @click="confirmBtn('ruleForm')">确 定</el-button>
+            </span>
+        </el-dialog>
+        <!-- 接收案件 -->
+        <el-dialog v-dialogDrag :title="showModel.dialogCaseReceivedTitle" :visible.sync="showModel.dialogCaseReceivedVisible">
+            <el-form :model="caseSubmitDataInfo" :rules="caseRules" ref="caseRuleForm" label-width="130px" class="demo-ruleForm">
+                <el-form-item label="实质办结日期" prop="over_time">
+                    <el-date-picker v-model="caseSubmitDataInfo.over_time" type="datetime" placeholder="请选择办结日期"
+                            value-format="yyyy-MM-dd HH:mm:ss" default-time="00:00:00"></el-date-picker>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="showModel.dialogCaseReceivedVisible = false">取 消</el-button>
+                <el-button type="primary" @click="confirmCaseBtn('caseRuleForm')">确 定</el-button>
             </span>
         </el-dialog>
         <!-- 批量打印回执单 -->
@@ -184,6 +198,9 @@
                     dialogReceivedTitle: '',
                     selectOption_type: [],
                     selectOption_time: [],
+                    // 新增案件
+                    dialogCaseReceivedTitle:'',
+                    dialogCaseReceivedVisible: false,
                     // 批量打印回执单
                     dialogPrintVisible: false,
                     pagination: {
@@ -249,14 +266,23 @@
                     ]
                 },
                 submitDataInfo_temporary: {},
-                eachDataInfoList: [
-                    { captionTitle: '档号', placeholder: '请输入档号', dom: 'dh', itemId: 1 },
-                    { captionTitle: '卷号(必填)', placeholder: '请输入卷号', dom: 'jh', itemId: 2 },
-                    { captionTitle: '被告人/嫌疑人(必填)', placeholder: '请输入被告人/嫌疑人', dom: 'bgr', itemId: 3 },
-                    { captionTitle: '卷宗类型(必填)', placeholder: '', dom: 'exhibit_type', itemId: 4 },
-                    { captionTitle: '选择年度(必填)', placeholder: '请输入年度 如 2018', dom: 'nd', itemId: 5 },
-                    { captionTitle: '选择期限(必填)', placeholder: '', dom: 'bgqx', itemId: 6 },
-                ],
+                // eachDataInfoList: [
+                //     { captionTitle: '档号', placeholder: '请输入档号', dom: 'dh', itemId: 1 },
+                //     { captionTitle: '卷号(必填)', placeholder: '请输入卷号', dom: 'jh', itemId: 2 },
+                //     { captionTitle: '被告人/嫌疑人(必填)', placeholder: '请输入被告人/嫌疑人', dom: 'bgr', itemId: 3 },
+                //     { captionTitle: '卷宗类型(必填)', placeholder: '', dom: 'exhibit_type', itemId: 4 },
+                //     { captionTitle: '选择年度(必填)', placeholder: '请输入年度 如 2018', dom: 'nd', itemId: 5 },
+                //     { captionTitle: '选择期限(必填)', placeholder: '', dom: 'bgqx', itemId: 6 },
+                // ],
+                caseSubmitDataInfo:{
+                    over_time:"",
+                    case_id:"",
+                },
+                caseRules:{
+                    over_time:[
+                        { required: true, message: '请选择实质办结日期', trigger: 'blur' },
+                    ]
+                },
                 setDynamicBtn: [],
             }
         },
@@ -473,6 +499,34 @@
                 this.submitDataInfo['print_code'] = true;
                 this.submitDataInfo['print_id'] = this.print_id;
                 this.submitDataInfo_temporary = { ...this.submitDataInfo }
+            },
+             // 接收案件信息
+            receivedCaseItem(data){
+                this.showModel.dialogCaseReceivedVisible = true;
+                this.showModel.dialogCaseReceivedTitle = '接收案件';
+                this.caseSubmitDataInfo.over_time = "";
+                this.caseSubmitDataInfo.case_id = data;
+            },
+            // 接收案件确认按钮
+            confirmCaseBtn(formName){
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        this.receptionCase()
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            },
+            // 接收案件接口
+            async receptionCase(){
+                let sendData = { ...this.caseSubmitDataInfo};
+                let resultData = await this.$api.receptionCase(sendData);
+                 if(resultData && resultData.code=='0'){
+                    this.$message.success('操作成功');
+                    this.getTableList(this.pagination);
+                    this.showModel.dialogCaseReceivedVisible = false;
+                }
             },
         },
     }

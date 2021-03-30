@@ -261,6 +261,10 @@ const cases = {
     updatecc(){
         return request({url:'/shale/shale/get',method:'post'})
     },
+    // 档案-案卷接收-预收卷-接收案件
+    receptionCase(data){
+        return request({url:'/cases/cases/getFromCasesShouli',method:'post',data})
+    },
 
 
 }

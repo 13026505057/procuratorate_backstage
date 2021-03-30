@@ -571,16 +571,19 @@
             // 确认搜索
             comfirmSearch_merge(data){
                 this.$nextTick(()=>{ for(let key in data){ this.pagination_merge_yrk[key] = this.pagination_merge_ysl[key] = data[key] } })
+                console.log(this.pagination_merge_yrk)
                 this.getWasInHouseList(this.pagination_merge_yrk)
                 this.getWasShouLiList(this.pagination_merge_ysl)
             },
             showDialogPanel(dataInfo,exhibit_id){
                 this.showModel.dialogTableVisible = true;
                 this.bindCaseData.exhibit_id = exhibit_id;
+                // console.log(dataInfo)
                 ['tysah','case_name','cbr','bgr'].map((item,index)=>{
                     this.mergeData.addSearch[index].value = dataInfo[item];
                     this.pagination_merge_yrk[item] = this.pagination_merge_ysl[item] = dataInfo[item];
                 })
+                
                 this.getWasInHouseList(this.pagination_merge_yrk)
                 this.getWasShouLiList(this.pagination_merge_ysl)
             },

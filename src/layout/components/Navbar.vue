@@ -25,10 +25,11 @@
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item @click.native='updateinfo'>修改个人信息</el-dropdown-item>
-          <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">退出</span>
-          </el-dropdown-item>
+            <el-dropdown-item @click.native='toFileTurnOver'>进入档案移交管理</el-dropdown-item>
+            <el-dropdown-item divided @click.native='updateinfo'>修改个人信息</el-dropdown-item>
+            <el-dropdown-item divided @click.native="logout">
+                <span style="display:block;">退出</span>
+            </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -76,7 +77,8 @@ export default {
       'device',
       'user_true_name',
       'address_id',
-      'org_id'
+      'org_id',
+      'username'
     ])
   },
   data(){
@@ -89,7 +91,9 @@ export default {
       }
     }
   },
-  
+    mounted(){
+        console.log(this.username,"============")
+    },
   methods: {
     //提交修改表单
     Submit(){
@@ -114,6 +118,12 @@ export default {
               this.list = res.data
             }
       })
+    },
+    // 进入档案移交页面
+    toFileTurnOver(){
+        // window.open("http://124.70.182.101:10080/dist/#/index?username="+this.username)
+        window.location.href = "http://124.70.182.101:10080/dist/#/index?username="+this.username
+        // console.log("http://124.70.182.101:10080/dist/#/index?username="+this.username)
     },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')

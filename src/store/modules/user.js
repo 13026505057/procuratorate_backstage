@@ -7,6 +7,7 @@ const getDefaultState = () => {
     token: getToken(),
     org_name: '',
     org_id: '',
+    username: '',
     user_id: '',
     dept_id:'',
     org_list: [],
@@ -30,6 +31,9 @@ const mutations = {
   },
   SET_ORG_ID: (state, org_id) => {
     state.org_id = org_id
+  },
+  SET_USER_NAME_HEAD: (state, username) => {
+    state.username = username
   },
   SET_ORG_LIST: (state, org_list) => {
     state.org_list = org_list
@@ -92,8 +96,8 @@ const actions = {
         if (!data) {
           reject('Verification failed, please Login again.')
         }
-        console.log('用户信息')
-        console.log(data[0])
+        // console.log('用户信息')
+        // console.log(data[0])
         const { user_id, org_name, user_true_name, org_id, province_id, city_id, area_id, userVueRoleList, username,dept_id,nation_id } = data[0]
         // const roles = new Array(data[0].username)
         const roles = {
@@ -111,6 +115,7 @@ const actions = {
         commit('SET_USER_ID', user_id)
         commit('SET_DEPT_ID', dept_id)
         commit('SET_ORG_ID', org_id)
+        commit('SET_USER_NAME_HEAD', username)
         commit('SET_ORG_ADDRESS_ID', { province_id, city_id, area_id,nation_id })
 
         dispatch('getDeptList',org_id)

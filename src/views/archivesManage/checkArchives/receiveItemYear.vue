@@ -21,7 +21,7 @@
                             <el-table-column align="center" label="操作" width="250">
                                 <template slot-scope="{row}">
                                     <el-button @click="receivedItem(row.bmsah,row.case_bh)" class="highlight-btn" size="small">接收案卷</el-button>
-                                    <el-button @click="receivedCaseItem(row.case_id)" class="highlight-btn" size="small">接收案件</el-button>
+                                    <!-- <el-button @click="receivedCaseItem(row.case_id)" class="highlight-btn" size="small">接收案件</el-button> -->
                                 </template>
                             </el-table-column>
                         </el-table>

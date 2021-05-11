@@ -25,8 +25,8 @@
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item @click.native='toFileTurnOver'>进入档案移交管理</el-dropdown-item>
-            <el-dropdown-item divided @click.native='updateinfo'>修改个人信息</el-dropdown-item>
+            <el-dropdown-item v-if="org_id == '370211'" @click.native='toFileTurnOver'>进入档案移交管理</el-dropdown-item>
+            <el-dropdown-item :divided="org_id == '370211'" @click.native='updateinfo'>修改个人信息</el-dropdown-item>
             <el-dropdown-item divided @click.native="logout">
                 <span style="display:block;">退出</span>
             </el-dropdown-item>
@@ -92,7 +92,7 @@ export default {
     }
   },
     mounted(){
-        console.log(this.username,"============")
+        // console.log(this.username,"============")
     },
   methods: {
     //提交修改表单
@@ -110,7 +110,7 @@ export default {
     },
     updateinfo(){
       this.show = true
-      console.log('修改')
+    //   console.log('修改')
 
       let id = {org_id:this.org_id}
       this.$api.bmlist(id).then(res=>{
@@ -122,7 +122,7 @@ export default {
     // 进入档案移交页面
     toFileTurnOver(){
         // window.open("http://124.70.182.101:10080/dist/#/index?username="+this.username)
-        window.location.href = "http://124.70.182.101:10080/dist/#/index?username="+this.username
+        window.location.href = "http://141.113.104.230:8082/dist/#/login?username="+this.username
         // console.log("http://124.70.182.101:10080/dist/#/index?username="+this.username)
     },
     toggleSideBar() {

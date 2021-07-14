@@ -20,6 +20,7 @@ const service = axios.create({
    baseURL: 'http://141.113.80.44/dossier_qd',
 //    baseURL: 'http://141.113.80.45/dossier_qd',
 //   baseURL: 'http://182.61.13.204/dossier_qd',
+//   baseURL: 'http://192.168.2.51/dossier_qd',
 
 //   baseURL: 'http://192.168.2.109:8888/dossier_qd',
 //   withCredentials: true, // send cookies when cross-domain requests

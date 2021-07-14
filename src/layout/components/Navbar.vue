@@ -25,7 +25,7 @@
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item v-if="org_id == '370211'" @click.native='toFileTurnOver'>进入档案移交管理</el-dropdown-item>
+            <!-- <el-dropdown-item v-if="org_id == '370211'" @click.native='toFileTurnOver'>进入档案移交管理</el-dropdown-item> -->
             <el-dropdown-item :divided="org_id == '370211'" @click.native='updateinfo'>修改个人信息</el-dropdown-item>
             <el-dropdown-item divided @click.native="logout">
                 <span style="display:block;">退出</span>
